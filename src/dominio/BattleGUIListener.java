@@ -39,4 +39,6 @@ public interface BattleGUIListener {
      * @param winner Entrenador que gano la batalla
      */
     void onBattleEnded(Trainer winner);
+
+    void onPokemonChanged(Trainer trainer);
 }

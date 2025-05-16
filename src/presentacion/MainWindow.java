@@ -80,7 +80,26 @@ public class MainWindow extends JFrame implements BattleGUIListener {
 
     @Override
     public void onPokemonDebilitado(Trainer trainer) {
-        actionPanel.addBattleText(trainer.getPokemonActivo().getNombre() + " se ha debilitado!, Selecciona otro pokemon");
+        // Mostrar mensaje en la interfaz
+        actionPanel.addBattleText(trainer.getPokemonActivo().getNombre() + " se ha debilitado!");
+        
+        // Mostrar opciones de cambio solo si es el turno del jugador afectado
+        if (trainer == battle.getTurnoActual()) {
+            SwingUtilities.invokeLater(() -> {
+                actionPanel.showSwitchOptions();
+            });
+        }
+        
+        updateUI();
+    }
+
+    @Override
+    public void onPokemonChanged(Trainer trainer) {
+        // Actualizar la interfaz con el nuevo Pokémon
+        battlePanel.updatePokemonStats();
+        actionPanel.addBattleText(trainer.getNombre() + " ha cambiado a " + 
+                            trainer.getPokemonActivo().getNombre());
+        updateUI();
     }
 
     @Override

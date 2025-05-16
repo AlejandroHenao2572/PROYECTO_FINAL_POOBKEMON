@@ -112,24 +112,36 @@ public class Battle {
             finalizarBatalla();
             return;
         }
-
+    
+        // Verificar si el Pokémon activo está debilitado
         if (turnoActual.getPokemonActivo().estaDebilitado()) {
-            if (listener != null) {
-                listener.onPokemonDebilitado(turnoActual);
-            }
+            manejarPokemonDebilitado();
             return;
         }
-
-        // Verificar si el Pokémon se quedó sin PP
+    
+        // Resto de la lógica normal del turno
         if (turnoActual.getPokemonActivo().sinPP()) {
             turnoActual.getPokemonActivo().getMovimientos().add(FORCEJEO);
         }
-
+    
         esperandoAccion = true;
         iniciarTemporizadorTurno();
-
+    
         if (listener != null) {
             listener.onTurnStarted(turnoActual);
+        }
+    }
+    
+    private void manejarPokemonDebilitado() {
+        cambioForzado = true;
+        cancelarTemporizador();
+        
+        if (listener != null) {
+            listener.onPokemonDebilitado(turnoActual);
+        }
+        
+        if (turnoActual.estaDerrotado()) {
+            finalizarBatalla();
         }
     }
 
@@ -224,9 +236,39 @@ public class Battle {
      * @param indicePokemon Índice del Pokémon seleccionado
      */
     public void cambioPokemonSeleccionado(int indicePokemon) {
-        if (!esperandoAccion) return;
+        if (!esperandoAccion && !cambioForzado) return;
         
-        turnoActual.onSwitchSelected(indicePokemon);
+        try {
+            // Validar selección
+            if (indicePokemon < 0 || indicePokemon >= turnoActual.getEquipo().size()) {
+                return;
+            }
+            
+            Pokemon seleccionado = turnoActual.getEquipo().get(indicePokemon);
+            
+            // No permitir cambiar al mismo Pokémon o debilitado
+            if (seleccionado.estaDebilitado() || seleccionado == turnoActual.getPokemonActivo()) {
+                return;
+            }
+            
+            // Realizar el cambio
+            turnoActual.cambiarPokemon(indicePokemon);
+            
+            // Notificar finalización
+            if (listener != null) {
+                listener.onPokemonChanged(turnoActual);
+            }
+            
+            // Manejar flujo del juego
+            if (cambioForzado) {
+                cambioForzado = false;
+                cambiarTurno(); // Pasar al oponente después de cambio forzado
+            } else {
+                finalizarTurno();
+            }
+        } catch (Exception e) {
+            System.err.println("Error al cambiar Pokémon: " + e.getMessage());
+        }
     }
 
     /**
@@ -251,6 +293,10 @@ public class Battle {
 
     public HumanTrainer getTurnoActual() {
         return turnoActual;
+    }
+    
+    public boolean isCambioForzado() {
+        return cambioForzado;
     }
     
 }

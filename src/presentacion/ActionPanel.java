@@ -3,6 +3,7 @@ package presentacion;
 import dominio.*;
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Clase que representa el panel de acciones del juego
@@ -121,39 +122,47 @@ public class ActionPanel extends JPanel {
      * Remueve los botones principales y muestra los Pokemon del equipo
      */
     public void showSwitchOptions() {
+        // Limpiar el panel primero
         buttonPanel.removeAll();
-
-        for (int i = 0; i < currentPlayer.getEquipo().size(); i++) {
-            Pokemon pokemon = currentPlayer.getEquipo().get(i);
-            JButton pokemonButton = new JButton(pokemon.getNombre() +
-                    (pokemon.estaDebilitado() ? " (DEBIL)" : ""));
+        
+        // Obtener el equipo del jugador actual
+        ArrayList<Pokemon> equipo = currentPlayer.getEquipo();
+        
+        // Crear botones para cada Pokémon
+        for (int i = 0; i < equipo.size(); i++) {
+            Pokemon pokemon = equipo.get(i);
+            JButton pokemonButton = new JButton(pokemon.getNombre() + 
+                                             (pokemon.estaDebilitado() ? " (DEBILITADO)" : ""));
             pokemonButton.setFont(new Font("Pokemon GB", Font.PLAIN, 12));
             pokemonButton.setForeground(Color.WHITE);
             pokemonButton.setBackground(new Color(14, 174, 147));
             pokemonButton.setFocusPainted(false);
-
-            int pokemonIndex = i;
-            pokemonButton.addActionListener(e -> {
-                mainWindow.switchPokemonSelected(pokemonIndex);
-                resetButtons();
-            });
-
-            if (pokemon.estaDebilitado()) {
+    
+            // Solo permitir cambiar a Pokémon no debilitados y que no sean el actual
+            if (pokemon.estaDebilitado() || pokemon == currentPlayer.getPokemonActivo()) {
                 pokemonButton.setEnabled(false);
+            } else {
+                int pokemonIndex = i;
+                pokemonButton.addActionListener(e -> {
+                    mainWindow.switchPokemonSelected(pokemonIndex);
+                    resetButtons(); // Restablecer la interfaz después de la selección
+                });
             }
-
+    
             buttonPanel.add(pokemonButton);
         }
-
-        // Boton de regreso
-        JButton backButton = new JButton("VOLVER");
-        backButton.setFont(new Font("Pokemon GB", Font.BOLD, 12));
-        backButton.setForeground(Color.WHITE);
-        backButton.setBackground(new Color(14, 174, 147));
-        backButton.setFocusPainted(false);
-        backButton.addActionListener(e -> resetButtons());
-
-        buttonPanel.add(backButton);
+    
+        // Botón de volver (solo si no es un cambio obligatorio)
+        if (!mainWindow.getBattle().isCambioForzado()) {
+            JButton backButton = new JButton("VOLVER");
+            backButton.setFont(new Font("Pokemon GB", Font.BOLD, 12));
+            backButton.setForeground(Color.WHITE);
+            backButton.setBackground(new Color(14, 174, 147));
+            backButton.setFocusPainted(false);
+            backButton.addActionListener(e -> resetButtons());
+            buttonPanel.add(backButton);
+        }
+    
         buttonPanel.revalidate();
         buttonPanel.repaint();
     }
