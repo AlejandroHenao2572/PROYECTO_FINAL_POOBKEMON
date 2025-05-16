@@ -6,7 +6,7 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/**
+/** cambiooos
  * Esta clase maneja la logica de una batalla entre entrenadores humanos
  * Autores David Patacon y Daniel Hueso
  * Version 2.0
