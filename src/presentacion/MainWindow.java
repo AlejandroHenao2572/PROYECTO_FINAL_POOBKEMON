@@ -9,8 +9,9 @@ public class MainWindow extends JFrame implements BattleGUIListener {
     private ActionPanel actionPanel;
     private Battle battle;
     private JDialog messageDialog;
+    private JLabel turnIndicator;
 
-    public MainWindow(HumanTrainer player, HumanTrainer enemy) {
+    public MainWindow(HumanTrainer player1, HumanTrainer player2) {
         setTitle("Pokémon Esmeralda - Combate");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
@@ -27,11 +28,11 @@ public class MainWindow extends JFrame implements BattleGUIListener {
             System.err.println("Error cargando fuente Pokémon: " + e.getMessage());
         }
 
-        this.battle = new Battle(player, enemy);
+        this.battle = new Battle(player1, player2);
         this.battle.setListener(this);
         
-        this.battlePanel = new BattlePanel(player, enemy);
-        this.actionPanel = new ActionPanel(this, player);
+        this.battlePanel = new BattlePanel(player1, player2);
+        this.actionPanel = new ActionPanel(this, player1);
         
         add(battlePanel, BorderLayout.CENTER);
         add(actionPanel, BorderLayout.SOUTH);
@@ -41,6 +42,15 @@ public class MainWindow extends JFrame implements BattleGUIListener {
         messageDialog.setUndecorated(true);
         messageDialog.setSize(300, 100);
         messageDialog.setLocationRelativeTo(this);
+
+        // Crear e inicializar el indicador de turno
+        turnIndicator = new JLabel("", SwingConstants.CENTER);
+        turnIndicator.setFont(new Font("Pokemon GB", Font.BOLD, 16));
+        turnIndicator.setOpaque(true);
+        turnIndicator.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+        
+        // Añadir el indicador en la parte superior
+        add(turnIndicator, BorderLayout.NORTH);
         
         centerWindow();
         setVisible(true);
@@ -59,6 +69,7 @@ public class MainWindow extends JFrame implements BattleGUIListener {
     public void updateUI() {
         battlePanel.updatePokemonStats();
         actionPanel.setCurrentPlayer(battle.getTurnoActual());
+        updateTurnIndicator(battle.getTurnoActual()); // Actualizar indicador al refrescar UI
         repaint();
     }
 
@@ -67,11 +78,26 @@ public class MainWindow extends JFrame implements BattleGUIListener {
         updateUI();
     }
 
-    @Override
+     @Override
     public void onTurnStarted(HumanTrainer trainer) {
+        // Actualizar el indicador de turno
+        updateTurnIndicator(trainer);
+        
         actionPanel.setCurrentPlayer(trainer);
         updateUI();
         actionPanel.addBattleText("¿Qué debería hacer " + trainer.getPokemonActivo().getNombre() + "?");
+    }
+
+    private void updateTurnIndicator(Trainer currentTrainer) {
+        if (currentTrainer == battle.getEntrenador1()) {
+            turnIndicator.setText("Turno de " + currentTrainer.getNombre());
+            turnIndicator.setForeground(Color.WHITE);
+            turnIndicator.setBackground(Color.RED);
+        } else {
+            turnIndicator.setText("Turno de " + currentTrainer.getNombre());
+            turnIndicator.setForeground(Color.WHITE);
+            turnIndicator.setBackground(Color.BLUE);
+        }
     }
 
     @Override

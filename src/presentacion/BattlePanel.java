@@ -18,18 +18,21 @@ public class BattlePanel extends JPanel {
     private JLabel enemyPokemonName;
     private JLabel playerPokemonLevel;
     private JLabel enemyPokemonLevel;
+    private JLabel playerNameLabel;
+    private JLabel enemyNameLabel;
     private Image backgroundImage;
     private Point enemyPokemonPosition = new Point(480, 100);
     private Point playerPokemonPosition = new Point(100, 305);
     private Point enemyInfoPosition = new Point(50, 180);
     private Point playerInfoPosition = new Point(450, 380);
 
-    public BattlePanel(Trainer player, Trainer enemy) {
-        this.player = player;
-        this.enemy = enemy;
+    public BattlePanel(Trainer player1, Trainer player2) {
+        this.player = player1;
+        this.enemy = player2;
         setLayout(null);
         setBackground(new Color(120, 200, 80));
 
+        setupPlayerNames();
         loadBackgroundImage();
         setupPokemonDisplays();
         setupInfoPanels();
@@ -155,30 +158,54 @@ public class BattlePanel extends JPanel {
         return null;
     }
 
-public void updatePokemonStats() {
-    // Actualizar stats del jugador
-    Pokemon playerPokemon = player.getPokemonActivo();
-    playerPokemonName.setText(playerPokemon.getNombre());
-    playerPokemonLevel.setText("Lv" + playerPokemon.getNivel());
-    playerHpBar.setMaximum(playerPokemon.getPs());
-    playerHpBar.setValue(playerPokemon.getPsActual());
-    playerHpBar.setString("HP: " + playerPokemon.getPsActual() + "/" + playerPokemon.getPs());
-    updateHpBarColor(playerHpBar);
-    loadPokemonImage(playerPokemon.getNombre(), playerPokemonImage, true);
+    public void updatePokemonStats() {
+        // Actualizar stats del jugador
+        Pokemon playerPokemon = player.getPokemonActivo();
+        playerPokemonName.setText(playerPokemon.getNombre());
+        playerPokemonLevel.setText("Lv" + playerPokemon.getNivel());
+        playerHpBar.setMaximum(playerPokemon.getPs());
+        playerHpBar.setValue(playerPokemon.getPsActual());
+        playerHpBar.setString("HP: " + playerPokemon.getPsActual() + "/" + playerPokemon.getPs());
+        updateHpBarColor(playerHpBar);
+        loadPokemonImage(playerPokemon.getNombre(), playerPokemonImage, true);
 
-    // Actualizar stats del enemigo
-    Pokemon enemyPokemon = enemy.getPokemonActivo();
-    enemyPokemonName.setText(enemyPokemon.getNombre());
-    enemyPokemonLevel.setText("Lv" + enemyPokemon.getNivel());
-    enemyHpBar.setMaximum(enemyPokemon.getPs());
-    enemyHpBar.setValue(enemyPokemon.getPsActual());
-    enemyHpBar.setString("HP: " + enemyPokemon.getPsActual() + "/" + enemyPokemon.getPs());
-    updateHpBarColor(enemyHpBar);
-    loadPokemonImage(enemyPokemon.getNombre(), enemyPokemonImage, false);
+        // Actualizar stats del enemigo
+        Pokemon enemyPokemon = enemy.getPokemonActivo();
+        enemyPokemonName.setText(enemyPokemon.getNombre());
+        enemyPokemonLevel.setText("Lv" + enemyPokemon.getNivel());
+        enemyHpBar.setMaximum(enemyPokemon.getPs());
+        enemyHpBar.setValue(enemyPokemon.getPsActual());
+        enemyHpBar.setString("HP: " + enemyPokemon.getPsActual() + "/" + enemyPokemon.getPs());
+        updateHpBarColor(enemyHpBar);
+        loadPokemonImage(enemyPokemon.getNombre(), enemyPokemonImage, false);
 
-    repaint();
-    revalidate();
-}
+        repaint();
+        revalidate();
+    }
+     private void setupPlayerNames() {
+        // Panel para nombres de jugadores
+        JPanel namesPanel = new JPanel(new GridLayout(1, 2));
+        namesPanel.setOpaque(false);
+        namesPanel.setBounds(0, 0, getWidth(), 30);
+        
+        // Nombre del jugador 1 (rojo)
+        playerNameLabel = new JLabel(player.getNombre(), SwingConstants.CENTER);
+        playerNameLabel.setFont(new Font("Pokemon GB", Font.BOLD, 14));
+        playerNameLabel.setForeground(Color.WHITE);
+        playerNameLabel.setBackground(new Color(200, 0, 0, 150));
+        playerNameLabel.setOpaque(true);
+        
+        // Nombre del jugador 2 (azul)
+        enemyNameLabel = new JLabel(enemy.getNombre(), SwingConstants.CENTER);
+        enemyNameLabel.setFont(new Font("Pokemon GB", Font.BOLD, 14));
+        enemyNameLabel.setForeground(Color.WHITE);
+        enemyNameLabel.setBackground(new Color(0, 0, 200, 150));
+        enemyNameLabel.setOpaque(true);
+        
+        namesPanel.add(playerNameLabel);
+        namesPanel.add(enemyNameLabel);
+        add(namesPanel);
+    }
 
     private void updateHpBarColor(JProgressBar hpBar) {
         double percentage = (double) hpBar.getValue() / hpBar.getMaximum();
