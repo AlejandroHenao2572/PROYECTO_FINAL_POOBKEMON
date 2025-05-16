@@ -124,6 +124,18 @@ public class MainWindow extends JFrame implements BattleGUIListener {
         }
     }
 
+    @Override
+    public void onPokemonRevivido(Trainer trainer, Pokemon pokemon) {
+        // Actualizar la interfaz
+        battlePanel.updatePokemonStats();
+        actionPanel.addBattleText(trainer.getNombre() + " ha revivido a " + pokemon.getNombre());
+        updateUI();
+    }
+
+    public void useReviveItem(int itemIndex, int pokemonIndex) {
+        battle.usarItemRevivir(itemIndex, pokemonIndex);
+    }
+
     public void attackSelected(int moveIndex) {
         battle.movimientoSeleccionado(moveIndex);
     }

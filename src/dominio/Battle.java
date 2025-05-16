@@ -298,6 +298,48 @@ public class Battle {
     public boolean isCambioForzado() {
         return cambioForzado;
     }
+
+    /**
+     * Procesa el uso de un item de revivir
+     * @param itemIndex Índice del item en la mochila
+     * @param pokemonIndex Índice del Pokémon a revivir
+     */
+    public void usarItemRevivir(int itemIndex, int pokemonIndex) {
+        if (!esperandoAccion) return;
+        
+        try {
+            // Validar índices
+            if (itemIndex < 0 || itemIndex >= turnoActual.getItems().size() ||
+                pokemonIndex < 0 || pokemonIndex >= turnoActual.getEquipo().size()) {
+                return;
+            }
+            
+            Item item = turnoActual.getItems().get(itemIndex);
+            Pokemon pokemon = turnoActual.getEquipo().get(pokemonIndex);
+            
+            // Verificar que el item sea de revivir y el Pokémon esté debilitado
+            if (item instanceof Revive && pokemon.estaDebilitado()) {
+                // Usar el item
+                item.usarEn(pokemon);
+                
+                // Eliminar el item de la mochila
+                turnoActual.getItems().remove(itemIndex);
+                
+                // Notificar a la interfaz
+                if (listener != null) {
+                    listener.onPokemonRevivido(turnoActual, pokemon);
+                }
+                
+                // Si revivimos al Pokémon activo, continuar el turno
+                if (pokemon == turnoActual.getPokemonActivo()) {
+                    esperandoAccion = true;
+                    iniciarTemporizadorTurno();
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error al usar item de revivir: " + e.getMessage());
+        }
+    }
     
 }
 
