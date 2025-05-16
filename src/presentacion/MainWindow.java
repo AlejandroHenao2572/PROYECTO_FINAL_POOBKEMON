@@ -3,7 +3,7 @@ package presentacion;
 import dominio.*;
 import javax.swing.*;
 import java.awt.*;
-
+//prueba de commit
 public class MainWindow extends JFrame implements BattleGUIListener {
     private BattlePanel battlePanel;
     private ActionPanel actionPanel;
