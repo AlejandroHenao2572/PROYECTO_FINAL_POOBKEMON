@@ -128,6 +128,17 @@ public abstract class Trainer {
         return debiles;
     }
 
+      
+    public ArrayList<Pokemon> getPokemonsActivos() {
+        ArrayList<Pokemon> vivos = new ArrayList<>();
+        for(Pokemon p : equipo){
+            if(!p.estaDebilitado()){
+                vivos.add(p);
+            }
+        }
+        return vivos;
+    }
+
     /**
      * Obtiene la lista de items del entrenador
      *
