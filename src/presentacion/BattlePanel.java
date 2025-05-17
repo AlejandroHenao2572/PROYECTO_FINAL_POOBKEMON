@@ -23,10 +23,11 @@ public class BattlePanel extends JPanel {
     private JLabel enemyNameLabel;
     private Image backgroundImage;
     private Dimension pokemonSize = new Dimension(200, 200); // Tamaño aumentado
-    private Point enemyPokemonPosition = new Point(480, 80);  // Posición ajustada
+    private Point enemyPokemonPosition = new Point(490, 80);  // Posición ajustada
     private Point playerPokemonPosition = new Point(80, 240); // Posición ajustada
-    private Point enemyInfoPosition = new Point(30, 180);  // Ajustado para el nuevo tamaño
-    private Point playerInfoPosition = new Point(400, 380); // Ajustado para el nuevo tamaño
+    private Point enemyInfoPosition = new Point(140, 120);  
+    private Point playerInfoPosition = new Point(350, 350); 
+    private Dimension infoPanelSize = new Dimension(270, 90); 
     private JPanel playerPokeballPanel;
     private JPanel enemyPokeballPanel;
     private ImageIcon fullBallIcon;
@@ -86,13 +87,16 @@ public class BattlePanel extends JPanel {
 
     private void setupInfoPanels() {
         JPanel enemyInfo = createInfoPanel(false);
-        enemyInfo.setBounds(enemyInfoPosition.x, enemyInfoPosition.y, 250, 80);
+        enemyInfo.setBounds(enemyInfoPosition.x, enemyInfoPosition.y, 
+                        infoPanelSize.width, infoPanelSize.height);
         add(enemyInfo);
 
         JPanel playerInfo = createInfoPanel(true);
-        playerInfo.setBounds(playerInfoPosition.x, playerInfoPosition.y, 250, 80);
+        playerInfo.setBounds(playerInfoPosition.x, playerInfoPosition.y, 
+                        infoPanelSize.width, infoPanelSize.height);
         add(playerInfo);
     }
+
 
     private JPanel createInfoPanel(boolean isPlayer) {
         Pokemon pokemon = isPlayer ? player.getPokemonActivo() : enemy.getPokemonActivo();
@@ -111,14 +115,15 @@ public class BattlePanel extends JPanel {
 
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setOpaque(false);
-        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
+        topPanel.setBorder(BorderFactory.createEmptyBorder(8, 15, 5, 15)); // Más espacio interno
 
         JLabel nameLabel = new JLabel(pokemon.getNombre());
-        nameLabel.setFont(new Font("Pokemon GB", Font.BOLD, 14));
+        int fontSize = pokemon.getNombre().length() > 12 ? 14 : 16;
+        nameLabel.setFont(new Font("Pokemon GB", Font.BOLD, fontSize));
         nameLabel.setForeground(Color.WHITE);
 
         JLabel levelLabel = new JLabel("Lv" + pokemon.getNivel());
-        levelLabel.setFont(new Font("Pokemon GB", Font.BOLD, 14));
+        levelLabel.setFont(new Font("Pokemon GB", Font.BOLD, 16)); // Tamaño aumentado
         levelLabel.setForeground(Color.WHITE);
         levelLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 

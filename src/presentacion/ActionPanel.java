@@ -2,6 +2,9 @@ package presentacion;
 
 import dominio.*;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
+
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -35,11 +38,14 @@ public class ActionPanel extends JPanel {
 
         // Etiqueta para mostrar la ultima accion
         lastActionLabel = new JLabel(" ", SwingConstants.CENTER);
-        lastActionLabel.setFont(new Font("Pokemon GB", Font.PLAIN, 12));
+        lastActionLabel.setFont(new Font("Pokemon GB", Font.BOLD, 12));
         lastActionLabel.setForeground(Color.WHITE);
-        lastActionLabel.setBackground(new Color(64, 64, 64));
+        lastActionLabel.setBackground(new Color(14, 174, 147));
         lastActionLabel.setOpaque(true);
-        lastActionLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        lastActionLabel.setBorder(BorderFactory.createCompoundBorder(
+            createRoundedBorder(),
+            BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        ));
 
         // Panel de botones
         buttonPanel = new JPanel(new GridLayout(2, 2));
@@ -48,10 +54,11 @@ public class ActionPanel extends JPanel {
         String[] buttonLabels = {"LUCHAR", "POKEMON", "MOCHILA", "HUIR"};
         for (String label : buttonLabels) {
             JButton button = new JButton(label);
-            button.setFont(new Font("Pokemon GB", Font.BOLD, 12));
+            button.setFont(new Font("Pokemon GB", Font.BOLD, 15));
             button.setForeground(Color.WHITE);
             button.setBackground(new Color(14, 174, 147));
             button.setFocusPainted(false);
+            button.setBorder(createRoundedBorder());
 
             switch(label) {
                 case "LUCHAR":
@@ -85,11 +92,13 @@ public class ActionPanel extends JPanel {
 
         for (int i = 0; i < activePokemon.getMovimientos().size(); i++) {
             Movimiento move = activePokemon.getMovimientos().get(i);
-            JButton moveButton = new JButton(move.getNombre() + " PP:" + move.getPP());
-            moveButton.setFont(new Font("Pokemon GB", Font.PLAIN, 12));
+            JButton moveButton = new JButton("<html><center>" + move.getNombre() + "PP: " + move.getPP() + "</center></html>");
+            moveButton.setFont(new Font("Pokemon GB", Font.BOLD, 10));
             moveButton.setForeground(Color.WHITE);
             moveButton.setBackground(new Color(14, 174, 147));
             moveButton.setFocusPainted(false);
+            moveButton.setBorder(createRoundedBorder());
+            moveButton.setPreferredSize(new Dimension(180, 30)); 
 
             int moveIndex = i;
             moveButton.addActionListener(e -> {
@@ -111,6 +120,7 @@ public class ActionPanel extends JPanel {
         backButton.setBackground(new Color(14, 174, 147));
         backButton.setFocusPainted(false);
         backButton.addActionListener(e -> resetButtons());
+        backButton.setBorder(createRoundedBorder());
 
         buttonPanel.add(backButton);
         buttonPanel.revalidate();
@@ -137,6 +147,7 @@ public class ActionPanel extends JPanel {
             pokemonButton.setForeground(Color.WHITE);
             pokemonButton.setBackground(new Color(14, 174, 147));
             pokemonButton.setFocusPainted(false);
+            pokemonButton.setBorder(createRoundedBorder());
     
             // Solo permitir cambiar a Pokémon no debilitados y que no sean el actual
             if (pokemon.estaDebilitado() || pokemon == currentPlayer.getPokemonActivo()) {
@@ -161,10 +172,12 @@ public class ActionPanel extends JPanel {
             backButton.setFocusPainted(false);
             backButton.addActionListener(e -> resetButtons());
             buttonPanel.add(backButton);
+            buttonPanel.setBorder(createRoundedBorder());
         }
     
         buttonPanel.revalidate();
         buttonPanel.repaint();
+        buttonPanel.setBorder(createRoundedBorder());
     }
 
 /**
@@ -187,6 +200,7 @@ private void showItemOptions() {
             itemButton.setForeground(Color.WHITE);
             itemButton.setBackground(new Color(14, 174, 147));
             itemButton.setFocusPainted(false);
+            itemButton.setBorder(createRoundedBorder());
 
             int itemIndex = i;
             itemButton.addActionListener(e -> {
@@ -209,7 +223,7 @@ private void showItemOptions() {
     backButton.setBackground(new Color(14, 174, 147));
     backButton.setFocusPainted(false);
     backButton.addActionListener(e -> resetButtons());
-
+    backButton.setBorder(createRoundedBorder());
     buttonPanel.add(backButton);
     buttonPanel.revalidate();
     buttonPanel.repaint();
@@ -240,7 +254,7 @@ private void showReviveOptions(int itemIndex) {
                 pokemonButton.setForeground(Color.WHITE);
                 pokemonButton.setBackground(new Color(14, 174, 147));
                 pokemonButton.setFocusPainted(false);
-
+                pokemonButton.setBorder(createRoundedBorder());
                 int pokemonIndex = i;
                 pokemonButton.addActionListener(e -> {
                     // Confirmar uso del item
@@ -269,6 +283,7 @@ private void showReviveOptions(int itemIndex) {
     backButton.setBackground(new Color(14, 174, 147));
     backButton.setFocusPainted(false);
     backButton.addActionListener(e -> showItemOptions());
+    backButton.setBorder(createRoundedBorder());
 
     buttonPanel.add(backButton);
     buttonPanel.revalidate();
@@ -289,7 +304,7 @@ private void showReviveOptions(int itemIndex) {
             button.setForeground(Color.WHITE);
             button.setBackground(new Color(14, 174, 147));
             button.setFocusPainted(false);
-
+            button.setBorder(createRoundedBorder());
             switch(label) {
                 case "LUCHAR":
                     button.addActionListener(e -> showAttackOptions());
@@ -378,5 +393,9 @@ private void showReviveOptions(int itemIndex) {
      */
     public void setCurrentPlayer(Trainer player) {
         this.currentPlayer = player;
+    }
+
+    private Border createRoundedBorder() {
+        return new LineBorder(Color.BLACK, 1, true); // grosor 2, redondeado true
     }
 }
