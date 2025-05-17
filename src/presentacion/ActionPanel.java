@@ -4,7 +4,6 @@ import dominio.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 /**
  * Clase que representa el panel de acciones del juego

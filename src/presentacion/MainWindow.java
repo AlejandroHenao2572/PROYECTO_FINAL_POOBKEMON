@@ -28,7 +28,16 @@ public class MainWindow extends JFrame implements BattleGUIListener {
             System.err.println("Error cargando fuente Pokémon: " + e.getMessage());
         }
 
+        // Mostrar el diálogo de lanzamiento de moneda
         this.battle = new Battle(player1, player2);
+        if(battle.getTurnoActual() == player1){
+            CoinFlipDialog coinFlip = new CoinFlipDialog(this, true);
+            coinFlip.setVisible(true); 
+        }
+        else {
+            CoinFlipDialog coinFlip = new CoinFlipDialog(this, false);
+            coinFlip.setVisible(true); 
+        }
         this.battle.setListener(this);
         
         this.battlePanel = new BattlePanel(player1, player2);

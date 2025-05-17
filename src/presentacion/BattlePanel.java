@@ -6,6 +6,7 @@
     import java.awt.*;
     import java.io.IOException;
     import java.net.URL;
+    import java.util.*;
 
     public class BattlePanel extends JPanel {
         private Trainer player;
@@ -25,6 +26,10 @@
         private Point playerPokemonPosition = new Point(100, 305);
         private Point enemyInfoPosition = new Point(50, 180);
         private Point playerInfoPosition = new Point(450, 380);
+        private JPanel playerPokeballPanel;
+        private JPanel enemyPokeballPanel;
+        private ImageIcon fullBallIcon;
+        private ImageIcon emptyBallIcon;
 
         public BattlePanel(Trainer player1, Trainer player2) {
             this.player = player1;
@@ -36,6 +41,8 @@
             loadBackgroundImage();
             setupPokemonDisplays();
             setupInfoPanels();
+            fullBallIcon = new ImageIcon(getClass().getClassLoader().getResource("graficos/items/pokeball_full.png"));
+            emptyBallIcon = new ImageIcon(getClass().getClassLoader().getResource("graficos/items/pokeball_empty.png"));
         }
 
         private void loadBackgroundImage() {
@@ -126,6 +133,24 @@
                 enemyHpBar = hpBar;
             }
 
+            JPanel ballPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
+            ballPanel.setOpaque(false);
+
+            ArrayList<Pokemon> equipo = isPlayer ? player.getEquipo() : enemy.getEquipo();
+            for (Pokemon p : equipo) {
+                boolean vivo = p.getPsActual() > 0;
+                JLabel ballLabel = new JLabel(vivo ? fullBallIcon : emptyBallIcon);
+                ballPanel.add(ballLabel);
+            }
+
+            panel.add(ballPanel, BorderLayout.SOUTH);
+
+            if (isPlayer) {
+                playerPokeballPanel = ballPanel;
+            } else {
+                enemyPokeballPanel = ballPanel;
+            }
+
             return panel;
         }
 
@@ -178,7 +203,8 @@
             enemyHpBar.setString("HP: " + enemyPokemon.getPsActual() + "/" + enemyPokemon.getPs());
             updateHpBarColor(enemyHpBar);
             loadPokemonImage(enemyPokemon.getNombre(), enemyPokemonImage, false);
-
+            updatePokeballPanel(playerPokeballPanel, player.getEquipo());
+            updatePokeballPanel(enemyPokeballPanel, enemy.getEquipo());
             repaint();
             revalidate();
         }
@@ -216,6 +242,17 @@
             } else {
                 hpBar.setForeground(new Color(14, 174, 147));
             }
+        }
+
+        private void updatePokeballPanel(JPanel panel,ArrayList<Pokemon> equipo) {
+            panel.removeAll();
+                for (Pokemon p : equipo) {
+                    boolean vivo = p.getPsActual() > 0;
+                    JLabel icon = new JLabel(vivo ? fullBallIcon : emptyBallIcon);
+                    panel.add(icon);
+                }
+                panel.revalidate();
+                panel.repaint();
         }
 
         @Override
