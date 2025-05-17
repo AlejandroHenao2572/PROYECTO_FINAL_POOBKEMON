@@ -45,4 +45,6 @@ public interface BattleGUIListener {
     void onPokemonRevivido(Trainer trainer, Pokemon pokemon);
 
     void onMoveUsed(Trainer trainer, String result);
+
+    public void onItemUsed(Trainer trainer, String result);
 }

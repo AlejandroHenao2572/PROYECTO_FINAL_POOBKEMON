@@ -280,10 +280,14 @@ public class Battle {
      * 
      * @param indiceItem Índice del ítem seleccionado
      */
-    public void itemSeleccionado(int indiceItem) {
-        if (!esperandoAccion || isPaused()) return;
+    public String itemSeleccionado(int indiceItem) {
+        if (!esperandoAccion || isPaused()) return null;
         
-        turnoActual.onItemSelected(indiceItem);
+        String message = turnoActual.onItemSelected(indiceItem);;
+        if (listener != null) {
+            listener.onMoveUsed(turnoActual, message);
+        }
+        return message;
     }
 
     // Métodos getter

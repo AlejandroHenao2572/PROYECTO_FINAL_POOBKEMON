@@ -25,13 +25,13 @@ public class Revive extends Item {
      * @param objetivo Pokemon al que se le aplicara Revive
      */
     @Override
-    public void usarEn(Pokemon objetivo) {
+    public String usarEn(Pokemon objetivo) {
         if (objetivo.estaDebilitado()) {
             int psRevive = objetivo.getPs() / 2;
             objetivo.restaurarPS(psRevive);
-            System.out.println("Se revivio a " + objetivo.getNombre() + " con " + psRevive + " PS");
+            return "Se revivio a " + objetivo.getNombre() + " con " + psRevive + " PS";
         } else {
-            System.out.println("Solo puedes usar Revive en un Pokemon debilitado");
+            return "Solo puedes usar Revive en un Pokemon debilitado";
         }
     }
 }

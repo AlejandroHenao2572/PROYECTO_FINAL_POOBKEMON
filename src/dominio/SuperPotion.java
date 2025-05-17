@@ -28,12 +28,12 @@ public class SuperPotion extends Item {
      * @param objetivo Pokemon al que se le aplicara la SuperPotion
      */
     @Override
-    public void usarEn(Pokemon objetivo) {
+    public String usarEn(Pokemon objetivo) {
         if (!objetivo.estaDebilitado()) {
             objetivo.restaurarPS(CURA_PS);
-            System.out.println("Se restauraron 50 PS a " + objetivo.getNombre());
+            return "Se restauraron 50 PS a " + objetivo.getNombre();
         } else {
-            System.out.println("No puedes usar SuperPotion en un Pokemon debilitado");
+            return "No puedes usar SuperPotion en un Pokemon debilitado";
         }
     }
 }

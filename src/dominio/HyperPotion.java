@@ -26,12 +26,12 @@ public class HyperPotion extends Item {
      * @param objetivo Pokemon a curar
      */
     @Override
-    public void usarEn(Pokemon objetivo) {
+    public String usarEn(Pokemon objetivo) {
         if (!objetivo.estaDebilitado()) {
             objetivo.restaurarPS(CURA_PS);
-            System.out.println("Se restauraron 200 PS a " + objetivo.getNombre());
+            return "Se restauraron 200 PS a " + objetivo.getNombre();
         } else {
-            System.out.println("No puedes usar HyperPotion en un Pokemon debilitado.");
+            return "No puedes usar HyperPotion en un Pokemon debilitado.";
         }
     }
 }

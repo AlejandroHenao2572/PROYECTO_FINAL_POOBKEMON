@@ -80,15 +80,17 @@ public class HumanTrainer extends Trainer {
      * 
      * @param itemIndex Indice del item
      */
-    public void onItemSelected(int itemIndex) {
+    public String onItemSelected(int itemIndex) {
         if (itemIndex >= 0 && itemIndex < items.size()) {
             Item item = items.get(itemIndex);
-            item.usarEn(pokemonActivo);
+            String message = item.usarEn(pokemonActivo);
             items.remove(itemIndex);
             if (listener != null) {
                 listener.onActionPerformed();
             }
+            return message;
         }
+        return null;
     }
 
     public void cambiarPokemon(int indicePokemon) {

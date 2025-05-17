@@ -29,12 +29,12 @@ public class Potion extends Item {
      * @param objetivo Pokemon al que se le aplicara la Potion
      */
     @Override
-    public void usarEn(Pokemon objetivo) {
+    public String usarEn(Pokemon objetivo) {
         if (!objetivo.estaDebilitado()) {
             objetivo.restaurarPS(CURA_PS);
-            System.out.println("Se restauraron 20 PS a " + objetivo.getNombre());
+            return "Se restauraron 20 PS a " + objetivo.getNombre();
         } else {
-            System.out.println("No puedes usar Potion en un Pokemon debilitado");
+            return "No puedes usar Potion en un Pokemon debilitado";
         }
     }
 }

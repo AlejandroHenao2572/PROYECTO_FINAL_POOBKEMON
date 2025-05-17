@@ -34,5 +34,5 @@ public abstract class Item {
      * 
      * @param objetivo Pokemon sobre el que se usa el item
      */
-    public abstract void usarEn(Pokemon objetivo);
+    public abstract String usarEn(Pokemon objetivo);
 }
