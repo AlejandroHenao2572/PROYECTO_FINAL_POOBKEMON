@@ -42,6 +42,7 @@ public class PokemonBattleGame {
     
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
+            TablaTipos.inicializarEfectividades();
             PvPNormalSetUp setup = new PvPNormalSetUp();
             setup.setVisible(true);
         });

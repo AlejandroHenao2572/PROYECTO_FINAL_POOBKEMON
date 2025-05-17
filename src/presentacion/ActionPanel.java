@@ -92,14 +92,14 @@ public class ActionPanel extends JPanel {
 
         for (int i = 0; i < activePokemon.getMovimientos().size(); i++) {
             Movimiento move = activePokemon.getMovimientos().get(i);
-            JButton moveButton = new JButton("<html><center>" + move.getNombre() + "PP: " + move.getPP() + "</center></html>");
+            JButton moveButton = new JButton("<html><center>" + move.getNombre() + " PP: " + move.getPP() + "</center></html>");
             moveButton.setFont(new Font("Pokemon GB", Font.BOLD, 10));
             moveButton.setForeground(Color.WHITE);
             moveButton.setBackground(new Color(14, 174, 147));
             moveButton.setFocusPainted(false);
             moveButton.setBorder(createRoundedBorder());
-            moveButton.setPreferredSize(new Dimension(180, 30)); 
-
+            moveButton.setPreferredSize(new Dimension(180, 30));
+            
             int moveIndex = i;
             moveButton.addActionListener(e -> {
                 mainWindow.attackSelected(moveIndex);

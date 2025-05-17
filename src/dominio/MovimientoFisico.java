@@ -10,7 +10,7 @@ import java.util.Random;
  * Autores David Patacon y Daniel Hueso
  * Version 1.0
  */
-public class MovimientoFisico extends Movimiento {
+public class MovimientoFisico extends Movimiento implements TablaTipos {
     
     /**
      * Crea un nuevo movimiento fisico
@@ -43,9 +43,9 @@ public class MovimientoFisico extends Movimiento {
             return message;
         }
     
-        double multiplicador = TablaTipos.getMultiplicador(tipo, objetivo.getTipo());
+        double multiplicador = getMultiplicador(tipo, objetivo.getTipo());
         if (objetivo.getTipoSecundario() != null) {
-            multiplicador *= TablaTipos.getMultiplicador(tipo, objetivo.getTipoSecundario());
+            multiplicador *= getMultiplicador(tipo, objetivo.getTipoSecundario());
         }
     
         // STAB
@@ -59,7 +59,7 @@ public class MovimientoFisico extends Movimiento {
     
         objetivo.recibirDaño(dano);
         usar();
-    
+        System.out.println(multiplicador);
        String message = String.format("%s usó %s y causó %d de daño (x%.1f)%n", atacante.getNombre(), nombre, dano, multiplicador);
         return message;
     }

@@ -10,7 +10,7 @@ import java.util.Random;
  * Autores David Patacon y Daniel Hueso
  * Version 1.0
  */
-public class MovimientoEspecial extends Movimiento {
+public class MovimientoEspecial extends Movimiento implements TablaTipos {
     
     /**
      * Crea un nuevo movimiento especial
@@ -43,9 +43,9 @@ public class MovimientoEspecial extends Movimiento {
             return message;
         }
 
-        double multiplicador = TablaTipos.getMultiplicador(tipo, objetivo.getTipo());
+        double multiplicador = getMultiplicador(tipo, objetivo.getTipo());
         if (objetivo.getTipoSecundario() != null) {
-            multiplicador *= TablaTipos.getMultiplicador(tipo, objetivo.getTipoSecundario());
+            multiplicador *= getMultiplicador(tipo, objetivo.getTipoSecundario());
         }
 
         if (atacante.getTipo().equals(tipo)) {
@@ -58,7 +58,7 @@ public class MovimientoEspecial extends Movimiento {
 
         objetivo.recibirDaño(dano);
         usar();
-
+         System.out.println(multiplicador);
        String message = String.format("%s usó %s y causó %d de daño (x%.1f)%n", atacante.getNombre(), nombre, dano, multiplicador);
         return message;
     }

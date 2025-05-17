@@ -3,24 +3,11 @@ package dominio;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Clase que maneja las efectividades de tipos Pokemon
- *
- * @author David Patacon
- * @author Daniel Hueso
- * @version 1.0
- */
-public class TablaTipos {
-    private static final Map<String, Map<String, Double>> efectividades = new HashMap<>();
-    private static boolean modoTest = false;
+public interface TablaTipos {
+    static final Map<String, Map<String, Double>> efectividades = new HashMap<>();
+    static boolean modoTest = false;
 
-    static {
-        // Inicializar tabla de tipos
-        inicializarEfectividades();
-    }
-
-    private static void inicializarEfectividades() {
-        // Efectividades de tipos
+    static void inicializarEfectividades() {
         agregarEfectividad("Normal", "Roca", 0.5);
         agregarEfectividad("Normal", "Fantasma", 0.0);
         agregarEfectividad("Fuego", "Fuego", 0.5);
@@ -56,23 +43,22 @@ public class TablaTipos {
         agregarEfectividad("Tierra", "Roca", 2.0);
     }
 
-    private static void agregarEfectividad(String atacante, String defensor, double multiplicador) {
+    static void agregarEfectividad(String atacante, String defensor, double multiplicador) {
         efectividades.computeIfAbsent(atacante, k -> new HashMap<>()).put(defensor, multiplicador);
     }
 
     /**
-     * Obtiene el multiplicador de efectividad entre tipos
-     * @param tipoAtacante Tipo del movimiento atacante
-     * @param tipoDefensor Tipo del Pokemon defensor
-     * @return Multiplicador de dano (0.0 0.5 1.0 o 2.0)
+     * Devuelve el multiplicador de efectividad entre tipos
      */
-    public static double getMultiplicador(String tipoAtacante, String tipoDefensor) {
+    default double getMultiplicador(String tipoAtacante, String tipoDefensor) {
         if (modoTest) return 1.0;
         return efectividades.getOrDefault(tipoAtacante, new HashMap<>())
                             .getOrDefault(tipoDefensor, 1.0);
     }
 
-    public static void setModoTest(boolean test) {
-        modoTest = test;
+    static void setModoTest(boolean test) {
+        // No se puede modificar variable static en interfaz directamente
+        // En un caso real se movería a una clase util o singleton
+        throw new UnsupportedOperationException("No se puede cambiar el modoTest desde interfaz.");
     }
 }
