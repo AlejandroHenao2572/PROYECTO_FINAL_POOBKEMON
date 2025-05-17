@@ -34,6 +34,11 @@ public class PvPNormalSetUp extends JFrame {
         add("gengar"); add("dragonite"); add("snorlax"); add("raichu");
         add("togetic"); add("tyranitar"); add("gardevoir");
         add("metagross"); add("donphan"); add("machamp"); add("delibird");
+        add("scizor"); add("mewtwo");add("torkoal"); add("milotic"); add("sceptile");add("manectric");
+        add("glalie"); add("kabutops"); add("whiscash"); add("masquerain");
+        add("banette"); add("altaria"); add("claydol"); add("hariyama");
+        add("swellow"); add("aggron"); add("weezing"); add("nidoking");
+        add("zangoose"); add("clefable"); add("absol"); add("chimecho");
     }};
 
     private ArrayList<String> nombresEquipo1 = new ArrayList<>();

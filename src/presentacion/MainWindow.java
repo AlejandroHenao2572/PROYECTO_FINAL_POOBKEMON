@@ -56,7 +56,7 @@ public class MainWindow extends JFrame implements BattleGUIListener {
         // 4. Configuramos el listener de la batalla
         this.battle.setListener(this);
         
-        // 5. Mostrar el diálogo de lanzamiento de moneda (ahora battle está inicializado)
+        // 5. Mostrar el diálogo de lanzamiento de moneda
         if(battle.getTurnoActual() == player1){
             CoinFlipDialog coinFlip = new CoinFlipDialog(this, true);
             coinFlip.setVisible(true); 
