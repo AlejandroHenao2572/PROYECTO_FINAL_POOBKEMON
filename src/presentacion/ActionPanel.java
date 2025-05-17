@@ -180,115 +180,105 @@ public class ActionPanel extends JPanel {
         buttonPanel.setBorder(createRoundedBorder());
     }
 
-/**
- * Muestra las opciones de items disponibles para usar
- * Remueve los botones principales y muestra los items en la mochila
- */
-private void showItemOptions() {
-    buttonPanel.removeAll();
+    /**
+     * Muestra las opciones de items disponibles para usar
+     * Remueve los botones principales y muestra los items en la mochila
+     */
+    private void showItemOptions() {
+        buttonPanel.removeAll();
 
-    if (currentPlayer.getItems().isEmpty()) {
-        JLabel noItemsLabel = new JLabel("No tienes items");
-        noItemsLabel.setFont(new Font("Pokemon GB", Font.PLAIN, 12));
-        noItemsLabel.setForeground(Color.WHITE);
-        buttonPanel.add(noItemsLabel);
-    } else {
-        for (int i = 0; i < currentPlayer.getItems().size(); i++) {
-            Item item = currentPlayer.getItems().get(i);
-            JButton itemButton = new JButton(item.getNombre());
-            itemButton.setFont(new Font("Pokemon GB", Font.PLAIN, 12));
-            itemButton.setForeground(Color.WHITE);
-            itemButton.setBackground(new Color(14, 174, 147));
-            itemButton.setFocusPainted(false);
-            itemButton.setBorder(createRoundedBorder());
+        if (currentPlayer.getItems().isEmpty()) {
+            JLabel noItemsLabel = new JLabel("No tienes items");
+            noItemsLabel.setFont(new Font("Pokemon GB", Font.PLAIN, 12));
+            noItemsLabel.setForeground(Color.WHITE);
+            buttonPanel.add(noItemsLabel);
+        } else {
+            for (int i = 0; i < currentPlayer.getItems().size(); i++) {
+                Item item = currentPlayer.getItems().get(i);
+                JButton itemButton = new JButton(item.getNombre());
+                itemButton.setFont(new Font("Pokemon GB", Font.PLAIN, 12));
+                itemButton.setForeground(Color.WHITE);
+                itemButton.setBackground(new Color(14, 174, 147));
+                itemButton.setFocusPainted(false);
+                itemButton.setBorder(createRoundedBorder());
 
-            int itemIndex = i;
-            itemButton.addActionListener(e -> {
-                if (item instanceof Revive) {
-                    showReviveOptions(itemIndex); // Mostrar opciones para revivir
-                } else {
-                    mainWindow.useItemSelected(itemIndex);
-                    resetButtons();
-                }
-            });
-
-            buttonPanel.add(itemButton);
-        }
-    }
-
-    // Boton de regreso
-    JButton backButton = new JButton("VOLVER");
-    backButton.setFont(new Font("Pokemon GB", Font.BOLD, 12));
-    backButton.setForeground(Color.WHITE);
-    backButton.setBackground(new Color(14, 174, 147));
-    backButton.setFocusPainted(false);
-    backButton.addActionListener(e -> resetButtons());
-    backButton.setBorder(createRoundedBorder());
-    buttonPanel.add(backButton);
-    buttonPanel.revalidate();
-    buttonPanel.repaint();
-}
-
-/**
- * Muestra las opciones para seleccionar qué Pokémon revivir
- * @param itemIndex Índice del item de revivir en la mochila
- */
-private void showReviveOptions(int itemIndex) {
-    buttonPanel.removeAll();
-    
-    // Obtener Pokémon debilitados
-    ArrayList<Pokemon> debilitados = currentPlayer.getPokemonsDebilitados();
-    
-    if (debilitados.isEmpty()) {
-        JLabel noDebilitadosLabel = new JLabel("No hay Pokémon debilitados");
-        noDebilitadosLabel.setFont(new Font("Pokemon GB", Font.PLAIN, 12));
-        noDebilitadosLabel.setForeground(Color.WHITE);
-        buttonPanel.add(noDebilitadosLabel);
-    } else {
-        // Mostrar opciones para cada Pokémon debilitado
-        for (int i = 0; i < currentPlayer.getEquipo().size(); i++) {
-            Pokemon pokemon = currentPlayer.getEquipo().get(i);
-            if (pokemon.estaDebilitado()) {
-                JButton pokemonButton = new JButton(pokemon.getNombre());
-                pokemonButton.setFont(new Font("Pokemon GB", Font.PLAIN, 12));
-                pokemonButton.setForeground(Color.WHITE);
-                pokemonButton.setBackground(new Color(14, 174, 147));
-                pokemonButton.setFocusPainted(false);
-                pokemonButton.setBorder(createRoundedBorder());
-                int pokemonIndex = i;
-                pokemonButton.addActionListener(e -> {
-                    // Confirmar uso del item
-                    int confirm = JOptionPane.showConfirmDialog(
-                        mainWindow,
-                        "¿Usar " + currentPlayer.getItems().get(itemIndex).getNombre() + 
-                        " en " + pokemon.getNombre() + "?",
-                        "Confirmar",
-                        JOptionPane.YES_NO_OPTION);
-                    
-                    if (confirm == JOptionPane.YES_OPTION) {
-                        mainWindow.useReviveItem(itemIndex, pokemonIndex);
+                int itemIndex = i;
+                itemButton.addActionListener(e -> {
+                    if (item instanceof Revive) {
+                        showReviveOptions(itemIndex); // Mostrar opciones para revivir
+                    } else {
+                        mainWindow.useItemSelected(itemIndex);
+                        resetButtons();
                     }
-                    resetButtons();
                 });
 
-                buttonPanel.add(pokemonButton);
+                buttonPanel.add(itemButton);
             }
         }
+
+        // Boton de regreso
+        JButton backButton = new JButton("VOLVER");
+        backButton.setFont(new Font("Pokemon GB", Font.BOLD, 12));
+        backButton.setForeground(Color.WHITE);
+        backButton.setBackground(new Color(14, 174, 147));
+        backButton.setFocusPainted(false);
+        backButton.addActionListener(e -> resetButtons());
+        backButton.setBorder(createRoundedBorder());
+        buttonPanel.add(backButton);
+        buttonPanel.revalidate();
+        buttonPanel.repaint();
     }
 
-    // Botón de volver
-    JButton backButton = new JButton("VOLVER");
-    backButton.setFont(new Font("Pokemon GB", Font.BOLD, 12));
-    backButton.setForeground(Color.WHITE);
-    backButton.setBackground(new Color(14, 174, 147));
-    backButton.setFocusPainted(false);
-    backButton.addActionListener(e -> showItemOptions());
-    backButton.setBorder(createRoundedBorder());
+    /**
+     * Muestra las opciones para seleccionar qué Pokémon revivir
+     * @param itemIndex Índice del item de revivir en la mochila
+     */
+    private void showReviveOptions(int itemIndex) {
+        buttonPanel.removeAll();
+        
+        // Obtener Pokémon debilitados
+        ArrayList<Pokemon> debilitados = currentPlayer.getPokemonsDebilitados();
+        
+        if (debilitados.isEmpty()) {
+            JLabel noDebilitadosLabel = new JLabel("No hay Pokémon debilitados");
+            noDebilitadosLabel.setFont(new Font("Pokemon GB", Font.PLAIN, 12));
+            noDebilitadosLabel.setForeground(Color.WHITE);
+            buttonPanel.add(noDebilitadosLabel);
+        } else {
+            // Mostrar opciones para cada Pokémon debilitado
+            for (int i = 0; i < currentPlayer.getEquipo().size(); i++) {
+                Pokemon pokemon = currentPlayer.getEquipo().get(i);
+                if (pokemon.estaDebilitado()) {
+                    JButton pokemonButton = new JButton(pokemon.getNombre());
+                    pokemonButton.setFont(new Font("Pokemon GB", Font.PLAIN, 12));
+                    pokemonButton.setForeground(Color.WHITE);
+                    pokemonButton.setBackground(new Color(14, 174, 147));
+                    pokemonButton.setFocusPainted(false);
+                    pokemonButton.setBorder(createRoundedBorder());
+                    int pokemonIndex = i;
+                    pokemonButton.addActionListener(e -> {
+                            mainWindow.useReviveItem(itemIndex, pokemonIndex);
+                        resetButtons();
+                    });
 
-    buttonPanel.add(backButton);
-    buttonPanel.revalidate();
-    buttonPanel.repaint();
-}
+                    buttonPanel.add(pokemonButton);
+                }
+            }
+        }
+
+        // Botón de volver
+        JButton backButton = new JButton("VOLVER");
+        backButton.setFont(new Font("Pokemon GB", Font.BOLD, 12));
+        backButton.setForeground(Color.WHITE);
+        backButton.setBackground(new Color(14, 174, 147));
+        backButton.setFocusPainted(false);
+        backButton.addActionListener(e -> showItemOptions());
+        backButton.setBorder(createRoundedBorder());
+
+        buttonPanel.add(backButton);
+        buttonPanel.revalidate();
+        buttonPanel.repaint();
+    }
 
     /**
      * Restablece los botones principales de accion (LUCHAR, POKEMON, MOCHILA, HUIR)

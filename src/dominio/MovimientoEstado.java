@@ -36,7 +36,43 @@ public class MovimientoEstado extends Movimiento {
     public String ejecutar(Pokemon atacante, Pokemon objetivo) {
         if (!esUtilizable()) return null;
         
-        String message = String.format("%s usó %s: %s%n", atacante.getNombre(), nombre, efectoSecundario);
+        String estadisticaAfectada = "";
+        int aumento = 0;
+        
+        switch (efectoSecundario) {
+            case "Aumenta puntos de salud":
+                aumento = atacante.aumentarEstadisticas("ps", 10);
+                estadisticaAfectada = "PS";
+                break;
+            case "Aumenta ataque":
+                aumento = atacante.aumentarEstadisticas("ataque", 10);
+                estadisticaAfectada = "ataque";
+                break;
+            case "Aumenta defensa":
+                aumento = atacante.aumentarEstadisticas("defensa", 10);
+                estadisticaAfectada = "defensa";
+                break;
+            case "Aumenta velocidad":
+                aumento = atacante.aumentarEstadisticas("velocidad", 10);
+                estadisticaAfectada = "velocidad";
+                break;
+            case "Aumenta ataque Especial":
+                aumento = atacante.aumentarEstadisticas("ataqueEspecial", 10);
+                estadisticaAfectada = "ataque especial";
+                break;
+            case "Aumenta defensa Especial":
+                aumento = atacante.aumentarEstadisticas("defensaEspecial", 10);
+                estadisticaAfectada = "defensa especial";
+                break;
+            default:
+                break;
+        }
+        String message = String.format("%s usó %s! %s aumentó en %d puntos.", 
+                                    atacante.getNombre(), 
+                                    getNombre(), 
+                                    estadisticaAfectada, 
+                                    aumento);
+        
         usar();
         return message;
     }

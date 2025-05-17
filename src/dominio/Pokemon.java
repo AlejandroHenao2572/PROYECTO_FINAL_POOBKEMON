@@ -187,5 +187,45 @@ public class Pokemon {
         }
         return true;
     }
+
+    /**
+     * Aumenta una estadística específica del Pokémon en la cantidad indicada
+     * y devuelve la cantidad que se aumentó
+     * 
+     * @param estadistica Nombre de la estadística a aumentar (ps, ataque, defensa, 
+     *                    ataqueEspecial, defensaEspecial, velocidad)
+     * @param cantidad Valor a aumentar (debe ser positivo)
+     * @return La cantidad que se aumentó, o 0 si la estadística no existe
+     *         o la cantidad es inválida
+     */
+    public int aumentarEstadisticas(String estadistica, int cantidad) {
+        if (cantidad <= 0) {
+            return 0; // Cantidad no válida
+        }
+
+        switch (estadistica.toLowerCase()) {
+            case "ps":
+                this.ps += cantidad;
+                this.psActual += cantidad;
+                return cantidad;
+            case "ataque":
+                this.ataque += cantidad;
+                return cantidad;
+            case "defensa":
+                this.defensa += cantidad;
+                return cantidad;
+            case "ataqueEspecial":
+                this.ataqueEspecial += cantidad;
+                return cantidad;
+            case "defensaEspecial":
+                this.defensaEspecial += cantidad;
+                return cantidad;
+            case "velocidad":
+                this.velocidad += cantidad;
+                return cantidad;
+            default:
+                return 0;
+        }
+    }
     
 }
