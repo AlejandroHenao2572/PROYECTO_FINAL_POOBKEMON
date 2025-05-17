@@ -239,28 +239,34 @@ public class Battle {
      * 
      * @param indicePokemon Índice del Pokémon seleccionado
      */
-    public void cambioPokemonSeleccionado(int indicePokemon) {
-        if ((!esperandoAccion && !cambioForzado) || isPaused()) return;
+    public String cambioPokemonSeleccionado(int indicePokemon) {
+        if ((!esperandoAccion && !cambioForzado) || isPaused()) {
+            return "No puedes cambiar Pokémon ahora";
+        }
         
         try {
             // Validar selección
             if (indicePokemon < 0 || indicePokemon >= turnoActual.getEquipo().size()) {
-                return;
+                return "Selección de Pokémon no válida";
             }
             
             Pokemon seleccionado = turnoActual.getEquipo().get(indicePokemon);
             
-            // No permitir cambiar al mismo Pokémon o debilitado
-            if (seleccionado.estaDebilitado() || seleccionado == turnoActual.getPokemonActivo()) {
-                return;
+            // Verificar condiciones de cambio
+            if (seleccionado.estaDebilitado()) {
+                return "¡" + seleccionado.getNombre() + " está debilitado!";
             }
             
-            // Realizar el cambio
-            turnoActual.cambiarPokemon(indicePokemon);
+            if (seleccionado == turnoActual.getPokemonActivo()) {
+                return "¡" + seleccionado.getNombre() + " ya está en combate!";
+            }
             
-            // Notificar finalización
+            // Realizar el cambio y obtener mensaje
+            String message = turnoActual.cambiarPokemon(indicePokemon);
+            
+            // Notificar cambio
             if (listener != null) {
-                listener.onPokemonChanged(turnoActual);
+                listener.onPokemonChanged(turnoActual, message);
             }
             
             // Manejar flujo del juego
@@ -270,8 +276,11 @@ public class Battle {
             } else {
                 finalizarTurno();
             }
+            
+            return message;
         } catch (Exception e) {
             System.err.println("Error al cambiar Pokémon: " + e.getMessage());
+            return "Error al cambiar Pokémon";
         }
     }
 

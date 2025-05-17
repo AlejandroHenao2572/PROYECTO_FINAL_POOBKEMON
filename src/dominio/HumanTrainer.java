@@ -93,22 +93,33 @@ public class HumanTrainer extends Trainer {
         return null;
     }
 
-    public void cambiarPokemon(int indicePokemon) {
+    @Override
+    public String cambiarPokemon(int indicePokemon) {
         if (indicePokemon >= 0 && indicePokemon < equipo.size()) {
             Pokemon nuevoActivo = equipo.get(indicePokemon);
-            if (!nuevoActivo.estaDebilitado() && nuevoActivo != pokemonActivo) {
-                // Mensaje de cambio
-                System.out.println(nombre + " ha cambiado a " + nuevoActivo.getNombre());
-                
-                // Realizar el cambio
-                pokemonActivo = nuevoActivo;
-                
-                // Notificar al listener si existe
-                if (listener != null) {
-                    listener.onActionPerformed();
-                }
+            
+            if (nuevoActivo.estaDebilitado()) {
+                return "¡" + nuevoActivo.getNombre() + " está debilitado!";
             }
+            
+            if (nuevoActivo == pokemonActivo) {
+                return "¡" + nuevoActivo.getNombre() + " ya está en combate!";
+            }
+            
+            // Mensaje de cambio
+            String message = nombre + " ha cambiado a " + nuevoActivo.getNombre();
+            
+            // Realizar el cambio
+            pokemonActivo = nuevoActivo;
+            
+            // Notificar al listener si existe
+            if (listener != null) {
+                listener.onActionPerformed();
+            }
+            
+            return message;
         }
+        return "Selección de Pokémon no válida";
     }
     
     public  void cambiarPokemonManual(){};

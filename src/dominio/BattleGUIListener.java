@@ -40,7 +40,7 @@ public interface BattleGUIListener {
      */
     void onBattleEnded(Trainer winner);
 
-    void onPokemonChanged(Trainer trainer);
+    void onPokemonChanged(Trainer trainer, String message);
 
     void onPokemonRevivido(Trainer trainer, Pokemon pokemon);
 

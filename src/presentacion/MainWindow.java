@@ -157,11 +157,10 @@ public class MainWindow extends JFrame implements BattleGUIListener {
     }
 
     @Override
-    public void onPokemonChanged(Trainer trainer) {
+    public void onPokemonChanged(Trainer trainer, String message) {
         // Actualizar la interfaz con el nuevo Pokémon
         battlePanel.updatePokemonStats();
-        actionPanel.addBattleText(trainer.getNombre() + " ha cambiado a " + 
-                            trainer.getPokemonActivo().getNombre());
+        actionPanel.addBattleText(message);
         updateUI();
     }
 
@@ -232,7 +231,21 @@ public class MainWindow extends JFrame implements BattleGUIListener {
     }
 
     public void switchPokemonSelected(int pokemonIndex) {
-        battle.cambioPokemonSeleccionado(pokemonIndex);
+        String message = battle.cambioPokemonSeleccionado(pokemonIndex);
+        actionPanel.addBattleText(message);
+        updateUI();
+        
+        actionPanel.disableButtons();
+        
+        // Temporizador para mostrar el mensaje antes de continuar
+        Timer messageTimer = new Timer(1500, e -> {
+            // Continuar con el turno después de mostrar el mensaje
+            battle.finalizarTurno();
+            // Habilitar botones nuevamente
+            actionPanel.enableButtons();
+        });
+        messageTimer.setRepeats(false);
+        messageTimer.start();
     }
 
     public void useItemSelected(int itemIndex) {

@@ -58,16 +58,21 @@ public abstract class Trainer {
      *
      * @param indice Indice del Pokemon en el equipo
      */
-    public void cambiarPokemon(int indice) {
+    public String cambiarPokemon(int indice) {
         if (indice >= 0 && indice < equipo.size()) {
-            if (!equipo.get(indice).estaDebilitado()) {
-                pokemonActivo = equipo.get(indice);
-            } else {
-                System.out.println("No puedes cambiar a un Pokemon debilitado");
+            Pokemon nuevoPokemon = equipo.get(indice);
+            if (!nuevoPokemon.estaDebilitado()) {
+                // Solo generar mensaje si es un cambio real
+                if (nuevoPokemon != pokemonActivo) {
+                    pokemonActivo = nuevoPokemon;
+                    return nombre + " ha cambiado a " + pokemonActivo.getNombre();
+                }
+                return nombre + " ya tiene a " + pokemonActivo.getNombre() + " en combate";
             }
+            return "No puedes cambiar a un Pokémon debilitado";
         }
+        return "Índice de Pokémon no válido";
     }
-
     /**
      * Verifica si todos los Pokemon del equipo estan debilitados
      *
