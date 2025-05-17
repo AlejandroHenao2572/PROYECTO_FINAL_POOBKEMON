@@ -32,8 +32,7 @@ public class Forcejeo extends MovimientoFisico {
      * @param objetivo Pokemon que recibe el ataque
      */
     @Override
-    public void ejecutar(Pokemon atacante, Pokemon objetivo) {
-        System.out.println(atacante.getNombre() + " está forzado a usar Forcejeo!");
+    public String ejecutar(Pokemon atacante, Pokemon objetivo) {
     
         // Calculo de daño normal
         int dano = (int)((getPotencia() * (double)atacante.getAtaque() / objetivo.getDefensa()) / 2);
@@ -43,7 +42,8 @@ public class Forcejeo extends MovimientoFisico {
         int autoDano = dano / 2;
         atacante.recibirDaño(autoDano);
     
-        System.out.println("Forcejeo causó " + dano + " de daño a " + objetivo.getNombre() +
-                           " y " + autoDano + " de autodano a " + atacante.getNombre());
+        String message = "Forcejeo causó " + dano + " de daño a " + objetivo.getNombre() +
+                           " y " + autoDano + " de autodano a " + atacante.getNombre();
+        return message;
     }
 }

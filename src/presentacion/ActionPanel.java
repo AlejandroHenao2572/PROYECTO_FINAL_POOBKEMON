@@ -318,8 +318,57 @@ private void showReviveOptions(int itemIndex) {
      * @param text Texto a mostrar
      */
     public void addBattleText(String text) {
-        // Reemplaza el texto anterior en lugar de anadirlo
-        lastActionLabel.setText("<html><div style='text-align: center;'>" + text + "</div></html>");
+        // Limpiar el texto anterior
+        lastActionLabel.setText("");
+        
+        // Forzar actualización inmediata
+        lastActionLabel.revalidate();
+        lastActionLabel.repaint();
+        
+        // Añadir el nuevo texto con formato HTML para mejor visualizacion 
+        lastActionLabel.setText("<html><div style='text-align: center; width: 100%;'>" + 
+                            text.replace("\n", "<br>") + "</div></html>");
+        
+        // Crear efecto de "typing" si deseas
+        new Thread(() -> {
+            try {
+                Thread.sleep(25); // Pequeño retraso para asegurar la actualización
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            SwingUtilities.invokeLater(() -> {
+                lastActionLabel.revalidate();
+                lastActionLabel.repaint();
+            });
+        }).start();
+    }
+
+    /**
+ * Deshabilita todos los botones del panel
+    */
+    public void disableButtons() {
+        Component[] components = buttonPanel.getComponents();
+        for (Component component : components) {
+            if (component instanceof JButton) {
+                component.setEnabled(false);
+            }
+        }
+    }
+
+    /**
+     * Habilita todos los botones del panel
+     */
+    public void enableButtons() {
+        Component[] components = buttonPanel.getComponents();
+        for (Component component : components) {
+            if (component instanceof JButton) {
+                component.setEnabled(true);
+            }
+        }
+        // Si es necesario resetear los botones
+        if (components.length == 4) { // Solo si son los botones principales
+            resetButtons();
+        }
     }
 
     /**

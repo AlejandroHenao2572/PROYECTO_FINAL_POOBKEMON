@@ -33,14 +33,14 @@ public class MovimientoEspecial extends Movimiento {
      * @param objetivo Pokemon que recibe el movimiento
      */
     @Override
-    public void ejecutar(Pokemon atacante, Pokemon objetivo) {
-        if (!esUtilizable()) return;
+    public String ejecutar(Pokemon atacante, Pokemon objetivo) {
+        if (!esUtilizable()) return null;
 
         Random rand = new Random();
         if (rand.nextInt(100) >= precision) {
-            System.out.println(atacante.getNombre() + " falló el ataque!");
+            String message = atacante.getNombre() + " falló el ataque!";
             usar();
-            return;
+            return message;
         }
 
         double multiplicador = TablaTipos.getMultiplicador(tipo, objetivo.getTipo());
@@ -59,7 +59,7 @@ public class MovimientoEspecial extends Movimiento {
         objetivo.recibirDaño(dano);
         usar();
 
-        System.out.printf("%s usó %s y causó %d de daño (x%.1f)%n", 
-            atacante.getNombre(), nombre, dano, multiplicador);
+       String message = String.format("%s usó %s y causó %d de daño (x%.1f)%n", atacante.getNombre(), nombre, dano, multiplicador);
+        return message;
     }
 }

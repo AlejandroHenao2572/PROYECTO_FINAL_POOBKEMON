@@ -64,8 +64,8 @@ public abstract class Movimiento {
     /**
      * Ejecuta el efecto del movimiento
      * 
-     * @param atacante Pokemon que realiza el movimiento
+     * @param atacante Pokemon que realiza els movimiento
      * @param objetivo Pokemon que recibe el movimiento
      */
-    public abstract void ejecutar(Pokemon atacante, Pokemon objetivo);
+    public abstract String ejecutar(Pokemon atacante, Pokemon objetivo);
 }

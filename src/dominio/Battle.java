@@ -223,11 +223,15 @@ public class Battle {
      * 
      * @param indiceMovimiento Índice del movimiento seleccionado
      */
-    public void movimientoSeleccionado(int indiceMovimiento) {
-        if (!esperandoAccion || isPaused()) return;
+    public String movimientoSeleccionado(int indiceMovimiento) {
+        if (!esperandoAccion || isPaused()) return null;
         
         HumanTrainer oponente = (turnoActual == entrenador1) ? entrenador2 : entrenador1;
-        turnoActual.onAttackSelected(indiceMovimiento, oponente);
+        String message = turnoActual.onAttackSelected(indiceMovimiento, oponente);
+        if (listener != null) {
+            listener.onMoveUsed(turnoActual, message);
+        }
+        return message;
     }
 
     /**

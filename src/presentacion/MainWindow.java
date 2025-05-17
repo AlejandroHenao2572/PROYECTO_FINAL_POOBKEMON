@@ -188,6 +188,13 @@ public class MainWindow extends JFrame implements BattleGUIListener {
     }
 
     @Override
+    public void onMoveUsed(Trainer trainer, String result) {
+        // Actualizar el panel de acción con el resultado
+        actionPanel.addBattleText(result);
+        updateUI();
+    }
+
+    @Override
     public void onPokemonRevivido(Trainer trainer, Pokemon pokemon) {
         // Actualizar la interfaz
         battlePanel.updatePokemonStats();
@@ -200,7 +207,22 @@ public class MainWindow extends JFrame implements BattleGUIListener {
     }
 
     public void attackSelected(int moveIndex) {
-        battle.movimientoSeleccionado(moveIndex);
+        String message = battle.movimientoSeleccionado(moveIndex);
+        actionPanel.addBattleText(message);
+        updateUI();
+        
+        // Deshabilitar botones temporalmente para evitar acciones durante la animación
+        actionPanel.disableButtons();
+        
+        // Temporizador para mostrar el mensaje antes de continuar
+        Timer messageTimer = new Timer(1500, e -> {
+            // Continuar con el turno después de mostrar el mensaje
+            battle.finalizarTurno();
+            // Habilitar botones nuevamente
+            actionPanel.enableButtons();
+        });
+        messageTimer.setRepeats(false);
+        messageTimer.start();
     }
 
     public void switchPokemonSelected(int pokemonIndex) {

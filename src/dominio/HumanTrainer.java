@@ -36,23 +36,26 @@ public class HumanTrainer extends Trainer {
      * @param moveIndex Indice del movimiento
      * @param oponente Entrenador rival
      */
-    public void onAttackSelected(int moveIndex, Trainer oponente) {
+    public String onAttackSelected(int moveIndex, Trainer oponente) {
         if (moveIndex < 0 || moveIndex >= pokemonActivo.getMovimientos().size()) {
-            return;
+            return null;
         }
 
         Movimiento movimiento = pokemonActivo.getMovimientos().get(moveIndex);
-        
+        String message;
         if (pokemonActivo.sinPP()) {
               Movimiento forcejeo = new Forcejeo();
-            forcejeo.ejecutar(pokemonActivo, oponente.getPokemonActivo());
+            message = forcejeo.ejecutar(pokemonActivo, oponente.getPokemonActivo());
+            return message;
         } else if (movimiento.esUtilizable()) {
-            movimiento.ejecutar(pokemonActivo, oponente.getPokemonActivo());
+            message = movimiento.ejecutar(pokemonActivo, oponente.getPokemonActivo());
+            return message;
         }
         
         if (listener != null) {
             listener.onActionPerformed();
         }
+        return null; 
     }
 
     /**

@@ -33,13 +33,12 @@ public class MovimientoEstado extends Movimiento {
      * @param objetivo Pokemon afectado por el movimiento
      */
     @Override
-    public void ejecutar(Pokemon atacante, Pokemon objetivo) {
-        if (!esUtilizable()) return;
+    public String ejecutar(Pokemon atacante, Pokemon objetivo) {
+        if (!esUtilizable()) return null;
         
-        System.out.printf("%s usó %s: %s%n", 
-            atacante.getNombre(), nombre, efectoSecundario);
-        
+        String message = String.format("%s usó %s: %s%n", atacante.getNombre(), nombre, efectoSecundario);
         usar();
+        return message;
     }
 
     public String getEfectoSecundario(){
