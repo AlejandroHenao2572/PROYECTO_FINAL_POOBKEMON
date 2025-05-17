@@ -107,7 +107,7 @@ public class Battle {
     /**
      * Inicia un nuevo turno de batalla
      */
-    private void iniciarTurno() {
+    public void iniciarTurno() {
         if (entrenador1.estaDerrotado() || entrenador2.estaDerrotado()) {
             finalizarBatalla();
             return;
@@ -132,7 +132,7 @@ public class Battle {
         }
     }
     
-    private void manejarPokemonDebilitado() {
+    public void manejarPokemonDebilitado() {
         cambioForzado = true;
         cancelarTemporizador();
         
@@ -148,7 +148,7 @@ public class Battle {
     /**
      * Inicia el temporizador para el turno actual
      */
-    private void iniciarTemporizadorTurno() {
+    public void iniciarTemporizadorTurno() {
         cancelarTemporizador();
         
         turnTimer = new Timer();
@@ -163,7 +163,7 @@ public class Battle {
     /**
      * Cancela el temporizador del turno actual
      */
-    private void cancelarTemporizador() {
+    public void cancelarTemporizador() {
         if (turnTimer != null) {
             turnTimer.cancel();
             turnTimer = null;
@@ -173,7 +173,7 @@ public class Battle {
     /**
      * Maneja la situación cuando se agota el tiempo para un turno
      */
-    private void tiempoAgotado() {
+    public void tiempoAgotado() {
         if (esperandoAccion) {
             // Penalización por tiempo agotado: pierde 1 PP en cada movimiento
             for (Movimiento m : turnoActual.getPokemonActivo().getMovimientos()) {
@@ -210,7 +210,7 @@ public class Battle {
     /**
      * Finaliza la batalla y determina al ganador
      */
-    private void finalizarBatalla() {
+    public void finalizarBatalla() {
         cancelarTemporizador();
         HumanTrainer ganador = entrenador1.estaDerrotado() ? entrenador2 : entrenador1;
         if (listener != null) {
@@ -224,7 +224,7 @@ public class Battle {
      * @param indiceMovimiento Índice del movimiento seleccionado
      */
     public void movimientoSeleccionado(int indiceMovimiento) {
-        if (!esperandoAccion) return;
+        if (!esperandoAccion || isPaused()) return;
         
         HumanTrainer oponente = (turnoActual == entrenador1) ? entrenador2 : entrenador1;
         turnoActual.onAttackSelected(indiceMovimiento, oponente);
@@ -236,7 +236,7 @@ public class Battle {
      * @param indicePokemon Índice del Pokémon seleccionado
      */
     public void cambioPokemonSeleccionado(int indicePokemon) {
-        if (!esperandoAccion && !cambioForzado) return;
+        if ((!esperandoAccion && !cambioForzado) || isPaused()) return;
         
         try {
             // Validar selección
@@ -277,7 +277,7 @@ public class Battle {
      * @param indiceItem Índice del ítem seleccionado
      */
     public void itemSeleccionado(int indiceItem) {
-        if (!esperandoAccion) return;
+        if (!esperandoAccion || isPaused()) return;
         
         turnoActual.onItemSelected(indiceItem);
     }
@@ -339,6 +339,10 @@ public class Battle {
         } catch (Exception e) {
             System.err.println("Error al usar item de revivir: " + e.getMessage());
         }
+    }
+
+    public boolean isPaused() {
+        return  false;
     }
     
 }

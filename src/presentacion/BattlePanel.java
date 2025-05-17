@@ -30,6 +30,8 @@
         private JPanel enemyPokeballPanel;
         private ImageIcon fullBallIcon;
         private ImageIcon emptyBallIcon;
+        private JButton pauseButton;
+        private boolean isPaused = false;
 
         public BattlePanel(Trainer player1, Trainer player2) {
             this.player = player1;
@@ -41,6 +43,7 @@
             loadBackgroundImage();
             setupPokemonDisplays();
             setupInfoPanels();
+            setupPauseButton(); 
             fullBallIcon = new ImageIcon(getClass().getClassLoader().getResource("graficos/items/pokeball_full.png"));
             emptyBallIcon = new ImageIcon(getClass().getClassLoader().getResource("graficos/items/pokeball_empty.png"));
         }
@@ -233,6 +236,30 @@
             add(namesPanel);
         }
 
+        private void setupPauseButton() {
+            pauseButton = new JButton("Pausa");
+            pauseButton.setFont(new Font("Pokemon GB", Font.BOLD, 12));
+            pauseButton.setBounds(350, 10, 100, 30);
+            pauseButton.setFocusPainted(false);
+            pauseButton.setContentAreaFilled(false);
+            pauseButton.setForeground(Color.WHITE);
+            pauseButton.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+            
+            pauseButton.addActionListener(e -> {
+                isPaused = !isPaused;
+                if (isPaused) {
+                    pauseButton.setText("Reanudar");
+                    pauseButton.setForeground(Color.YELLOW);
+                } else {
+                    pauseButton.setText("Pausa");
+                    pauseButton.setForeground(Color.WHITE);
+                }
+                firePropertyChange("pauseState", !isPaused, isPaused);
+            });
+            
+            add(pauseButton);
+        }
+
         private void updateHpBarColor(JProgressBar hpBar) {
             double percentage = (double) hpBar.getValue() / hpBar.getMaximum();
             if (percentage < 0.2) {
@@ -253,6 +280,10 @@
                 }
                 panel.revalidate();
                 panel.repaint();
+        }
+
+        public boolean isPaused() {
+            return isPaused;
         }
 
         @Override

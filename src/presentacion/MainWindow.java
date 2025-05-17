@@ -10,8 +10,9 @@ public class MainWindow extends JFrame implements BattleGUIListener {
     private Battle battle;
     private JDialog messageDialog;
     private JLabel turnIndicator;
+    private boolean isBattlePaused = false;
 
-    public MainWindow(HumanTrainer player1, HumanTrainer player2) {
+        public MainWindow(HumanTrainer player1, HumanTrainer player2) {
         setTitle("Pokémon Esmeralda - Combate");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
@@ -28,8 +29,34 @@ public class MainWindow extends JFrame implements BattleGUIListener {
             System.err.println("Error cargando fuente Pokémon: " + e.getMessage());
         }
 
-        // Mostrar el diálogo de lanzamiento de moneda
+        // 1. Primero inicializamos la batalla
         this.battle = new Battle(player1, player2);
+        
+        // 2. Luego inicializamos el battlePanel
+        this.battlePanel = new BattlePanel(player1, player2);
+        
+        // 3. Configuramos el listener para pausa (ahora battle ya está inicializado)
+        this.battlePanel.addPropertyChangeListener("pauseState", evt -> {
+            isBattlePaused = (boolean) evt.getNewValue();
+            if (isBattlePaused) {
+                battle.cancelarTemporizador();
+                if (turnIndicator != null) {
+                    turnIndicator.setText("JUEGO EN PAUSA");
+                    turnIndicator.setForeground(Color.YELLOW);
+                    turnIndicator.setBackground(Color.BLACK);
+                }
+            } else {
+                updateTurnIndicator(battle.getTurnoActual());
+                if (battle.getTurnoActual() instanceof HumanTrainer) {
+                    battle.iniciarTemporizadorTurno();
+                }
+            }
+        });
+
+        // 4. Configuramos el listener de la batalla
+        this.battle.setListener(this);
+        
+        // 5. Mostrar el diálogo de lanzamiento de moneda (ahora battle está inicializado)
         if(battle.getTurnoActual() == player1){
             CoinFlipDialog coinFlip = new CoinFlipDialog(this, true);
             coinFlip.setVisible(true); 
@@ -38,11 +65,11 @@ public class MainWindow extends JFrame implements BattleGUIListener {
             CoinFlipDialog coinFlip = new CoinFlipDialog(this, false);
             coinFlip.setVisible(true); 
         }
-        this.battle.setListener(this);
         
-        this.battlePanel = new BattlePanel(player1, player2);
+        // 6. Inicializamos el actionPanel
         this.actionPanel = new ActionPanel(this, player1);
         
+        // 7. Añadimos los componentes al JFrame
         add(battlePanel, BorderLayout.CENTER);
         add(actionPanel, BorderLayout.SOUTH);
         
@@ -64,7 +91,6 @@ public class MainWindow extends JFrame implements BattleGUIListener {
         centerWindow();
         setVisible(true);
     }
-
     private void centerWindow() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation((screenSize.width - getWidth()) / 2, 
@@ -76,10 +102,12 @@ public class MainWindow extends JFrame implements BattleGUIListener {
     }
 
     public void updateUI() {
-        battlePanel.updatePokemonStats();
-        actionPanel.setCurrentPlayer(battle.getTurnoActual());
-        updateTurnIndicator(battle.getTurnoActual()); // Actualizar indicador al refrescar UI
-        repaint();
+        if (!isBattlePaused) {
+            battlePanel.updatePokemonStats();
+            actionPanel.setCurrentPlayer(battle.getTurnoActual());
+            updateTurnIndicator(battle.getTurnoActual());
+            repaint();
+        }
     }
 
     @Override
