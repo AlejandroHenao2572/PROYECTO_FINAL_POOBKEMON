@@ -17,6 +17,7 @@ import javax.swing.SwingUtilities;
 public class PokemonBattleGame {
     
     /**
+     * 
      * Inicia una batalla Pokemon entre dos entrenadores humanos
      * Configura los equipos de Pokemon con sus movimientos y estadisticas
      * agrega los items a los entrenadores e inicia la interfaz grafica del combate
@@ -31,13 +32,14 @@ public class PokemonBattleGame {
         List<String> nombresEquipo2,
         Map<String, Integer> items1,
         Map<String, Integer> items2
-    ) {
-    Battle battle = Battle.setupBattle(nombresEquipo1, nombresEquipo2, items1, items2);
-    SwingUtilities.invokeLater(() -> {
-        MainWindow mainWindow = new MainWindow((HumanTrainer) battle.getEntrenador1(), (HumanTrainer) battle.getEntrenador2());
-        mainWindow.setVisible(true);
-        mainWindow.startBattle();
-    });
+    ) 
+    {
+        Battle battle = Battle.setupBattle(nombresEquipo1, nombresEquipo2, items1, items2);
+        SwingUtilities.invokeLater(() -> {
+            MainWindow mainWindow = new MainWindow((HumanTrainer) battle.getEntrenador1(), (HumanTrainer) battle.getEntrenador2());
+            mainWindow.setVisible(true);
+            mainWindow.startBattle();
+        });
     }
     
     public static void main(String[] args) {

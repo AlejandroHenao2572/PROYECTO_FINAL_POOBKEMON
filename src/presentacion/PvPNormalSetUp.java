@@ -48,13 +48,23 @@ public class PvPNormalSetUp extends JFrame {
     private HashMap<String, Integer> itemsJugador2 = new HashMap<>();
     private final String[] itemsDisponibles = {"Potion", "SuperPotion", "HyperPotion", "Revive"};
 
-    public PvPNormalSetUp() {
-        setTitle("Configuracion - PvP Modo Normal");
-        setSize(1200, 700);
+     public PvPNormalSetUp() {
+        setTitle("PvP MODO NORMAL");
+        setSize(1280, 720); // Tamaño ligeramente mayor
         setLayout(new GridLayout(1, 2));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        getContentPane().setBackground(new Color(240, 240, 240));
+        getContentPane().setBackground(new Color(20, 20, 20)); // Fondo oscuro retro
+        
+        // Cargar fuente Pokemon GB
+        try {
+            Font pokemonFont = Font.createFont(Font.TRUETYPE_FONT, 
+                getClass().getResourceAsStream("/graficos/PokemonGB.ttf"));
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(pokemonFont);
+        } catch (Exception e) {
+            System.err.println("Error al cargar la fuente Pokemon GB: " + e.getMessage());
+        }
 
         cargarImagenes();
         crearPanelJugador(panelJugador1 = new JPanel(), 1);
@@ -125,13 +135,13 @@ public class PvPNormalSetUp extends JFrame {
 
         HashMap<String, JSpinner> spinners = new HashMap<>();
         for (String item : itemsDisponibles) {
-            JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 2));
+            JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 50, 2));
             row.setBackground(colorSecundario);
             JLabel iconLabel = new JLabel(imagenesItems.get(item));
             iconLabel.setPreferredSize(new Dimension(32, 32));
             JLabel itemLabel = new JLabel(item);
             itemLabel.setFont(new Font("Pokemon GB", Font.PLAIN, 14));
-            itemLabel.setPreferredSize(new Dimension(100, 25));
+            itemLabel.setPreferredSize(new Dimension(200, 25));
             JSpinner spinner = new JSpinner(new SpinnerNumberModel(0, 0, item.equals("Revive") ? 1 : 2, 1));
             spinner.setFont(new Font("Pokemon GB", Font.PLAIN, 12));
             spinner.setBorder(new LineBorder(Color.BLACK, 1));
@@ -177,7 +187,7 @@ public class PvPNormalSetUp extends JFrame {
         for (String nombre : listaPokemones) {
             try {
                 ImageIcon icon = new ImageIcon(getClass().getResource("/graficos/pokemones/" + nombre.toLowerCase() + ".png"));
-                Image img = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+                Image img = icon.getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH);
                 imagenesPokemones.put(nombre, new ImageIcon(img));
             } catch (Exception e) {
                 System.err.println("Error al cargar imagen de " + nombre + ": " + e.getMessage());
@@ -204,54 +214,54 @@ public class PvPNormalSetUp extends JFrame {
         }
 
         @Override
-public void actionPerformed(ActionEvent e) {
-    DefaultListModel<String> model = jugador == 1 ? equipo1Model : equipo2Model;
-    ArrayList<String> equipo = jugador == 1 ? nombresEquipo1 : nombresEquipo2;
-    HashMap<String, Integer> items = jugador == 1 ? itemsJugador1 : itemsJugador2;
+    public void actionPerformed(ActionEvent e) {
+        DefaultListModel<String> model = jugador == 1 ? equipo1Model : equipo2Model;
+        ArrayList<String> equipo = jugador == 1 ? nombresEquipo1 : nombresEquipo2;
+        HashMap<String, Integer> items = jugador == 1 ? itemsJugador1 : itemsJugador2;
 
-    equipo.clear();
-    items.clear();
-    int totalItems = 0;
+        equipo.clear();
+        items.clear();
+        int totalItems = 0;
 
-    // ✅ Nuevo: permitir entre 1 y 6 Pokémon
-    if (model.size() < 1 || model.size() > 6) {
-        JOptionPane.showMessageDialog(null, "Debes seleccionar al menos 1 y como máximo 6 Pokémon.");
-        return;
-    }
-
-    for (String item : itemsDisponibles) {
-        int cantidad = (int) spinners.get(item).getValue();
-        totalItems += cantidad;
-    }
-
-    if (totalItems > 7) {
-        JOptionPane.showMessageDialog(null, "No puedes seleccionar más de 7 ítems.");
-        return;
-    }
-
-    for (String item : itemsDisponibles) {
-        int cantidad = (int) spinners.get(item).getValue();
-        if (cantidad > 0) {
-            items.put(item, cantidad);
+        // ✅ Nuevo: permitir entre 1 y 6 Pokémon
+        if (model.size() < 1 || model.size() > 6) {
+            JOptionPane.showMessageDialog(null, "Debes seleccionar al menos 1 y como máximo 6 Pokémon.");
+            return;
         }
-    }
 
-    for (int i = 0; i < model.size(); i++) {
-        equipo.add(model.get(i));
-    }
+        for (String item : itemsDisponibles) {
+            int cantidad = (int) spinners.get(item).getValue();
+            totalItems += cantidad;
+        }
 
-    JOptionPane.showMessageDialog(null, "Equipo del Jugador " + jugador + " confirmado");
+        if (totalItems > 7) {
+            JOptionPane.showMessageDialog(null, "No puedes seleccionar más de 7 ítems.");
+            return;
+        }
 
-    // ✅ Verificar que ambos equipos estén confirmados (mínimo 1 Pokémon por jugador)
-    if (nombresEquipo1.size() >= 1 && nombresEquipo2.size() >= 1) {
-        PokemonBattleGame.iniciarBatalla(
-            new ArrayList<>(nombresEquipo1),
-            new ArrayList<>(nombresEquipo2),
-            new HashMap<>(itemsJugador1),
-            new HashMap<>(itemsJugador2)
-        );
-        dispose();
-    }
-    }
+        for (String item : itemsDisponibles) {
+            int cantidad = (int) spinners.get(item).getValue();
+            if (cantidad > 0) {
+                items.put(item, cantidad);
+            }
+        }
+
+        for (int i = 0; i < model.size(); i++) {
+            equipo.add(model.get(i));
+        }
+
+        JOptionPane.showMessageDialog(null, "Equipo del Jugador " + jugador + " confirmado");
+
+        // ✅ Verificar que ambos equipos estén confirmados (mínimo 1 Pokémon por jugador)
+        if (nombresEquipo1.size() >= 1 && nombresEquipo2.size() >= 1) {
+            PokemonBattleGame.iniciarBatalla(
+                new ArrayList<>(nombresEquipo1),
+                new ArrayList<>(nombresEquipo2),
+                new HashMap<>(itemsJugador1),
+                new HashMap<>(itemsJugador2)
+            );
+            dispose();
+        }
+        }
     }
 }

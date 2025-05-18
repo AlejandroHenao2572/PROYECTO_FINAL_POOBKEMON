@@ -180,12 +180,11 @@ public class GamePanel extends JPanel implements Runnable {
                 if (playerBounds.intersects(normalModeZone)) {
                     startPvPNormalMode();
                 } else if (playerBounds.intersects(survivalModeZone)) {
-                    startGame("Player vs Player - Supervivencia");
+                    startPvPSurvivalMode();
                 }
                 break;
 
             case IN_GAME:
-                // Logica durante el juego
                 break;
         }
     }
@@ -203,6 +202,23 @@ public class GamePanel extends JPanel implements Runnable {
 
             // Crear nueva instancia de PvPNormalSetUp
             PvPNormalSetUp pvpSetup = new PvPNormalSetUp();
+            pvpSetup.setVisible(true);
+        });
+    }
+
+        /**
+     * Inicia el modo de juego PvP Supervivencia 
+     * Cierra la ventana actual y crea una nueva instancia de PvPSurvivalSetUp
+     */
+    private void startPvPSurvivalMode() {
+        // Cerrar la ventana actual de forma segura
+        SwingUtilities.invokeLater(() -> {
+            if (parentFrame != null) {
+                parentFrame.dispose();
+            }
+
+            // Crear nueva instancia de PvPNormalSetUp
+            PvPSupervivenciaSetUp pvpSetup = new PvPSupervivenciaSetUp();
             pvpSetup.setVisible(true);
         });
     }
