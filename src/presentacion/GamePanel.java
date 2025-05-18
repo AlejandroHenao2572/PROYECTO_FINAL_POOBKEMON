@@ -4,7 +4,12 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -86,6 +91,29 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyH);
         this.setFocusable(true);
 
+        // Crear barra de menú
+        JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("Archivo");
+
+        // Opción Abrir Partida
+        JMenuItem openItem = new JMenuItem("Abrir Partida");
+        openItem.addActionListener(e -> cargarPartida());
+
+        // Opción Salir
+        JMenuItem exitItem = new JMenuItem("Salir");
+        exitItem.addActionListener(e -> {
+            if (parentFrame != null) parentFrame.dispose();
+        });
+
+        fileMenu.add(openItem);
+        fileMenu.addSeparator();
+        fileMenu.add(exitItem);
+        menuBar.add(fileMenu);
+
+        // Añadir la barra de menú al JFrame padre
+        if (parentFrame instanceof JFrame) {
+            ((JFrame) parentFrame).setJMenuBar(menuBar);
+        }
         // Cargar recursos
         loadResources();
         
@@ -107,6 +135,32 @@ public class GamePanel extends JPanel implements Runnable {
         } catch (IOException e) {
             System.err.println("Error al cargar recursos graficos: " + e.getMessage());
             titleImage = null;
+        }
+    }
+
+
+    private void cargarPartida() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Abrir partida");
+        int userSelection = fileChooser.showOpenDialog(this);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            java.io.File fileToLoad = fileChooser.getSelectedFile();
+            try {
+                dominio.Battle battle = dominio.Battle.cargarPartida(fileToLoad.getAbsolutePath());
+                JOptionPane.showMessageDialog(this, "Partida cargada con éxito", 
+                    "Carga exitosa", JOptionPane.INFORMATION_MESSAGE);
+                // Cerrar el JFrame actual
+                if (parentFrame != null) parentFrame.dispose();
+                // Abrir la ventana de batalla con la partida cargada
+                MainWindow mainWindow = new MainWindow(battle.getEntrenador1(), battle.getEntrenador2());
+                mainWindow.setVisible(true);
+                mainWindow.startBattle();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al cargar: " + e.getMessage(), 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
         }
     }
 
