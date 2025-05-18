@@ -1,5 +1,7 @@
 package dominio;
 
+import java.io.Serializable;
+
 /**
  * Clase abstracta base para todos los items del juego
  * Representa un item generico que puede usarse sobre pokemones
@@ -8,8 +10,9 @@ package dominio;
  * Autores David Patacon y Daniel Hueso
  * Version 1.0
  */
-public abstract class Item {
+public abstract class Item implements Serializable{
     protected String nombre;
+    private static final long serialVersionUID = 1L;
 
     /**
      * Crea un nuevo item con nombre especifico

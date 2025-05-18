@@ -21,7 +21,7 @@ public class BattlePanel extends JPanel {
     private JLabel enemyPokemonLevel;
     private JLabel playerNameLabel;
     private JLabel enemyNameLabel;
-    private Image backgroundImage;
+    private transient  Image backgroundImage;
     private Dimension pokemonSize = new Dimension(200, 200); // Tamaño aumentado
     private Point enemyPokemonPosition = new Point(490, 80);  // Posición ajustada
     private Point playerPokemonPosition = new Point(80, 240); // Posición ajustada
@@ -30,8 +30,8 @@ public class BattlePanel extends JPanel {
     private Dimension infoPanelSize = new Dimension(270, 90); 
     private JPanel playerPokeballPanel;
     private JPanel enemyPokeballPanel;
-    private ImageIcon fullBallIcon;
-    private ImageIcon emptyBallIcon;
+    private transient  ImageIcon fullBallIcon;
+    private transient  ImageIcon emptyBallIcon;
     private JButton pauseButton;
     private boolean isPaused = false;
 
@@ -378,5 +378,34 @@ public class BattlePanel extends JPanel {
                                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
             g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
         }
+    }
+
+    /**
+     * Actualiza los jugadores en el panel de batalla
+     * @param player1 Primer jugador
+     * @param player2 Segundo jugador
+     */
+    public void updatePlayers(Trainer player1, Trainer player2) {
+        this.player = player1;
+        this.enemy = player2;
+        
+        // Actualizar nombres de los jugadores
+        playerNameLabel.setText(player1.getNombre());
+        enemyNameLabel.setText(player2.getNombre());
+        
+        // Actualizar imágenes y stats de los Pokémon activos
+        loadPokemonImage(player1.getPokemonActivo().getNombre(), playerPokemonImage, true);
+        loadPokemonImage(player2.getPokemonActivo().getNombre(), enemyPokemonImage, false);
+        
+        // Actualizar paneles de información
+        updatePokemonStats();
+        
+        // Actualizar paneles de pokeballs
+        updatePokeballPanel(playerPokeballPanel, player1.getEquipo());
+        updatePokeballPanel(enemyPokeballPanel, player2.getEquipo());
+        
+        // Forzar redibujado del panel
+        revalidate();
+        repaint();
     }
 }

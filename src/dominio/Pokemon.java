@@ -1,5 +1,6 @@
 package dominio;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -12,7 +13,8 @@ import java.util.ArrayList;
  * Autores David Patacon y Daniel Hueso
  * Version 1.0
  */
-public class Pokemon {
+public class Pokemon implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String nombre;
     private String tipo;
     private String tipoSecundario;

@@ -1,9 +1,11 @@
 package dominio;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class BattleFactory {
+public class BattleFactory implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     public static Pokemon crearPokemon(String nombre, Trainer entrenador) {
         Pokemon p = new Pokemon(nombre, "Normal", null, 100, 100, 100, 100, 100, 100, new ArrayList<>());

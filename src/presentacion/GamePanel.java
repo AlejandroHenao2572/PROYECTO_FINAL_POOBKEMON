@@ -88,12 +88,11 @@ public class GamePanel extends JPanel implements Runnable {
 
         // Cargar recursos
         loadResources();
-
+        
         // Inicializar metricas de fuente
         fontMetrics = this.getFontMetrics(buttonFont);
         calculateButtonSizes();
     }
-
     /**
      * Carga los recursos graficos del juego como la imagen del titulo
      * Si ocurre un error durante la carga se imprime un mensaje de error

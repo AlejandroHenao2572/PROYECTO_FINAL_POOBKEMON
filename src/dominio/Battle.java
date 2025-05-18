@@ -1,5 +1,12 @@
 package dominio;
 
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -11,12 +18,13 @@ import java.util.TimerTask;
  * Autores David Patacon y Daniel Hueso
  * Version 2.0
  */
-public class Battle {
+public class Battle implements Serializable {
+    private static final long serialVersionUID = 1L;
     private HumanTrainer entrenador1;
     private HumanTrainer entrenador2;
     private HumanTrainer turnoActual;
-    private BattleGUIListener listener;
-    private Timer turnTimer;
+    private transient BattleGUIListener listener;
+    private transient Timer turnTimer;
     private boolean esperandoAccion;
     private static final int TIEMPO_TURNO = 20; // 20 segundos por turno
     private static final Movimiento FORCEJEO = new Forcejeo();
@@ -35,19 +43,8 @@ public class Battle {
         this.esperandoAccion = false;
         
         // Configurar listeners de los entrenadores
-        this.entrenador1.setListener(new TrainerListener() {
-            @Override
-            public void onActionPerformed() {
-                finalizarTurno();
-            }
-        });
-        
-        this.entrenador2.setListener(new TrainerListener() {
-            @Override
-            public void onActionPerformed() {
-                finalizarTurno();
-            }
-        });
+        this.entrenador1.setListener(new TrainerActionListener(this));
+        this.entrenador2.setListener(new TrainerActionListener(this));
     }
 
     public static Battle setupBattle(
@@ -361,12 +358,54 @@ public class Battle {
     public boolean isPaused() {
         return  false;
     }
+
+    /**
+     * Guarda el estado actual de la batalla en un archivo
+     * @param filePath Ruta del archivo donde guardar
+     * @throws IOException Si ocurre un error de E/S
+     */
+    public void guardarPartida(String filePath) throws IOException {
+        try (ObjectOutputStream oos = new ObjectOutputStream(
+            new BufferedOutputStream(new FileOutputStream(filePath)))) {
+            oos.writeObject(this);
+        }
+    }
+    /**
+     * Carga una batalla desde un archivo
+     * @param filePath Ruta del archivo a cargar
+     * @return La batalla cargada
+     * @throws IOException Si ocurre un error de E/S
+     * @throws ClassNotFoundException Si la clase no se encuentra
+     */
+    public static Battle cargarPartida(String filePath) throws IOException, ClassNotFoundException {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
+            Battle batalla = (Battle) ois.readObject();
+            // Reconstruir listeners después de cargar
+            batalla.entrenador1.setListener(new TrainerActionListener(batalla));
+            batalla.entrenador2.setListener(new TrainerActionListener(batalla));
+            return batalla;
+        }
+    }
     
+    private static class TrainerActionListener implements TrainerListener, Serializable {
+    private static final long serialVersionUID = 1L;
+    private final Battle battle;
+    
+    public TrainerActionListener(Battle battle) {
+        this.battle = battle;
+    }
+    
+    @Override
+    public void onActionPerformed() {
+        battle.finalizarTurno();
+    }
+}
 }
 
 /**
  * Interfaz para notificar a Battle cuando un entrenador completa su acción
  */
-interface TrainerListener {
+interface TrainerListener extends Serializable {
     void onActionPerformed();
 }
+

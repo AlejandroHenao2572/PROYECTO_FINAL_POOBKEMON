@@ -388,4 +388,6 @@ public class ActionPanel extends JPanel {
     private Border createRoundedBorder() {
         return new LineBorder(Color.BLACK, 1, true); // grosor 2, redondeado true
     }
+
+    
 }

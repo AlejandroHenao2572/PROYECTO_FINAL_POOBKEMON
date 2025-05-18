@@ -1,5 +1,7 @@
 package dominio;
 
+import java.io.Serializable;
+
 /**
  * Clase abstracta base para todos los movimientos de pokemon
  * Representa un movimiento generico que puede usar un pokemon
@@ -8,7 +10,8 @@ package dominio;
  * Autores David Patacon y Daniel Hueso
  * Version 1.0
  */
-public abstract class Movimiento {
+public abstract class Movimiento implements Serializable {
+    private static final long serialVersionUID = 1L;
     protected String nombre;
     protected String tipo;
     protected int potencia;
