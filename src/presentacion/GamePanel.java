@@ -34,6 +34,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenWidth = titleSize * maxScreenCol;
     public final int screenHeight = titleSize * maxScreenRow;
 
+
     // Control del juego
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
@@ -120,6 +121,7 @@ public class GamePanel extends JPanel implements Runnable {
         // Inicializar metricas de fuente
         fontMetrics = this.getFontMetrics(buttonFont);
         calculateButtonSizes();
+        MusicManager.playMusic("musica/Normal_music.wav");
     }
     /**
      * Carga los recursos graficos del juego como la imagen del titulo

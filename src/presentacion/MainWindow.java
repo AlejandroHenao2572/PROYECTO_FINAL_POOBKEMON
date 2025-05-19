@@ -132,6 +132,7 @@ public class MainWindow extends JFrame implements BattleGUIListener {
             
             centerWindow();
             setVisible(true);
+            MusicManager.playMusic("musica/Battle_music.wav");
     }
 
     private void guardarPartida() {
@@ -434,5 +435,8 @@ public class MainWindow extends JFrame implements BattleGUIListener {
 
     public Battle getBattle() {
         return battle;
+    }
+    public void setBattle(Battle battle) {
+        this.battle = battle;
     }
 }

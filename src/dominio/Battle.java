@@ -423,7 +423,7 @@ public class Battle implements Serializable {
         }
     }
     
-    private static class TrainerActionListener implements TrainerListener, Serializable {
+    private static class TrainerActionListener implements TrainerListener {
     private static final long serialVersionUID = 1L;
     private final Battle battle;
     
