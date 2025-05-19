@@ -6,18 +6,27 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Pruebas unitarias para la clase HumanTrainer.
+ * Se verifica el manejo del equipo de pokemon, el uso de items, el cambio de pokemon activo,
+ * el ataque a oponentes, el uso de Forcejeo cuando no hay PP y el manejo de condiciones de derrota.
+ */
 public class TrainerTest {
     private HumanTrainer entrenador;
     private HumanTrainer oponente;
     private Pokemon pikachu;
     private Pokemon charmander;
 
+    /**
+     * Prepara el escenario antes de cada prueba.
+     * Se crean dos entrenadores, cada uno con su equipo de pokemon y movimientos.
+     */
     @BeforeEach
     void setUp() {
         entrenador = new HumanTrainer("Ash", "Rojo");
         oponente = new HumanTrainer("Gary", "Azul");
 
-        Movimiento ataqueRapido = new MovimientoFisico("Ataque Rápido", "Normal", 40, 100, 10);
+        Movimiento ataqueRapido = new MovimientoFisico("Ataque Rapido", "Normal", 40, 100, 10);
         Movimiento golpe = new MovimientoFisico("Golpe", "Normal", 50, 100, 10);
 
         pikachu = new Pokemon("Pikachu", "Electrico", null, 100, 55, 40, 50, 50, 90, new ArrayList<>());
@@ -35,12 +44,18 @@ public class TrainerTest {
         oponente.agregarPokemon(squirtle);
     }
 
+    /**
+     * Prueba que al agregar pokemon, el primero se establece como activo y el equipo tiene el tamano correcto.
+     */
     @Test
     void shouldAddPokemonAndSetFirstAsActive() {
         assertEquals(pikachu, entrenador.getPokemonActivo());
         assertEquals(2, entrenador.getEquipo().size());
     }
 
+    /**
+     * Prueba que al usar una pocion, el pokemon activo se cura y el item se elimina del inventario.
+     */
     @Test
     void shouldHealPokemonWhenUsingPotion() throws POOBkemonException {
         Potion pocion = new Potion();
@@ -54,12 +69,18 @@ public class TrainerTest {
         assertTrue(entrenador.getItems().isEmpty());
     }
 
+    /**
+     * Prueba que el entrenador puede cambiar manualmente el pokemon activo.
+     */
     @Test
     void shouldChangeActivePokemonManually() {
         entrenador.onSwitchSelected(1); // Charmander
         assertEquals(charmander, entrenador.getPokemonActivo());
     }
 
+    /**
+     * Prueba que no se puede cambiar a un pokemon debilitado, el activo permanece igual.
+     */
     @Test
     void shouldNotChangeToFaintedPokemon() throws POOBkemonException {
         charmander.recibirDaño(999); // Lo debilitamos
@@ -67,6 +88,9 @@ public class TrainerTest {
         assertEquals(pikachu, entrenador.getPokemonActivo()); // No cambia
     }
 
+    /**
+     * Prueba que el entrenador es derrotado si todos sus pokemon estan debilitados.
+     */
     @Test
     void shouldBeDefeatedIfAllPokemonAreFainted() throws POOBkemonException{
         pikachu.recibirDaño(200);
@@ -74,6 +98,9 @@ public class TrainerTest {
         assertTrue(entrenador.estaDerrotado());
     }
 
+    /**
+     * Prueba que al atacar, el pokemon enemigo pierde PS.
+     */
     @Test
     void shouldReduceEnemyHPWhenAttacking() {
         Pokemon enemigo = oponente.getPokemonActivo();
@@ -83,7 +110,10 @@ public class TrainerTest {
         assertTrue(enemigo.getPsActual() < vidaAntes);
     }
 
-   @Test
+    /**
+     * Prueba que si todos los movimientos estan sin PP, se usa Forcejeo y se produce autodaño y dano al enemigo.
+     */
+    @Test
     void shouldUseStruggleWhenAllMovesAreOutOfPP() throws POOBkemonException {
         // Agotar PP de todos los movimientos
         for (Movimiento m : pikachu.getMovimientos()) {
@@ -92,27 +122,30 @@ public class TrainerTest {
             }
         }
 
-        // Confirmamos que todos los movimientos están sin PP
-        assertTrue(pikachu.sinPP(), "Pikachu debería no tener PP en ningún movimiento");
+        // Confirmamos que todos los movimientos estan sin PP
+        assertTrue(pikachu.sinPP(), "Pikachu deberia no tener PP en ningun movimiento");
 
         Pokemon enemigo = oponente.getPokemonActivo();
-        enemigo.recibirDaño(20); // Opcional: para que el enemigo no esté al 100%
+        enemigo.recibirDaño(20); // Opcional: para que el enemigo no este al 100%
         
         int vidaInicialPikachu = pikachu.getPsActual();
         int vidaInicialEnemigo = enemigo.getPsActual();
 
-        entrenador.onAttackSelected(0, oponente); // Este índice es irrelevante si no hay PP
+        entrenador.onAttackSelected(0, oponente); // Este indice es irrelevante si no hay PP
 
         int vidaFinalPikachu = pikachu.getPsActual();
         int vidaFinalEnemigo = enemigo.getPsActual();
 
         // Verificamos que hubo autodaño
-        assertTrue(vidaFinalPikachu < vidaInicialPikachu, "Pikachu debería recibir autodaño por Forcejeo");
+        assertTrue(vidaFinalPikachu < vidaInicialPikachu, "Pikachu deberia recibir autodaño por Forcejeo");
 
-        // Verificamos que se hizo daño al enemigo
-        assertTrue(vidaFinalEnemigo < vidaInicialEnemigo, "El enemigo debería recibir daño por Forcejeo");
+        // Verificamos que se hizo dano al enemigo
+        assertTrue(vidaFinalEnemigo < vidaInicialEnemigo, "El enemigo deberia recibir dano por Forcejeo");
     }
     
+    /**
+     * Prueba que si el movimiento falla (precision 0), el enemigo no recibe dano.
+     */
     @Test
     void shouldNotAttackWhenMoveMisses() {
         // Usamos movimiento con precision 0 para asegurar fallo
@@ -124,9 +157,12 @@ public class TrainerTest {
         int vidaAntes = enemigo.getPsActual();
 
         entrenador.onAttackSelected(0, oponente);
-        assertEquals(vidaAntes, enemigo.getPsActual(), "El ataque fallido no debe causar daño");
+        assertEquals(vidaAntes, enemigo.getPsActual(), "El ataque fallido no debe causar dano");
     }
 
+    /**
+     * Prueba que al usar un movimiento, el PP del movimiento disminuye en 1.
+     */
     @Test
     void shouldDecreasePPWhenMoveIsUsed() throws POOBkemonException{
         Movimiento movimientoTest = new MovimientoFisico("Golpe Seguro", "Normal", 50, 100, 5);
@@ -138,7 +174,7 @@ public class TrainerTest {
         entrenador.onAttackSelected(0, oponente);
         int ppDespues = movimientoTest.getPP();
 
-        assertEquals(ppAntes - 1, ppDespues);  // ✅ Esto ahora será cierto
+        assertEquals(ppAntes - 1, ppDespues);  // Se espera que el PP disminuya en 1
     }
 
 }

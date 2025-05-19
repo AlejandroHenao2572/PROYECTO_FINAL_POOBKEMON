@@ -9,11 +9,20 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Pruebas unitarias para la clase Pokemon.
+ * Se verifica la correcta inicializacion, el manejo de PS, el funcionamiento de los setters,
+ * y el lanzamiento de excepciones en casos de error o parametros invalidos.
+ */
 public class PokemonTest {
 
     private Pokemon pikachu;
     private Pokemon bulbasaur;
 
+    /**
+     * Prepara el escenario antes de cada prueba.
+     * Se crean dos Pokemon de prueba con estadisticas y movimientos basicos.
+     */
     @BeforeEach
     public void setUp() {
         ArrayList<Movimiento> movimientos = new ArrayList<>();
@@ -23,6 +32,9 @@ public class PokemonTest {
 
     // CONSTRUCTOR
 
+    /**
+     * Prueba que el constructor inicializa correctamente todos los atributos del Pokemon.
+     */
     @Test
     public void shouldInitializePokemonWithCorrectValues() {
         assertEquals("Pikachu", pikachu.getNombre());
@@ -41,14 +53,18 @@ public class PokemonTest {
 
     // recibirDaño
 
-// recibirDaño
-
+    /**
+     * Prueba que al recibir dano, los PS actuales se reducen correctamente.
+     */
     @Test
     public void shouldReducePsActualWhenReceivingDamage() throws POOBkemonException {
         pikachu.recibirDaño(25);
         assertEquals(75, pikachu.getPsActual());
     }
 
+    /**
+     * Prueba que los PS actuales no pueden ser negativos aunque el dano recibido sea mayor que los PS.
+     */
     @Test
     public void shouldNotHaveNegativePsActualAfterReceivingExcessiveDamage() throws POOBkemonException {
         pikachu.recibirDaño(999);
@@ -57,12 +73,18 @@ public class PokemonTest {
 
     // estaDebilitado 
 
+    /**
+     * Prueba que un Pokemon no esta debilitado si sus PS actuales son mayores a cero.
+     */
     @Test
     public void shouldNotBeDebilitatedIfPsActualGreaterThanZero() throws POOBkemonException {
         pikachu.recibirDaño(20);
         assertFalse(pikachu.estaDebilitado());
     }
 
+    /**
+     * Prueba que un Pokemon esta debilitado si sus PS actuales son cero.
+     */
     @Test
     public void shouldBeDebilitatedIfPsActualIsZero() throws POOBkemonException {
         pikachu.recibirDaño(100);
@@ -71,6 +93,9 @@ public class PokemonTest {
 
     // restaurarPS
 
+    /**
+     * Prueba que al restaurar PS, los PS actuales aumentan correctamente.
+     */
     @Test
     public void shouldRestorePsActualWhenHealing() throws POOBkemonException {
         pikachu.recibirDaño(40);
@@ -78,6 +103,9 @@ public class PokemonTest {
         assertEquals(90, pikachu.getPsActual());
     }
 
+    /**
+     * Prueba que al restaurar PS, los PS actuales no pueden exceder el maximo de PS.
+     */
     @Test
     public void shouldNotExceedMaxPsWhenRestoring() throws POOBkemonException {
         pikachu.recibirDaño(10);
@@ -87,6 +115,9 @@ public class PokemonTest {
 
     // SETTERS 
 
+    /**
+     * Prueba que los setters actualizan correctamente las estadisticas y tipos del Pokemon.
+     */
     @Test
     public void shouldUpdatePokemonStatsWithSetters() {
         pikachu.setAtaque(70);
@@ -100,6 +131,9 @@ public class PokemonTest {
         assertEquals("Volador", pikachu.getTipoSecundario());
     }
 
+    /**
+     * Prueba que al cambiar el maximo de PS, los PS actuales tambien se actualizan.
+     */
     @Test
     public void shouldResetPsAndPsActualWhenSettingNewPs() {
         pikachu.setPs(150);
@@ -107,7 +141,12 @@ public class PokemonTest {
         assertEquals(150, pikachu.getPsActual());
     }
 
-     @Test
+    // EXCEPCIONES
+
+    /**
+     * Prueba que recibir dano con una cantidad no valida lanza la excepcion correspondiente.
+     */
+    @Test
     public void recibirDanioCantidadNoValidaLanzaExcepcion() {
         POOBkemonException ex = assertThrows(POOBkemonException.class, () -> {
             bulbasaur.recibirDaño(0);
@@ -115,6 +154,9 @@ public class PokemonTest {
         assertEquals(POOBkemonException.ERROR_CANTIDAD_NO_VALIDA, ex.getMessage());
     }
 
+    /**
+     * Prueba que restaurar PS con una cantidad no valida lanza la excepcion correspondiente.
+     */
     @Test
     public void restaurarPsCantidadNoValidaLanzaExcepcion() {
         POOBkemonException ex = assertThrows(POOBkemonException.class, () -> {
@@ -123,6 +165,9 @@ public class PokemonTest {
         assertEquals(POOBkemonException.ERROR_CANTIDAD_NO_VALIDA, ex.getMessage());
     }
 
+    /**
+     * Prueba que asignar movimientos nulos o vacios lanza la excepcion correspondiente.
+     */
     @Test
     public void setMovimientosNuloOLimpioLanzaExcepcion() {
         POOBkemonException ex1 = assertThrows(POOBkemonException.class, () -> {
@@ -136,6 +181,9 @@ public class PokemonTest {
         assertEquals(POOBkemonException.ERROR_MOVIMIENTOS_NO_VALIDOS, ex2.getMessage());
     }
 
+    /**
+     * Prueba que asignar un nivel no valido lanza la excepcion correspondiente.
+     */
     @Test
     public void setNivelNoValidoLanzaExcepcion() {
         POOBkemonException ex1 = assertThrows(POOBkemonException.class, () -> {
@@ -149,6 +197,9 @@ public class PokemonTest {
         assertEquals(POOBkemonException.ERROR_NIVEL_NO_VALIDO, ex2.getMessage());
     }
 
+    /**
+     * Prueba que aumentar estadisticas con cantidad no valida lanza la excepcion correspondiente.
+     */
     @Test
     public void aumentarEstadisticasCantidadNoValidaLanzaExcepcion() {
         POOBkemonException ex = assertThrows(POOBkemonException.class, () -> {
@@ -157,6 +208,9 @@ public class PokemonTest {
         assertEquals(POOBkemonException.ERROR_CANTIDAD_NO_VALIDA, ex.getMessage());
     }
 
+    /**
+     * Prueba que intentar aumentar una estadistica inexistente lanza la excepcion correspondiente.
+     */
     @Test
     public void aumentarEstadisticasNoExistenteLanzaExcepcion() {
         POOBkemonException ex = assertThrows(POOBkemonException.class, () -> {
@@ -165,6 +219,9 @@ public class PokemonTest {
         assertTrue(ex.getMessage().contains("no existe"));
     }
 
+    /**
+     * Prueba que aumentar una estadistica valida incrementa correctamente el valor.
+     */
     @Test
     public void aumentarEstadisticasCorrecto() throws POOBkemonException {
         int oldAtaque = bulbasaur.getAtaque();
