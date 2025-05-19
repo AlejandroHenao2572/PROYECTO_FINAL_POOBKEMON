@@ -33,6 +33,7 @@ public class GamePanel extends JPanel implements Runnable {
     final int maxScreenRow = 12;
     public final int screenWidth = titleSize * maxScreenCol;
     public final int screenHeight = titleSize * maxScreenRow;
+    private Font pokemonFont;
 
 
     // Control del juego
@@ -58,6 +59,9 @@ public class GamePanel extends JPanel implements Runnable {
     Rectangle normalModeZone;
     Rectangle survivalModeZone;
 
+    // Nueva area para el boton de volver
+    Rectangle backZone;
+
     // Fuentes
     Font buttonFont = new Font("Arial", Font.BOLD, 16);
     Font titleFont = new Font("Arial", Font.BOLD, 24);
@@ -78,29 +82,31 @@ public class GamePanel extends JPanel implements Runnable {
 
     /**
      * Constructor de la clase GamePanel
-     * Inicializa la configuracion de la pantalla el KeyHandler el jugador el TileManager
-     * y carga los recursos del juego Tambien inicializa las metricas de la fuente y calcula
-     * el tamaño de los botones del menu
+     * Inicializa la configuracion de la pantalla, el KeyHandler, el TileManager,
+     * y carga los recursos del juego. Tambien inicializa las metricas de la fuente y calcula
+     * el tamaño de los botones del menu. Agrega listeners de mouse para seleccionar modos con click.
      *
      * @param parentFrame El JFrame contenedor de este panel
      */
     public GamePanel(JFrame parentFrame) {
         this.parentFrame = parentFrame;
+        loadPokemonFont();
+        buttonFont = pokemonFont.deriveFont(14f);
+        titleFont = pokemonFont.deriveFont(24f);
+        subtitleFont = pokemonFont.deriveFont(16f);
+        titleYOffset = 10;
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
-        this.addKeyListener(keyH);
         this.setFocusable(true);
 
         // Crear barra de menú
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("Archivo");
 
-        // Opción Abrir Partida
         JMenuItem openItem = new JMenuItem("Abrir Partida");
         openItem.addActionListener(e -> cargarPartida());
 
-        // Opción Salir
         JMenuItem exitItem = new JMenuItem("Salir");
         exitItem.addActionListener(e -> {
             if (parentFrame != null) parentFrame.dispose();
@@ -111,18 +117,25 @@ public class GamePanel extends JPanel implements Runnable {
         fileMenu.add(exitItem);
         menuBar.add(fileMenu);
 
-        // Añadir la barra de menú al JFrame padre
         if (parentFrame instanceof JFrame) {
             ((JFrame) parentFrame).setJMenuBar(menuBar);
         }
-        // Cargar recursos
         loadResources();
-        
-        // Inicializar metricas de fuente
+
         fontMetrics = this.getFontMetrics(buttonFont);
         calculateButtonSizes();
         MusicManager.playMusic("musica/Normal_music.wav");
+
+        // Quitar KeyListener y agregar MouseListener para clicks en botones
+        this.removeKeyListener(keyH);
+        this.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                handleMenuClick(e.getPoint());
+            }
+        });
     }
+
     /**
      * Carga los recursos graficos del juego como la imagen del titulo
      * Si ocurre un error durante la carga se imprime un mensaje de error
@@ -130,7 +143,7 @@ public class GamePanel extends JPanel implements Runnable {
     private void loadResources() {
         try {
             // Cargar imagen del titulo
-            titleImage = ImageIO.read(getClass().getResourceAsStream("/graficos/pokemon_logo_new (6).png"));
+            titleImage = ImageIO.read(getClass().getResourceAsStream("/graficos/POOBkemon_logo.png"));
             double scaleFactor = (screenWidth * 0.7) / titleImage.getWidth();
             titleWidth = (int)(titleImage.getWidth() * scaleFactor);
             titleHeight = (int)(titleImage.getHeight() * scaleFactor);
@@ -205,37 +218,34 @@ public class GamePanel extends JPanel implements Runnable {
      * cuando se presiona la tecla Enter
      */
     public void update() {
-        player.update();
+        // player.update(); // Eliminar esta linea
 
-        if (keyH.enterPressed) {
-            handleMenuSelection();
-            keyH.enterPressed = false;
-        }
+        // Ya no se usa keyH.enterPressed ni handleMenuSelection
     }
 
     /**
      * Maneja la seleccion de elementos del menu principal y de seleccion de modo PvP
-     * basandose en la posicion del jugador y las areas de los botones
+     * usando la posicion del click del mouse sobre los botones
      */
-    private void handleMenuSelection() {
-        Rectangle playerBounds = player.getBounds();
-
+    private void handleMenuClick(Point clickPoint) {
         switch(currentState) {
             case MAIN_MENU:
-                if (playerBounds.intersects(pvpZone)) {
+                if (pvpZone.contains(clickPoint)) {
                     currentState = GameState.PVP_MODE_SELECTION;
-                } else if (playerBounds.intersects(pvmZone)) {
+                } else if (pvmZone.contains(clickPoint)) {
                     startGame("Player vs Machine");
-                } else if (playerBounds.intersects(mvmZone)) {
+                } else if (mvmZone.contains(clickPoint)) {
                     startGame("Machine vs Machine");
                 }
                 break;
 
             case PVP_MODE_SELECTION:
-                if (playerBounds.intersects(normalModeZone)) {
+                if (normalModeZone.contains(clickPoint)) {
                     startPvPNormalMode();
-                } else if (playerBounds.intersects(survivalModeZone)) {
+                } else if (survivalModeZone.contains(clickPoint)) {
                     startPvPSurvivalMode();
+                } else if (backZone.contains(clickPoint)) {
+                    currentState = GameState.MAIN_MENU;
                 }
                 break;
 
@@ -302,28 +312,29 @@ public class GamePanel extends JPanel implements Runnable {
     private void drawButton(Graphics2D g2, Rectangle rect, String text, Color color) {
         if (rect == null) return;
 
-        // Fondo del boton
+        // Fondo del boton (color solido retro)
         g2.setColor(color);
-        g2.fillRoundRect(rect.x, rect.y, rect.width, rect.height, 15, 15);
+        g2.fillRect(rect.x, rect.y, rect.width, rect.height);
 
-        // Borde del boton
+        // Borde pixelado (negro, grueso)
         g2.setColor(Color.BLACK);
-        g2.setStroke(new BasicStroke(2));
-        g2.drawRoundRect(rect.x, rect.y, rect.width, rect.height, 15, 15);
+        g2.setStroke(new BasicStroke(4));
+        g2.drawRect(rect.x, rect.y, rect.width, rect.height);
 
-        // Texto centrado
+        // Sombra interna para efecto 3D retro
+        g2.setColor(new Color(60, 60, 60));
+        g2.drawLine(rect.x, rect.y + rect.height, rect.x + rect.width, rect.y + rect.height); // abajo
+        g2.drawLine(rect.x + rect.width, rect.y, rect.x + rect.width, rect.y + rect.height); // derecha
+
+        // Texto centrado con fuente PokemonGB
         g2.setFont(buttonFont);
+        g2.setColor(Color.WHITE);
         int textWidth = g2.getFontMetrics().stringWidth(text);
         int textX = rect.x + (rect.width - textWidth) / 2;
         int textY = rect.y + (rect.height / 2) + g2.getFontMetrics().getAscent() / 2 - 5;
         g2.drawString(text, textX, textY);
 
-        // Efecto de seleccion
-        if (player.getBounds().intersects(rect)) {
-            g2.setColor(Color.YELLOW);
-            g2.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-            g2.drawRoundRect(rect.x-3, rect.y-3, rect.width+6, rect.height+6, 18, 18);
-        }
+        // Ya no hay efecto de seleccion por colision con el jugador
     }
 
     /**
@@ -333,32 +344,39 @@ public class GamePanel extends JPanel implements Runnable {
     private void calculateButtonSizes() {
         if (fontMetrics == null) return;
 
-        // Botones principales mas pequeños
+        // Botones principales en columna (uno debajo del otro)
         int mainButtonWidth = fontMetrics.stringWidth("Player vs Player") + 40;
-        int mainButtonHeight = 45;
-        int mainButtonSpacing = 25;
+        int mainButtonHeight = 30;
+        int mainButtonSpacing = 20;
 
-        int totalMainWidth = mainButtonWidth * 3 + mainButtonSpacing * 2;
-        int startMainX = (screenWidth - totalMainWidth) / 2;
-        int mainButtonY = titleYOffset + (titleImage != null ? titleHeight : 0) + 80;
+        int totalMainHeight = mainButtonHeight * 3 + mainButtonSpacing * 2;
+        int startMainY = (screenHeight - totalMainHeight) / 2 + 60; // 60 para dejar espacio al titulo
+        int mainButtonX = (screenWidth - mainButtonWidth) / 2;
 
-        pvpZone = new Rectangle(startMainX, mainButtonY, mainButtonWidth, mainButtonHeight);
-        pvmZone = new Rectangle(startMainX + mainButtonWidth + mainButtonSpacing, mainButtonY, mainButtonWidth, mainButtonHeight);
-        mvmZone = new Rectangle(startMainX + 2*(mainButtonWidth + mainButtonSpacing), mainButtonY, mainButtonWidth, mainButtonHeight);
+        pvpZone = new Rectangle(mainButtonX, startMainY, mainButtonWidth, mainButtonHeight);
+        pvmZone = new Rectangle(mainButtonX, startMainY + mainButtonHeight + mainButtonSpacing, mainButtonWidth, mainButtonHeight);
+        mvmZone = new Rectangle(mainButtonX, startMainY + 2 * (mainButtonHeight + mainButtonSpacing), mainButtonWidth, mainButtonHeight);
 
-        // Botones de modo PvP un poco mas grandes
+        // Botones de modo PvP en columna
         int modeButtonWidth = Math.max(
-            fontMetrics.stringWidth("Modo Normal") + 50,
-            fontMetrics.stringWidth("Supervivencia") + 50
+            fontMetrics.stringWidth("Modo Normal") + 25,
+            fontMetrics.stringWidth("Supervivencia") + 25
         );
-        int modeButtonHeight = 55;
-        int modeButtonSpacing = 40;
-        int totalModeWidth = modeButtonWidth * 2 + modeButtonSpacing;
-        int startModeX = (screenWidth - totalModeWidth) / 2;
-        int modeButtonY = mainButtonY + 120;
+        int modeButtonHeight = 35;
+        int modeButtonSpacing = 20;
+        int totalModeHeight = modeButtonHeight * 2 + modeButtonSpacing + 40; // +40 para el boton de volver
+        int startModeY = (screenHeight - totalModeHeight) / 2 + 40;
+        int modeButtonX = (screenWidth - modeButtonWidth) / 2;
 
-        normalModeZone = new Rectangle(startModeX, modeButtonY - 70, modeButtonWidth, modeButtonHeight);
-        survivalModeZone = new Rectangle(startModeX + modeButtonWidth + modeButtonSpacing, modeButtonY - 70, modeButtonWidth, modeButtonHeight);
+        normalModeZone = new Rectangle(modeButtonX, startModeY, modeButtonWidth, modeButtonHeight);
+        survivalModeZone = new Rectangle(modeButtonX, startModeY + modeButtonHeight + modeButtonSpacing, modeButtonWidth, modeButtonHeight);
+
+        // Boton de volver debajo de los modos
+        int backButtonWidth = fontMetrics.stringWidth("Volver") + 30;
+        int backButtonHeight = 28;
+        int backButtonX = (screenWidth - backButtonWidth) / 2;
+        int backButtonY = startModeY + 2 * (modeButtonHeight + modeButtonSpacing) + 10;
+        backZone = new Rectangle(backButtonX, backButtonY, backButtonWidth, backButtonHeight);
     }
 
     /**
@@ -394,9 +412,23 @@ public class GamePanel extends JPanel implements Runnable {
                 break;
         }
 
-        // Dibujar jugador
-        player.draw(g2);
         g2.dispose();
+    }
+
+    /**
+     * Dibuja una imagen en la pantalla en una posicion y tamaño especificos
+     * 
+     * @param g2 El objeto Graphics2D para dibujar
+     * @param img La imagen a dibujar
+     * @param x La coordenada x de la posicion superior izquierda
+     * @param y La coordenada y de la posicion superior izquierda
+     * @param width El ancho al que se dibujara la imagen
+     * @param height La altura a la que se dibujara la imagen
+     */
+    private void drawImageAt(Graphics2D g2, Image img, int x, int y, int width, int height) {
+        if (img != null) {
+            g2.drawImage(img, x, y, width, height, null);
+        }
     }
 
     /**
@@ -408,15 +440,17 @@ public class GamePanel extends JPanel implements Runnable {
      */
     private void drawTitle(Graphics2D g2) {
         if (titleImage != null) {
-            int titleX = (screenWidth - titleWidth) / 2;
-            g2.drawImage(titleImage, titleX, titleYOffset, titleWidth, titleHeight, null);
+            // Especifica aquí la posición exacta:
+            int posX = (screenWidth - titleWidth) / 2; // centrado horizontal
+            int posY = -150; // por ejemplo, 20 píxeles desde arriba
+            drawImageAt(g2, titleImage, posX, posY, titleWidth, titleHeight);
         } else {
             // Fallback si no hay imagen
             g2.setColor(Color.WHITE);
             g2.setFont(titleFont);
             String title = "POOBkemon";
             int titleWidth = g2.getFontMetrics().stringWidth(title);
-            g2.drawString(title, (screenWidth - titleWidth)/2, titleYOffset + 40);
+            g2.drawString(title, (screenWidth - titleWidth)/2, 70);
         }
     }
 
@@ -476,6 +510,11 @@ public class GamePanel extends JPanel implements Runnable {
         drawButton(g2, survivalModeZone, "Supervivencia",
             player.getBounds().intersects(survivalModeZone) ?
             new Color(255, 200, 200) : new Color(255, 150, 150));
+
+        // Boton de volver
+        drawButton(g2, backZone, "Volver",
+            player.getBounds().intersects(backZone) ?
+            new Color(255, 255, 180) : new Color(220, 220, 120));
     }
 
     /**
@@ -492,5 +531,17 @@ public class GamePanel extends JPanel implements Runnable {
         String message = "Juego en progreso";
         int msgWidth = g2.getFontMetrics().stringWidth(message);
         g2.drawString(message, (screenWidth - msgWidth)/2, screenHeight/2);
+    }
+
+    private void loadPokemonFont() {
+        try {
+            pokemonFont = Font.createFont(Font.TRUETYPE_FONT, 
+                getClass().getClassLoader().getResourceAsStream("graficos/PokemonGB.ttf")).deriveFont(24f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(pokemonFont);
+        } catch (Exception e) {
+            System.err.println("No se pudo cargar la fuente PokemonGB: " + e.getMessage());
+            pokemonFont = new Font("Monospaced", Font.BOLD, 24); // Fallback
+        }
     }
 }
