@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /** 
  * Esta clase maneja la logica de una batalla entre entrenadores humanos
@@ -29,6 +31,17 @@ public class Battle implements Serializable {
     private static final int TIEMPO_TURNO = 20; // 20 segundos por turno
     private static final Movimiento FORCEJEO = new Forcejeo();
     private boolean cambioForzado = false;
+    private static final Logger LOGGER = Logger.getLogger(Battle.class.getName());
+    static {
+        try {
+            java.util.logging.FileHandler fileHandler = new java.util.logging.FileHandler("battle_exceptions.log", true);
+            fileHandler.setFormatter(new java.util.logging.SimpleFormatter());
+            LOGGER.addHandler(fileHandler);
+            LOGGER.setUseParentHandlers(false); // Opcional: para que no salga en consola
+        } catch (IOException e) {
+            System.err.println("No se pudo inicializar el log de Battle: " + e.getMessage());
+        }
+    }
 
     /**
      * Constructor que inicializa una batalla con dos entrenadores humanos
@@ -220,15 +233,24 @@ public class Battle implements Serializable {
      * 
      * @param indiceMovimiento Índice del movimiento seleccionado
      */
-    public String movimientoSeleccionado(int indiceMovimiento) {
-        if (!esperandoAccion || isPaused()) return null;
-        
-        HumanTrainer oponente = (turnoActual == entrenador1) ? entrenador2 : entrenador1;
-        String message = turnoActual.onAttackSelected(indiceMovimiento, oponente);
-        if (listener != null) {
-            listener.onMoveUsed(turnoActual, message);
+    public String movimientoSeleccionado(int indiceMovimiento) throws POOBkemonException {
+        if (!esperandoAccion || isPaused()) {
+            throw new POOBkemonException(POOBkemonException.ERROR_MOVIMIENTO_TURNO);
         }
-        return message;
+        if (indiceMovimiento < 0 || indiceMovimiento >= turnoActual.getPokemonActivo().getMovimientos().size()) {
+            throw new POOBkemonException(POOBkemonException.ERROR_MOVIMIENTO_INDICE);
+        }
+        try {
+            HumanTrainer oponente = (turnoActual == entrenador1) ? entrenador2 : entrenador1;
+            String message = turnoActual.onAttackSelected(indiceMovimiento, oponente);
+            if (listener != null) {
+                listener.onMoveUsed(turnoActual, message);
+            }
+            return message;
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error inesperado al usar movimiento", e);
+            throw new POOBkemonException("Error inesperado al usar movimiento", e);
+        }
     }
 
     /**
@@ -236,64 +258,65 @@ public class Battle implements Serializable {
      * 
      * @param indicePokemon Índice del Pokémon seleccionado
      */
-    public String cambioPokemonSeleccionado(int indicePokemon) {
+    
+    public String cambioPokemonSeleccionado(int indicePokemon) throws POOBkemonException {
         if ((!esperandoAccion && !cambioForzado) || isPaused()) {
-            return "No puedes cambiar Pokémon ahora";
+            throw new POOBkemonException(POOBkemonException.ERROR_CAMBIO_POKEMON_TURNO);
         }
-        
         try {
-            // Validar selección
             if (indicePokemon < 0 || indicePokemon >= turnoActual.getEquipo().size()) {
-                return "Selección de Pokémon no válida";
+                throw new POOBkemonException(POOBkemonException.ERROR_CAMBIO_POKEMON_INDICE);
             }
-            
             Pokemon seleccionado = turnoActual.getEquipo().get(indicePokemon);
-            
-            // Verificar condiciones de cambio
             if (seleccionado.estaDebilitado()) {
-                return "¡" + seleccionado.getNombre() + " está debilitado!";
+                throw new POOBkemonException(String.format(POOBkemonException.ERROR_POKEMON_DEBILITADO, seleccionado.getNombre()));
             }
-            
             if (seleccionado == turnoActual.getPokemonActivo()) {
-                return "¡" + seleccionado.getNombre() + " ya está en combate!";
+                throw new POOBkemonException(String.format(POOBkemonException.ERROR_POKEMON_ACTIVO, seleccionado.getNombre()));
             }
-            
-            // Realizar el cambio y obtener mensaje
             String message = turnoActual.cambiarPokemon(indicePokemon);
-            
-            // Notificar cambio
             if (listener != null) {
                 listener.onPokemonChanged(turnoActual, message);
             }
-            
-            // Manejar flujo del juego
             if (cambioForzado) {
                 cambioForzado = false;
-                cambiarTurno(); // Pasar al oponente después de cambio forzado
+                cambiarTurno();
             } else {
                 finalizarTurno();
             }
-            
             return message;
+        } catch (POOBkemonException e) {
+            LOGGER.log(Level.WARNING, "Error al cambiar Pokémon: " + e.getMessage(), e);
+            throw e;
         } catch (Exception e) {
-            System.err.println("Error al cambiar Pokémon: " + e.getMessage());
-            return "Error al cambiar Pokémon";
+            LOGGER.log(Level.SEVERE, "Error inesperado al cambiar Pokémon", e);
+            throw new POOBkemonException("Error inesperado al cambiar Pokémon", e);
         }
     }
+
 
     /**
      * Procesa la selección de uso de ítem por parte del jugador
      * 
      * @param indiceItem Índice del ítem seleccionado
      */
-    public String itemSeleccionado(int indiceItem) {
-        if (!esperandoAccion || isPaused()) return null;
-        
-        String message = turnoActual.onItemSelected(indiceItem);;
-        if (listener != null) {
-            listener.onMoveUsed(turnoActual, message);
+    public String itemSeleccionado(int indiceItem) throws POOBkemonException {
+        if (!esperandoAccion || isPaused()) {
+            throw new POOBkemonException(POOBkemonException.ERROR_ITEM_TURNO);
         }
-        return message;
+        if (indiceItem < 0 || indiceItem >= turnoActual.getItems().size()) {
+            throw new POOBkemonException(POOBkemonException.ERROR_ITEM_INDICE);
+        }
+        try {
+            String message = turnoActual.onItemSelected(indiceItem);
+            if (listener != null) {
+                listener.onMoveUsed(turnoActual, message);
+            }
+            return message;
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error inesperado al usar ítem", e);
+            throw new POOBkemonException("Error inesperado al usar ítem", e);
+        }
     }
 
     // Métodos getter
@@ -364,12 +387,16 @@ public class Battle implements Serializable {
      * @param filePath Ruta del archivo donde guardar
      * @throws IOException Si ocurre un error de E/S
      */
-    public void guardarPartida(String filePath) throws IOException {
+    public void guardarPartida(String filePath) throws POOBkemonException {
         try (ObjectOutputStream oos = new ObjectOutputStream(
             new BufferedOutputStream(new FileOutputStream(filePath)))) {
             oos.writeObject(this);
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Error al guardar la partida", e);
+            throw new POOBkemonException(POOBkemonException.ERROR_GUARDAR, e);
         }
     }
+
     /**
      * Carga una batalla desde un archivo
      * @param filePath Ruta del archivo a cargar
@@ -377,13 +404,15 @@ public class Battle implements Serializable {
      * @throws IOException Si ocurre un error de E/S
      * @throws ClassNotFoundException Si la clase no se encuentra
      */
-    public static Battle cargarPartida(String filePath) throws IOException, ClassNotFoundException {
+    public static Battle cargarPartida(String filePath) throws POOBkemonException {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
             Battle batalla = (Battle) ois.readObject();
-            // Reconstruir listeners después de cargar
             batalla.entrenador1.setListener(new TrainerActionListener(batalla));
             batalla.entrenador2.setListener(new TrainerActionListener(batalla));
             return batalla;
+        } catch (IOException | ClassNotFoundException e) {
+            LOGGER.log(Level.SEVERE, "Error al cargar la partida", e);
+            throw new POOBkemonException(POOBkemonException.ERROR_CARGAR, e);
         }
     }
     

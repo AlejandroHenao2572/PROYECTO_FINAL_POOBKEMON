@@ -135,41 +135,37 @@ public class MainWindow extends JFrame implements BattleGUIListener {
     }
 
     private void guardarPartida() {
-        // Crear el file chooser de forma que no cause problemas de serialización
         JFileChooser fileChooser = new JFileChooser() {
-            // Sobrescribir para evitar serialización del UI
             private void writeObject(ObjectOutputStream out) throws IOException {
                 throw new NotSerializableException("JFileChooser no debe ser serializado");
             }
         };
-        
         fileChooser.setDialogTitle("Guardar partida");
-        
-        // Configurar directorio inicial si lo deseas
         // fileChooser.setCurrentDirectory(new File("ruta/a/tu/directorio"));
-        
-        // Mostrar diálogo de guardado
+
         int userSelection = fileChooser.showSaveDialog(this);
-        
+
         if (userSelection == JFileChooser.APPROVE_OPTION) {
             File fileToSave = fileChooser.getSelectedFile();
-            
+
             // Asegurarse de que tenga la extensión correcta
             if (!fileToSave.getName().toLowerCase().endsWith(".pokemon")) {
                 fileToSave = new File(fileToSave.getPath() + ".pokemon");
             }
-            
+
             try {
-                // Solo guardamos el modelo (Battle)
                 battle.guardarPartida(fileToSave.getAbsolutePath());
-                JOptionPane.showMessageDialog(this, "Partida guardada con éxito", 
-                    "Guardado", JOptionPane.INFORMATION_MESSAGE);
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Error al guardar: " + e.getMessage(), 
-                    "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Partida guardada con éxito",
+                        "Guardado", JOptionPane.INFORMATION_MESSAGE);
+            } catch (POOBkemonException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error inesperado al guardar: " + e.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-    }
+}
         
     private void cargarPartida() {
         JFileChooser fileChooser = new JFileChooser();
@@ -359,57 +355,64 @@ public class MainWindow extends JFrame implements BattleGUIListener {
     }
 
     public void attackSelected(int moveIndex) {
-        String message = battle.movimientoSeleccionado(moveIndex);
-        actionPanel.addBattleText(message);
-        updateUI();
-        
-        actionPanel.disableButtons();
-        
-        // Temporizador para mostrar el mensaje antes de continuar
-        Timer messageTimer = new Timer(1500, e -> {
-            // Continuar con el turno después de mostrar el mensaje
-            battle.finalizarTurno();
-            // Habilitar botones nuevamente
+        try {
+            String message = battle.movimientoSeleccionado(moveIndex);
+            actionPanel.addBattleText(message);
+            updateUI();
+
+            actionPanel.disableButtons();
+
+            // Temporizador para mostrar el mensaje antes de continuar
+            Timer messageTimer = new Timer(1500, e -> {
+                battle.finalizarTurno();
+                actionPanel.enableButtons();
+            });
+            messageTimer.setRepeats(false);
+            messageTimer.start();
+        } catch (POOBkemonException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             actionPanel.enableButtons();
-        });
-        messageTimer.setRepeats(false);
-        messageTimer.start();
+        }
     }
 
     public void switchPokemonSelected(int pokemonIndex) {
-        String message = battle.cambioPokemonSeleccionado(pokemonIndex);
-        actionPanel.addBattleText(message);
-        updateUI();
-        
-        actionPanel.disableButtons();
-        
-        // Temporizador para mostrar el mensaje antes de continuar
-        Timer messageTimer = new Timer(1500, e -> {
-            // Continuar con el turno después de mostrar el mensaje
-            battle.finalizarTurno();
-            // Habilitar botones nuevamente
+        try {
+            String message = battle.cambioPokemonSeleccionado(pokemonIndex);
+            actionPanel.addBattleText(message);
+            updateUI();
+
+            actionPanel.disableButtons();
+
+            Timer messageTimer = new Timer(1500, e -> {
+                battle.finalizarTurno();
+                actionPanel.enableButtons();
+            });
+            messageTimer.setRepeats(false);
+            messageTimer.start();
+        } catch (POOBkemonException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             actionPanel.enableButtons();
-        });
-        messageTimer.setRepeats(false);
-        messageTimer.start();
+        }
     }
 
     public void useItemSelected(int itemIndex) {
-        String message = battle.itemSeleccionado(itemIndex);
-        actionPanel.addBattleText(message);
-        updateUI();
-        
-        actionPanel.disableButtons();
-        
-        // Temporizador para mostrar el mensaje antes de continuar
-        Timer messageTimer = new Timer(1500, e -> {
-            // Continuar con el turno después de mostrar el mensaje
-            battle.finalizarTurno();
-            // Habilitar botones nuevamente
+        try {
+            String message = battle.itemSeleccionado(itemIndex);
+            actionPanel.addBattleText(message);
+            updateUI();
+
+            actionPanel.disableButtons();
+
+            Timer messageTimer = new Timer(1500, e -> {
+                battle.finalizarTurno();
+                actionPanel.enableButtons();
+            });
+            messageTimer.setRepeats(false);
+            messageTimer.start();
+        } catch (POOBkemonException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             actionPanel.enableButtons();
-        });
-        messageTimer.setRepeats(false);
-        messageTimer.start(); 
+        }
     }
 
     public void runAway() {

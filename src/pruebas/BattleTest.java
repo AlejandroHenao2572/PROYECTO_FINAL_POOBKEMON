@@ -97,4 +97,85 @@ public class BattleTest {
         assertEquals(turno1, turno3, "El turno debería alternar correctamente entre los entrenadores");
         assertNotEquals(turno1, turno2, "El turno deberia cambiar tras una llamada a cambiarTurno");
     }
+
+    @Test
+    void testMovimientoSeleccionadoFueraDeTurnoLanzaExcepcion() {
+        // No se ha iniciado la batalla, esperandoAccion es false
+        POOBkemonException ex = assertThrows(POOBkemonException.class, () -> {
+            batalla.movimientoSeleccionado(0);
+        });
+        assertEquals(POOBkemonException.ERROR_MOVIMIENTO_TURNO, ex.getMessage());
+    }
+
+    @Test
+    void testMovimientoSeleccionadoIndiceInvalidoLanzaExcepcion() {
+        batalla.iniciar();
+        // Turno válido, pero índice fuera de rango
+        POOBkemonException ex = assertThrows(POOBkemonException.class, () -> {
+            batalla.movimientoSeleccionado(99);
+        });
+        assertEquals(POOBkemonException.ERROR_MOVIMIENTO_INDICE, ex.getMessage());
+    }
+
+    @Test
+    void testCambioPokemonSeleccionadoFueraDeTurnoLanzaExcepcion() {
+        // No se ha iniciado la batalla, esperandoAccion es false
+        POOBkemonException ex = assertThrows(POOBkemonException.class, () -> {
+            batalla.cambioPokemonSeleccionado(0);
+        });
+        assertEquals(POOBkemonException.ERROR_CAMBIO_POKEMON_TURNO, ex.getMessage());
+    }
+
+    @Test
+    void testCambioPokemonSeleccionadoIndiceInvalidoLanzaExcepcion() {
+        batalla.iniciar();
+        POOBkemonException ex = assertThrows(POOBkemonException.class, () -> {
+            batalla.cambioPokemonSeleccionado(99);
+        });
+        assertEquals(POOBkemonException.ERROR_CAMBIO_POKEMON_INDICE, ex.getMessage());
+    }
+
+    @Test
+    void testCambioPokemonSeleccionadoDebilitadoLanzaExcepcion() {
+        batalla.iniciar();
+        // Debilitar el Pokémon que no es el activo
+        Pokemon otro = new Pokemon("Bulbasaur", "Planta", null, 100, 50, 40, 40, 40, 45, new ArrayList<>());
+        entrenador1.agregarPokemon(otro);
+        otro.recibirDaño(999);
+        POOBkemonException ex = assertThrows(POOBkemonException.class, () -> {
+            batalla.cambioPokemonSeleccionado(1); // Cambiar al debilitado
+        });
+        assertTrue(ex.getMessage().contains("debilitado"));
+    }
+
+    @Test
+    void testItemSeleccionadoFueraDeTurnoLanzaExcepcion() {
+        POOBkemonException ex = assertThrows(POOBkemonException.class, () -> {
+            batalla.itemSeleccionado(0);
+        });
+        assertEquals(POOBkemonException.ERROR_ITEM_TURNO, ex.getMessage());
+    }
+
+    @Test
+    void testItemSeleccionadoIndiceInvalidoLanzaExcepcion() {
+        batalla.iniciar();
+        POOBkemonException ex = assertThrows(POOBkemonException.class, () -> {
+            batalla.itemSeleccionado(99);
+        });
+        assertEquals(POOBkemonException.ERROR_ITEM_INDICE, ex.getMessage());
+    }
+
+    @Test
+    void testGuardarYcargarPartida() throws Exception {
+        batalla.iniciar();
+        String path = "test_save.pokemon";
+        // Guardar
+        assertDoesNotThrow(() -> batalla.guardarPartida(path));
+        // Cargar
+        Battle cargada = assertDoesNotThrow(() -> Battle.cargarPartida(path));
+        assertNotNull(cargada);
+        assertEquals(batalla.getEntrenador1().getNombre(), cargada.getEntrenador1().getNombre());
+        // Limpieza
+        new java.io.File(path).delete();
+    }
 }
