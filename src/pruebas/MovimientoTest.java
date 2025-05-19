@@ -20,8 +20,6 @@ public class MovimientoTest {
         atacante = new Pokemon("Charmander", "Fuego", null, 10, 50, 30, 20, 15, 10, null);
         objetivo = new Pokemon("Bulbasaur", "Planta", null, 10, 50, 20, 30, 10, 15, null);
         
-        // Evitamos efectos de tipo para facilidad las pruebas
-        TablaTipos.setModoTest(true); // hace que getMultiplicador() siempre retorne 1.0
     }
 
     @Test
@@ -82,12 +80,13 @@ public class MovimientoTest {
         Movimiento m2 = new MovimientoEspecial("Agotado2", "Fuego", 10, 100, 0);
         movimientos.add(m1);
         movimientos.add(m2);
-        atacante.setMovimientos(movimientos);
+
+        assertDoesNotThrow(() -> atacante.setMovimientos(movimientos));
 
         assertTrue(atacante.sinPP(), "El Pokemon debe activar Forcejeo si no tiene PP en ningun movimiento");
 
         Movimiento forcejeo = new Forcejeo();
-        forcejeo.ejecutar(atacante, objetivo);
+        assertDoesNotThrow(() -> forcejeo.ejecutar(atacante, objetivo));
 
         assertTrue(objetivo.getPsActual() < 100);
     }

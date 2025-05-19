@@ -1,4 +1,6 @@
 package dominio;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Clase que representa el item Potion
@@ -30,11 +32,20 @@ public class Potion extends Item {
      */
     @Override
     public String usarEn(Pokemon objetivo) {
-        if (!objetivo.estaDebilitado()) {
-            objetivo.restaurarPS(CURA_PS);
-            return "Se restauraron 20 PS a " + objetivo.getNombre();
-        } else {
-            return "No puedes usar Potion en un Pokemon debilitado";
+        Logger logger = Logger.getLogger(Potion.class.getName());
+        try {
+            if (!objetivo.estaDebilitado()) {
+                objetivo.restaurarPS(CURA_PS);
+                return "Se restauraron 20 PS a " + objetivo.getNombre();
+            } else {
+                return "No puedes usar Potion en un Pokemon debilitado";
+            }
+        } catch (POOBkemonException e) {
+            logger.log(Level.WARNING, "Error al usar Potion: " + e.getMessage(), e);
+            return "Error al usar Potion: " + e.getMessage();
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error inesperado al usar Potion: " + e.getMessage(), e);
+            return "Error inesperado al usar Potion.";
         }
     }
 }

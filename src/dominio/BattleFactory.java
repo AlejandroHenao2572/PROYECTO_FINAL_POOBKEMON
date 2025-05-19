@@ -3,15 +3,26 @@ package dominio;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class BattleFactory implements Serializable {
     private static final long serialVersionUID = 1L;
-
-    public static Pokemon crearPokemon(String nombre, Trainer entrenador) {
-        Pokemon p = new Pokemon(nombre, "Normal", null, 100, 100, 100, 100, 100, 100, new ArrayList<>());
-        configurarEstadisticas(p);
-        p.setMovimientos(obtenerMovimientosParaPokemon(nombre));
-        return p;
+    private static final Logger LOGGER = Logger.getLogger(BattleFactory.class.getName());
+    
+    public static Pokemon crearPokemon(String nombre, Trainer entrenador) throws POOBkemonException {
+        try {
+            Pokemon p = new Pokemon(nombre, "Normal", null, 100, 100, 100, 100, 100, 100, new ArrayList<>());
+            configurarEstadisticas(p);
+            p.setMovimientos(obtenerMovimientosParaPokemon(nombre));
+            return p;
+        } catch (POOBkemonException e) {
+            LOGGER.log(Level.WARNING, "Error al crear el Pokémon: " + e.getMessage(), e);
+            throw e;
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error inesperado al crear el Pokémon: " + e.getMessage(), e);
+            throw new POOBkemonException("Error inesperado al crear el Pokémon: " + e.getMessage(), e);
+        }
     }
 
     public static void agregarItems(Trainer trainer, Map<String, Integer> items) {

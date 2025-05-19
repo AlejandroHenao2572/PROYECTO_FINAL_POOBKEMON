@@ -15,7 +15,7 @@ public class ItemTest {
     private Revive revive;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws POOBkemonException {
         bulbasaur = new Pokemon("Bulbasaur", "Planta", null, 100, 49, 49, 65, 65, 45, new ArrayList<>());
         potion = new Potion();
         superPotion = new SuperPotion();
@@ -26,14 +26,14 @@ public class ItemTest {
     // Potion
 
     @Test
-    public void shouldRestore20PsWithPotionIfNotFainted() {
+    public void shouldRestore20PsWithPotionIfNotFainted() throws POOBkemonException {
         bulbasaur.recibirDaño(30); // PS actual = 70
         potion.usarEn(bulbasaur);
         assertEquals(90, bulbasaur.getPsActual());
     }
 
     @Test
-    public void shouldNotRestorePsWithPotionIfFainted() {
+    public void shouldNotRestorePsWithPotionIfFainted() throws POOBkemonException {
         bulbasaur.recibirDaño(100);
         potion.usarEn(bulbasaur);
         assertEquals(0, bulbasaur.getPsActual());
@@ -42,14 +42,14 @@ public class ItemTest {
     // SuperPotion
 
     @Test
-    public void shouldRestore50PsWithSuperPotionIfNotFainted() {
+    public void shouldRestore50PsWithSuperPotionIfNotFainted() throws POOBkemonException {
         bulbasaur.recibirDaño(60); // PS actual = 40
         superPotion.usarEn(bulbasaur);
         assertEquals(90, bulbasaur.getPsActual());
     }
 
     @Test
-    public void shouldNotRestorePsWithSuperPotionIfFainted() {
+    public void shouldNotRestorePsWithSuperPotionIfFainted() throws POOBkemonException {
         bulbasaur.recibirDaño(200);
         superPotion.usarEn(bulbasaur);
         assertEquals(0, bulbasaur.getPsActual());
@@ -58,7 +58,7 @@ public class ItemTest {
     // HyperPotion
 
     @Test
-    public void shouldRestoreUpToMaxPsWithHyperPotionIfNotFainted() {
+    public void shouldRestoreUpToMaxPsWithHyperPotionIfNotFainted() throws POOBkemonException {
         bulbasaur.recibirDaño(150); // PS actual = 0
         hyperPotion.usarEn(bulbasaur);
         assertEquals(0, bulbasaur.getPsActual());
@@ -70,7 +70,7 @@ public class ItemTest {
     }
 
     @Test
-    public void shouldNotRestorePsWithHyperPotionIfFainted() {
+    public void shouldNotRestorePsWithHyperPotionIfFainted() throws POOBkemonException {
         bulbasaur.recibirDaño(100);
         hyperPotion.usarEn(bulbasaur);
         assertEquals(0, bulbasaur.getPsActual());
@@ -79,7 +79,7 @@ public class ItemTest {
     // Revive
 
     @Test
-    public void shouldReviveFaintedPokemonWithHalfPs() {
+    public void shouldReviveFaintedPokemonWithHalfPs() throws POOBkemonException {
         bulbasaur.recibirDaño(100);
         assertTrue(bulbasaur.estaDebilitado());
         revive.usarEn(bulbasaur);
@@ -88,7 +88,7 @@ public class ItemTest {
     }
 
     @Test
-    public void shouldNotUseReviveIfPokemonIsNotFainted() {
+    public void shouldNotUseReviveIfPokemonIsNotFainted() throws POOBkemonException {
         bulbasaur.recibirDaño(60);
         revive.usarEn(bulbasaur);
         assertEquals(40, bulbasaur.getPsActual());
@@ -103,4 +103,6 @@ public class ItemTest {
         assertEquals("HyperPotion", hyperPotion.getNombre());
         assertEquals("Revive", revive.getNombre());
     }
+
+   
 }

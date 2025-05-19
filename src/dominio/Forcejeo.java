@@ -8,6 +8,8 @@ package dominio;
  * Autores David Patacon y Daniel Hueso
  * Version 1.0
  */
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Forcejeo extends MovimientoFisico {
     
@@ -31,19 +33,28 @@ public class Forcejeo extends MovimientoFisico {
      * @param atacante Pokemon que ejecuta el movimiento
      * @param objetivo Pokemon que recibe el ataque
      */
-    @Override
+@Override
     public String ejecutar(Pokemon atacante, Pokemon objetivo) {
-    
-        // Calculo de daño normal
-        int dano = (int)((getPotencia() * (double)atacante.getAtaque() / objetivo.getDefensa()) / 2);
-        objetivo.recibirDaño(dano);
-    
-        // El atacante recibe la mitad del daño infligido
-        int autoDano = dano / 2;
-        atacante.recibirDaño(autoDano);
-    
-        String message = "Forcejeo causó " + dano + " de daño a " + objetivo.getNombre() +
-                           " y " + autoDano + " de autodano a " + atacante.getNombre();
+        Logger logger = Logger.getLogger(Forcejeo.class.getName());
+        String message;
+        try {
+            // Calculo de daño normal
+            int dano = (int)((getPotencia() * (double)atacante.getAtaque() / objetivo.getDefensa()) / 2);
+            objetivo.recibirDaño(dano);
+
+            // El atacante recibe la mitad del daño infligido
+            int autoDano = dano / 2;
+            atacante.recibirDaño(autoDano);
+
+            message = "Forcejeo causó " + dano + " de daño a " + objetivo.getNombre() +
+                    " y " + autoDano + " de autodano a " + atacante.getNombre();
+        } catch (POOBkemonException e) {
+            logger.log(Level.WARNING, "Error al ejecutar Forcejeo: " + e.getMessage(), e);
+            message = "Error al ejecutar Forcejeo: " + e.getMessage();
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error inesperado al ejecutar Forcejeo: " + e.getMessage(), e);
+            message = "Error inesperado al ejecutar Forcejeo.";
+        }
         return message;
-    }
+}
 }

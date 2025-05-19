@@ -1,4 +1,6 @@
 package dominio;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Clase que implementa movimientos de estado sin daño directo
@@ -34,46 +36,55 @@ public class MovimientoEstado extends Movimiento {
      */
     @Override
     public String ejecutar(Pokemon atacante, Pokemon objetivo) {
-        if (!esUtilizable()) return null;
-        
+        Logger logger = Logger.getLogger(MovimientoEstado.class.getName());
         String estadisticaAfectada = "";
         int aumento = 0;
-        
-        switch (efectoSecundario) {
-            case "Aumenta puntos de salud":
-                aumento = atacante.aumentarEstadisticas("ps", 10);
-                estadisticaAfectada = "PS";
-                break;
-            case "Aumenta ataque":
-                aumento = atacante.aumentarEstadisticas("ataque", 10);
-                estadisticaAfectada = "ataque";
-                break;
-            case "Aumenta defensa":
-                aumento = atacante.aumentarEstadisticas("defensa", 10);
-                estadisticaAfectada = "defensa";
-                break;
-            case "Aumenta velocidad":
-                aumento = atacante.aumentarEstadisticas("velocidad", 10);
-                estadisticaAfectada = "velocidad";
-                break;
-            case "Aumenta ataque Especial":
-                aumento = atacante.aumentarEstadisticas("ataqueEspecial", 10);
-                estadisticaAfectada = "ataque especial";
-                break;
-            case "Aumenta defensa Especial":
-                aumento = atacante.aumentarEstadisticas("defensaEspecial", 10);
-                estadisticaAfectada = "defensa especial";
-                break;
-            default:
-                break;
-        }
-        String message = String.format("%s usó %s! %s aumentó en %d puntos.", 
-                                    atacante.getNombre(), 
-                                    getNombre(), 
-                                    estadisticaAfectada, 
+        String message;
+        try {
+            if (!esUtilizable()) return null;
+
+            switch (efectoSecundario) {
+                case "Aumenta puntos de salud":
+                    aumento = atacante.aumentarEstadisticas("ps", 10);
+                    estadisticaAfectada = "PS";
+                    break;
+                case "Aumenta ataque":
+                    aumento = atacante.aumentarEstadisticas("ataque", 10);
+                    estadisticaAfectada = "ataque";
+                    break;
+                case "Aumenta defensa":
+                    aumento = atacante.aumentarEstadisticas("defensa", 10);
+                    estadisticaAfectada = "defensa";
+                    break;
+                case "Aumenta velocidad":
+                    aumento = atacante.aumentarEstadisticas("velocidad", 10);
+                    estadisticaAfectada = "velocidad";
+                    break;
+                case "Aumenta ataque Especial":
+                    aumento = atacante.aumentarEstadisticas("ataqueEspecial", 10);
+                    estadisticaAfectada = "ataque especial";
+                    break;
+                case "Aumenta defensa Especial":
+                    aumento = atacante.aumentarEstadisticas("defensaEspecial", 10);
+                    estadisticaAfectada = "defensa especial";
+                    break;
+                default:
+                    break;
+            }
+            message = String.format("%s usó %s! %s aumentó en %d puntos.",
+                                    atacante.getNombre(),
+                                    getNombre(),
+                                    estadisticaAfectada,
                                     aumento);
-        
-        usar();
+
+            usar();
+        } catch (POOBkemonException e) {
+            logger.log(Level.WARNING, "Error al ejecutar MovimientoEstado: " + e.getMessage(), e);
+            message = "Error al ejecutar el movimiento de estado: " + e.getMessage();
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error inesperado al ejecutar MovimientoEstado: " + e.getMessage(), e);
+            message = "Error inesperado al ejecutar el movimiento de estado.";
+        }
         return message;
     }
 

@@ -5,7 +5,6 @@ import java.util.Map;
 
 public interface TablaTipos {
     static final Map<String, Map<String, Double>> efectividades = new HashMap<>();
-    static boolean modoTest = false;
 
     static void inicializarEfectividades() {
         agregarEfectividad("Normal", "Roca", 0.5);
@@ -51,14 +50,8 @@ public interface TablaTipos {
      * Devuelve el multiplicador de efectividad entre tipos
      */
     default double getMultiplicador(String tipoAtacante, String tipoDefensor) {
-        if (modoTest) return 1.0;
         return efectividades.getOrDefault(tipoAtacante, new HashMap<>())
                             .getOrDefault(tipoDefensor, 1.0);
     }
 
-    static void setModoTest(boolean test) {
-        // No se puede modificar variable static en interfaz directamente
-        // En un caso real se movería a una clase util o singleton
-        throw new UnsupportedOperationException("No se puede cambiar el modoTest desde interfaz.");
-    }
 }

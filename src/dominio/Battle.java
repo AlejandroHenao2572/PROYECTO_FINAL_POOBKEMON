@@ -61,30 +61,37 @@ public class Battle implements Serializable {
     }
 
     public static Battle setupBattle(
-        List<String> nombresEquipo1,
-        List<String> nombresEquipo2,
-        Map<String, Integer> items1,
-        Map<String, Integer> items2
-    ) {
+            List<String> nombresEquipo1,
+            List<String> nombresEquipo2,
+            Map<String, Integer> items1,
+            Map<String, Integer> items2
+    ) throws POOBkemonException {
         HumanTrainer jugador1 = new HumanTrainer("Jugador 1", "Rojo");
         HumanTrainer jugador2 = new HumanTrainer("Jugador 2", "Azul");
 
-           for (String nombre : nombresEquipo1) {
-            Pokemon p = BattleFactory.crearPokemon(nombre, jugador1);
-            jugador1.agregarPokemon(p);
+        try {
+            for (String nombre : nombresEquipo1) {
+                Pokemon p = BattleFactory.crearPokemon(nombre, jugador1);
+                jugador1.agregarPokemon(p);
+            }
+
+            for (String nombre : nombresEquipo2) {
+                Pokemon p = BattleFactory.crearPokemon(nombre, jugador2);
+                jugador2.agregarPokemon(p);
+            }
+
+            BattleFactory.agregarItems(jugador1, items1);
+            BattleFactory.agregarItems(jugador2, items2);
+
+            return new Battle(jugador1, jugador2);
+        } catch (POOBkemonException e) {
+            LOGGER.log(Level.WARNING, "Error al crear el equipo: " + e.getMessage(), e);
+            throw e;
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error inesperado al crear la batalla: " + e.getMessage(), e);
+            throw new POOBkemonException(POOBkemonException.ERROR_CREAR_BATALLA, e);
         }
-
-        for (String nombre : nombresEquipo2) {
-            Pokemon p = BattleFactory.crearPokemon(nombre, jugador2);
-            jugador2.agregarPokemon(p);
-        }
-
-        BattleFactory.agregarItems(jugador1, items1);
-        BattleFactory.agregarItems(jugador2, items2);
-
-        return new Battle(jugador1, jugador2);
     }
-
     /**
      * Establece el listener para eventos de la interfaz grafica
      * 

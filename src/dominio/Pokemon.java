@@ -59,10 +59,13 @@ public class Pokemon implements Serializable {
     }
 
     // Metodos setters para configuracion
-    public void setMovimientos(ArrayList<Movimiento> movimientos) {
+    public void setMovimientos(ArrayList<Movimiento> movimientos) throws POOBkemonException {
+        if (movimientos == null || movimientos.isEmpty()) {
+            throw new POOBkemonException(POOBkemonException.ERROR_MOVIMIENTOS_NO_VALIDOS);
+        }
         this.movimientos = movimientos;
     }
-    
+
     public void setTipoPrincipal(String tipo) {
         this.tipo = tipo;
     }
@@ -96,7 +99,10 @@ public class Pokemon implements Serializable {
         this.velocidad = velocidad;
     }
     
-    public void setNivel(int nivel) {
+    public void setNivel(int nivel) throws POOBkemonException {
+        if (nivel <= 0 || nivel > 100) {
+            throw new POOBkemonException(POOBkemonException.ERROR_NIVEL_NO_VALIDO);
+        }
         this.nivel = nivel;
     }
 
@@ -154,10 +160,14 @@ public class Pokemon implements Serializable {
      * 
      * @param cantidad Daño a recibir
      */
-    public void recibirDaño(int cantidad) {
+    public void recibirDaño(int cantidad) throws POOBkemonException {
+        if (cantidad <= 0) {
+            throw new POOBkemonException(POOBkemonException.ERROR_CANTIDAD_NO_VALIDA);
+        }
         psActual -= cantidad;
         if (psActual < 0) psActual = 0;
     }
+
     
     /**
      * Verifica si el Pokemon esta debilitado
@@ -173,7 +183,10 @@ public class Pokemon implements Serializable {
      * 
      * @param cantidad Cantidad de PS a restaurar
      */
-    public void restaurarPS(int cantidad) {
+    public void restaurarPS(int cantidad) throws POOBkemonException {
+        if (cantidad <= 0) {
+            throw new POOBkemonException(POOBkemonException.ERROR_CANTIDAD_NO_VALIDA);
+        }
         psActual += cantidad;
         if (psActual > ps) psActual = ps;
     }
@@ -200,11 +213,10 @@ public class Pokemon implements Serializable {
      * @return La cantidad que se aumentó, o 0 si la estadística no existe
      *         o la cantidad es inválida
      */
-    public int aumentarEstadisticas(String estadistica, int cantidad) {
+    public int aumentarEstadisticas(String estadistica, int cantidad) throws POOBkemonException {
         if (cantidad <= 0) {
-            return 0; // Cantidad no válida
+            throw new POOBkemonException(POOBkemonException.ERROR_CANTIDAD_NO_VALIDA);
         }
-
         switch (estadistica.toLowerCase()) {
             case "ps":
                 this.ps += cantidad;
@@ -216,17 +228,17 @@ public class Pokemon implements Serializable {
             case "defensa":
                 this.defensa += cantidad;
                 return cantidad;
-            case "ataqueEspecial":
+            case "ataqueespecial":
                 this.ataqueEspecial += cantidad;
                 return cantidad;
-            case "defensaEspecial":
+            case "defensaespecial":
                 this.defensaEspecial += cantidad;
                 return cantidad;
             case "velocidad":
                 this.velocidad += cantidad;
                 return cantidad;
             default:
-                return 0;
+                throw new POOBkemonException(String.format(POOBkemonException.ERROR_ESTADISTICA_NO_EXISTE, estadistica));
         }
     }
     

@@ -13,6 +13,11 @@ public class POOBkemonException extends Exception {
     public static final String ERROR_GUARDAR = "No se pudo guardar la partida";
     public static final String ERROR_CARGAR = "No se pudo cargar la partida";
     public static final String ERROR_ITEM_REVIVIR = "No se puede usar el item de revivir en este contexto.";
+    public static final String ERROR_CANTIDAD_NO_VALIDA = "La cantidad debe ser positiva.";
+    public static final String ERROR_NIVEL_NO_VALIDO = "El nivel debe ser mayor que cero.";
+    public static final String ERROR_MOVIMIENTOS_NO_VALIDOS = "La lista de movimientos no puede ser nula o vacía.";
+    public static final String ERROR_ESTADISTICA_NO_EXISTE = "La estadística '%s' no existe.";
+    public static final String ERROR_CREAR_BATALLA = "No se pudo crear la batalla";
 
     public POOBkemonException(String message) {
         super(message);

@@ -1,5 +1,6 @@
 package dominio;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  * Clase que implementa el item HyperPotion
  * Item que restaura 200 PS a un Pokemon
@@ -25,13 +26,23 @@ public class HyperPotion extends Item {
      * 
      * @param objetivo Pokemon a curar
      */
+
     @Override
     public String usarEn(Pokemon objetivo) {
-        if (!objetivo.estaDebilitado()) {
-            objetivo.restaurarPS(CURA_PS);
-            return "Se restauraron 200 PS a " + objetivo.getNombre();
-        } else {
-            return "No puedes usar HyperPotion en un Pokemon debilitado.";
+        Logger logger = Logger.getLogger(HyperPotion.class.getName());
+        try {
+            if (!objetivo.estaDebilitado()) {
+                objetivo.restaurarPS(CURA_PS);
+                return "Se restauraron 200 PS a " + objetivo.getNombre();
+            } else {
+                return "No puedes usar HyperPotion en un Pokemon debilitado.";
+            }
+        } catch (POOBkemonException e) {
+            logger.log(Level.WARNING, "Error al usar HyperPotion: " + e.getMessage(), e);
+            return "Error al usar HyperPotion: " + e.getMessage();
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error inesperado al usar HyperPotion: " + e.getMessage(), e);
+            return "Error inesperado al usar HyperPotion.";
         }
     }
 }

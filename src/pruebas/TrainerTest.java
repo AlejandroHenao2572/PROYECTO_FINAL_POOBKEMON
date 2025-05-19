@@ -42,7 +42,7 @@ public class TrainerTest {
     }
 
     @Test
-    void shouldHealPokemonWhenUsingPotion() {
+    void shouldHealPokemonWhenUsingPotion() throws POOBkemonException {
         Potion pocion = new Potion();
         entrenador.agregarItem(pocion);
 
@@ -61,14 +61,14 @@ public class TrainerTest {
     }
 
     @Test
-    void shouldNotChangeToFaintedPokemon() {
+    void shouldNotChangeToFaintedPokemon() throws POOBkemonException {
         charmander.recibirDaño(999); // Lo debilitamos
         entrenador.onSwitchSelected(1);
         assertEquals(pikachu, entrenador.getPokemonActivo()); // No cambia
     }
 
     @Test
-    void shouldBeDefeatedIfAllPokemonAreFainted() {
+    void shouldBeDefeatedIfAllPokemonAreFainted() throws POOBkemonException{
         pikachu.recibirDaño(200);
         charmander.recibirDaño(200);
         assertTrue(entrenador.estaDerrotado());
@@ -84,7 +84,7 @@ public class TrainerTest {
     }
 
    @Test
-    void shouldUseStruggleWhenAllMovesAreOutOfPP() {
+    void shouldUseStruggleWhenAllMovesAreOutOfPP() throws POOBkemonException {
         // Agotar PP de todos los movimientos
         for (Movimiento m : pikachu.getMovimientos()) {
             while (m.esUtilizable()) {
@@ -128,7 +128,7 @@ public class TrainerTest {
     }
 
     @Test
-    void shouldDecreasePPWhenMoveIsUsed() {
+    void shouldDecreasePPWhenMoveIsUsed() throws POOBkemonException{
         Movimiento movimientoTest = new MovimientoFisico("Golpe Seguro", "Normal", 50, 100, 5);
         ArrayList<Movimiento> movimientos = new ArrayList<>();
         movimientos.add(movimientoTest);

@@ -43,13 +43,14 @@ public class BattleTest {
 
     @Test
     void shouldEndBattleWhenOneTrainerIsDefeated() {
-        p2.recibirDaño(999); // dejar fuera de combate
+        assertDoesNotThrow(() -> p2.recibirDaño(999)); // dejar fuera de combate
         assertTrue(p2.estaDebilitado(), "El Pokemon deberia estar debilitado");
 
         batalla.iniciar();
         assertTrue(entrenador2.estaDerrotado(), "El entrenador 2 deberia estar derrotado");
         assertFalse(entrenador1.estaDerrotado(), "El entrenador 1 no deberia estar derrotado");
     }
+
 
     @Test
     void shouldChangeTurn() {
@@ -66,7 +67,7 @@ public class BattleTest {
         batalla.iniciar();
         Trainer actual = batalla.getTurnoActual();
         Pokemon activo = actual.getPokemonActivo();
-        activo.recibirDaño(999);
+        assertDoesNotThrow(() -> activo.recibirDaño(999));
 
         assertTrue(activo.estaDebilitado(), "El Pokemon deberia estar debilitado");
 
@@ -76,12 +77,13 @@ public class BattleTest {
 
     @Test
     void shouldDeclareCorrectWinner() {
-        p2.recibirDaño(999);
+        assertDoesNotThrow(() -> p2.recibirDaño(999));
         batalla.iniciar();
 
         assertTrue(entrenador2.estaDerrotado(), "Entrenador 2 debería haber perdido");
         assertFalse(entrenador1.estaDerrotado(), "Entrenador 1 debería haber ganado");
     }
+
 
     @Test
     void shouldAlternateTurnsProperly() {
@@ -141,7 +143,7 @@ public class BattleTest {
         // Debilitar el Pokémon que no es el activo
         Pokemon otro = new Pokemon("Bulbasaur", "Planta", null, 100, 50, 40, 40, 40, 45, new ArrayList<>());
         entrenador1.agregarPokemon(otro);
-        otro.recibirDaño(999);
+        assertDoesNotThrow(() -> otro.recibirDaño(999));
         POOBkemonException ex = assertThrows(POOBkemonException.class, () -> {
             batalla.cambioPokemonSeleccionado(1); // Cambiar al debilitado
         });
