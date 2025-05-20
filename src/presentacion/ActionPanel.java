@@ -16,7 +16,8 @@ import java.util.ArrayList;
  * @author Daniel Hueso
  * @version 1.0
  */
-public class ActionPanel extends JPanel {
+public class ActionPanel extends JPanel { 
+
     private MainWindow mainWindow;
     private Trainer currentPlayer;
     private JLabel lastActionLabel;

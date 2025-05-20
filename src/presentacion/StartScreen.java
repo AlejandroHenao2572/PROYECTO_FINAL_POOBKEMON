@@ -1,6 +1,9 @@
 package presentacion;
 
 import javax.swing.*;
+
+import dominio.TablaTipos;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
@@ -59,6 +62,7 @@ public class StartScreen extends JFrame {
      * @param args Argumentos de la linea de comandos .
      */
     public static void main(String[] args) {
+        TablaTipos.inicializarEfectividades();
         new StartScreen();
     }
 }

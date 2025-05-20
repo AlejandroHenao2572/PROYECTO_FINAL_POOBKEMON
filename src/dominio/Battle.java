@@ -28,7 +28,7 @@ public class Battle implements Serializable {
     private transient BattleGUIListener listener;
     private transient Timer turnTimer;
     private boolean esperandoAccion;
-    private static final int TIEMPO_TURNO = 20; // 20 segundos por turno
+    private static final int TIEMPO_TURNO = 20;
     private static final Movimiento FORCEJEO = new Forcejeo();
     private boolean cambioForzado = false;
     private static final Logger LOGGER = Logger.getLogger(Battle.class.getName());
@@ -92,6 +92,7 @@ public class Battle implements Serializable {
             throw new POOBkemonException(POOBkemonException.ERROR_CREAR_BATALLA, e);
         }
     }
+    
     /**
      * Establece el listener para eventos de la interfaz grafica
      * 

@@ -51,6 +51,29 @@ public class PokemonBattleGame {
             JOptionPane.showMessageDialog(null, "Error inesperado al iniciar la batalla.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
+        public static void iniciarBatallaPvM(
+        List<String> nombresEquipoJugador,
+        List<String> nombresEquipoMaquina,
+        Map<String, Integer> itemsJugador,
+        Map<String, Integer> itemsMaquina,
+        String nombreEntrenadorMaquina
+    ) {
+        try {
+            BattlePvM battle = BattlePvM.setupBattle(nombresEquipoJugador, nombresEquipoMaquina, itemsJugador, itemsMaquina, nombreEntrenadorMaquina);
+            SwingUtilities.invokeLater(() -> {
+                MainWindowPvM mainWindow = new MainWindowPvM((HumanTrainer) battle.getEntrenador1(), (AITrainer) battle.getEntrenador2());
+                mainWindow.setVisible(true);
+                mainWindow.startBattle();
+            });
+        } catch (POOBkemonException e) {
+            LOGGER.log(Level.WARNING, "Error al iniciar la batalla: " + e.getMessage(), e);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error al iniciar batalla", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error inesperado al iniciar la batalla: " + e.getMessage(), e);
+            JOptionPane.showMessageDialog(null, "Error inesperado al iniciar la batalla.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
     
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {

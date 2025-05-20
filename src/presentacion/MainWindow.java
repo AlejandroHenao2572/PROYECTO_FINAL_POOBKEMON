@@ -142,14 +142,12 @@ public class MainWindow extends JFrame implements BattleGUIListener {
             }
         };
         fileChooser.setDialogTitle("Guardar partida");
-        // fileChooser.setCurrentDirectory(new File("ruta/a/tu/directorio"));
 
         int userSelection = fileChooser.showSaveDialog(this);
 
         if (userSelection == JFileChooser.APPROVE_OPTION) {
             File fileToSave = fileChooser.getSelectedFile();
 
-            // Asegurarse de que tenga la extensión correcta
             if (!fileToSave.getName().toLowerCase().endsWith(".pokemon")) {
                 fileToSave = new File(fileToSave.getPath() + ".pokemon");
             }
@@ -259,7 +257,7 @@ public class MainWindow extends JFrame implements BattleGUIListener {
     }
 
      @Override
-    public void onTurnStarted(HumanTrainer trainer) {
+    public void onTurnStarted(Trainer trainer) {
         // Actualizar el indicador de turno
         updateTurnIndicator(trainer);
         
@@ -281,7 +279,7 @@ public class MainWindow extends JFrame implements BattleGUIListener {
     }
 
     @Override
-    public void onTurnEnded(HumanTrainer trainer) {
+    public void onTurnEnded(Trainer trainer) {
     }
 
     @Override

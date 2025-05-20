@@ -46,7 +46,10 @@ public class GamePanel extends JPanel implements Runnable {
     enum GameState {
         MAIN_MENU,
         PVP_MODE_SELECTION,
-        IN_GAME
+        PVM_MODE_SELECTION,
+        MVM_MODE_SELECTION,
+        IN_GAME,
+
     }
     private GameState currentState = GameState.MAIN_MENU;
 
@@ -62,6 +65,14 @@ public class GamePanel extends JPanel implements Runnable {
     // Nueva area para el boton de volver
     Rectangle backZone;
 
+    // Nuevas áreas para los botones de selección de tipo de máquina
+    Rectangle defensiveTrainerZone;
+    Rectangle attackingTrainerZone;
+    Rectangle chaningTrainerZone;
+    Rectangle expertTrainerZone;
+    Rectangle backZonePVM;
+    Rectangle backZoneMVM;
+
     // Fuentes
     Font buttonFont = new Font("Arial", Font.BOLD, 16);
     Font titleFont = new Font("Arial", Font.BOLD, 24);
@@ -72,7 +83,6 @@ public class GamePanel extends JPanel implements Runnable {
     private BufferedImage titleImage;
     private int titleWidth;
     private int titleHeight;
-    private int titleYOffset = 30;
 
     // Configuracion de FPS
     int FPS = 60;
@@ -94,7 +104,6 @@ public class GamePanel extends JPanel implements Runnable {
         buttonFont = pokemonFont.deriveFont(14f);
         titleFont = pokemonFont.deriveFont(24f);
         subtitleFont = pokemonFont.deriveFont(16f);
-        titleYOffset = 10;
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
@@ -233,9 +242,9 @@ public class GamePanel extends JPanel implements Runnable {
                 if (pvpZone.contains(clickPoint)) {
                     currentState = GameState.PVP_MODE_SELECTION;
                 } else if (pvmZone.contains(clickPoint)) {
-                    startGame("Player vs Machine");
+                    currentState = GameState.PVM_MODE_SELECTION;
                 } else if (mvmZone.contains(clickPoint)) {
-                    startGame("Machine vs Machine");
+                    currentState = GameState.MVM_MODE_SELECTION;
                 }
                 break;
 
@@ -245,6 +254,34 @@ public class GamePanel extends JPanel implements Runnable {
                 } else if (survivalModeZone.contains(clickPoint)) {
                     startPvPSurvivalMode();
                 } else if (backZone.contains(clickPoint)) {
+                    currentState = GameState.MAIN_MENU;
+                }
+                break;
+
+            case PVM_MODE_SELECTION:
+                if (defensiveTrainerZone.contains(clickPoint)) {
+                    PvMSetUp("defensiveTrainer");
+                } else if (attackingTrainerZone.contains(clickPoint)) {
+                    PvMSetUp("attackingTrainer");
+                } else if (chaningTrainerZone.contains(clickPoint)) {
+                    PvMSetUp("chaningTrainer");
+                } else if (expertTrainerZone.contains(clickPoint)) {
+                    PvMSetUp("expertTrainer");
+                } else if (backZonePVM.contains(clickPoint)) {
+                    currentState = GameState.MAIN_MENU;
+                }
+                break;
+
+            case MVM_MODE_SELECTION:
+                if (defensiveTrainerZone.contains(clickPoint)) {
+                    MvMSetUp("defensiveTrainer");
+                } else if (attackingTrainerZone.contains(clickPoint)) {
+                    MvMSetUp("attackingTrainer");
+                } else if (chaningTrainerZone.contains(clickPoint)) {
+                    MvMSetUp("chaningTrainer");
+                } else if (expertTrainerZone.contains(clickPoint)) {
+                    MvMSetUp("expertTrainer");
+                } else if (backZoneMVM.contains(clickPoint)) {
                     currentState = GameState.MAIN_MENU;
                 }
                 break;
@@ -288,18 +325,26 @@ public class GamePanel extends JPanel implements Runnable {
         });
     }
 
-    /**
-     * Inicia un modo de juego especifico
-     * Actualmente solo imprime un mensaje en la consola y cambia el estado del juego a IN_GAME
-     * Aqui se implementaria la logica para iniciar diferentes modos de juego
-     *
-     * @param gameMode El nombre del modo de juego a iniciar
-     */
-    private void startGame(String gameMode) {
-        System.out.println("Iniciando juego: " + gameMode);
-        currentState = GameState.IN_GAME;
-        // Aqui iria la logica para iniciar otros modos de juego
+    // Métodos de setup para PvM y MvM (solo expresados, sin implementación)
+    private void PvMSetUp(String trainerType) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                if (parentFrame != null) {
+                    parentFrame.dispose();
+                }
+
+                // Crear nueva instancia de PvMSetUp
+                PvMSetUp pvmSetup = new PvMSetUp(trainerType);
+                pvmSetup.setVisible(true);
+            }
+        });
     }
+
+    private void MvMSetUp(String trainerType) {
+        System.out.println("En construccion");
+    }
+
 
     /**
      * Dibuja un boton en la pantalla
@@ -350,7 +395,7 @@ public class GamePanel extends JPanel implements Runnable {
         int mainButtonSpacing = 20;
 
         int totalMainHeight = mainButtonHeight * 3 + mainButtonSpacing * 2;
-        int startMainY = (screenHeight - totalMainHeight) / 2 + 60; // 60 para dejar espacio al titulo
+        int startMainY = (screenHeight - totalMainHeight) / 2 + 60;
         int mainButtonX = (screenWidth - mainButtonWidth) / 2;
 
         pvpZone = new Rectangle(mainButtonX, startMainY, mainButtonWidth, mainButtonHeight);
@@ -364,7 +409,7 @@ public class GamePanel extends JPanel implements Runnable {
         );
         int modeButtonHeight = 35;
         int modeButtonSpacing = 20;
-        int totalModeHeight = modeButtonHeight * 2 + modeButtonSpacing + 40; // +40 para el boton de volver
+        int totalModeHeight = modeButtonHeight * 2 + modeButtonSpacing + 40;
         int startModeY = (screenHeight - totalModeHeight) / 2 + 40;
         int modeButtonX = (screenWidth - modeButtonWidth) / 2;
 
@@ -377,6 +422,24 @@ public class GamePanel extends JPanel implements Runnable {
         int backButtonX = (screenWidth - backButtonWidth) / 2;
         int backButtonY = startModeY + 2 * (modeButtonHeight + modeButtonSpacing) + 10;
         backZone = new Rectangle(backButtonX, backButtonY, backButtonWidth, backButtonHeight);
+
+        // Botones para selección de tipo de máquina (PvM y MvM)
+        int machineButtonWidth = fontMetrics.stringWidth("expertTrainer") + 40;
+        int machineButtonHeight = 30;
+        int machineButtonSpacing = 15;
+        int totalMachineHeight = machineButtonHeight * 4 + machineButtonSpacing * 3 + 40;
+        int startMachineY = (screenHeight - totalMachineHeight) / 2 + 40;
+        int machineButtonX = (screenWidth - machineButtonWidth) / 2;
+
+        defensiveTrainerZone = new Rectangle(machineButtonX, startMachineY, machineButtonWidth, machineButtonHeight);
+        attackingTrainerZone = new Rectangle(machineButtonX, startMachineY + (machineButtonHeight + machineButtonSpacing), machineButtonWidth, machineButtonHeight);
+        chaningTrainerZone = new Rectangle(machineButtonX, startMachineY + 2 * (machineButtonHeight + machineButtonSpacing), machineButtonWidth, machineButtonHeight);
+        expertTrainerZone = new Rectangle(machineButtonX, startMachineY + 3 * (machineButtonHeight + machineButtonSpacing), machineButtonWidth, machineButtonHeight);
+
+        // Botón de volver para PvM y MvM
+        int backMachineY = startMachineY + 4 * (machineButtonHeight + machineButtonSpacing) + 10;
+        backZonePVM = new Rectangle(machineButtonX, backMachineY, backButtonWidth, backButtonHeight);
+        backZoneMVM = new Rectangle(machineButtonX, backMachineY, backButtonWidth, backButtonHeight);
     }
 
     /**
@@ -405,6 +468,14 @@ public class GamePanel extends JPanel implements Runnable {
 
             case PVP_MODE_SELECTION:
                 drawPvpModeSelection(g2);
+                break;
+
+            case PVM_MODE_SELECTION:
+                drawPvmModeSelection(g2);
+                break;
+
+            case MVM_MODE_SELECTION:
+                drawMvmModeSelection(g2);
                 break;
 
             case IN_GAME:
@@ -515,6 +586,48 @@ public class GamePanel extends JPanel implements Runnable {
         drawButton(g2, backZone, "Volver",
             player.getBounds().intersects(backZone) ?
             new Color(255, 255, 180) : new Color(220, 220, 120));
+    }
+
+    // Dibuja la selección de tipo de máquina para PvM
+    private void drawPvmModeSelection(Graphics2D g2) {
+        g2.setColor(Color.WHITE);
+        g2.setFont(titleFont);
+        String title = "Player vs Machine";
+        int titleWidth = g2.getFontMetrics().stringWidth(title);
+        g2.drawString(title, (screenWidth - titleWidth)/2, defensiveTrainerZone.y - 60);
+
+        g2.setFont(subtitleFont);
+        String subtitle = "Elige el tipo de máquina";
+        int subtitleWidth = g2.getFontMetrics().stringWidth(subtitle);
+        g2.drawString(subtitle, (screenWidth - subtitleWidth)/2, defensiveTrainerZone.y - 30);
+
+        // Colores más oscuros para mejor contraste
+        drawButton(g2, defensiveTrainerZone, "defensiveTrainer", new Color(60, 60, 120));
+        drawButton(g2, attackingTrainerZone, "attackingTrainer", new Color(120, 60, 60));
+        drawButton(g2, chaningTrainerZone, "chaningTrainer", new Color(120, 120, 60));
+        drawButton(g2, expertTrainerZone, "expertTrainer", new Color(60, 120, 60));
+        drawButton(g2, backZonePVM, "Volver", new Color(100, 100, 40));
+    }
+
+    // Dibuja la selección de tipo de máquina para MvM
+    private void drawMvmModeSelection(Graphics2D g2) {
+        g2.setColor(Color.WHITE);
+        g2.setFont(titleFont);
+        String title = "Machine vs Machine";
+        int titleWidth = g2.getFontMetrics().stringWidth(title);
+        g2.drawString(title, (screenWidth - titleWidth)/2, defensiveTrainerZone.y - 60);
+
+        g2.setFont(subtitleFont);
+        String subtitle = "Elige el tipo de máquina";
+        int subtitleWidth = g2.getFontMetrics().stringWidth(subtitle);
+        g2.drawString(subtitle, (screenWidth - subtitleWidth)/2, defensiveTrainerZone.y - 30);
+
+        // Colores más oscuros para mejor contraste
+        drawButton(g2, defensiveTrainerZone, "defensiveTrainer", new Color(60, 60, 120));
+        drawButton(g2, attackingTrainerZone, "attackingTrainer", new Color(120, 60, 60));
+        drawButton(g2, chaningTrainerZone, "chaningTrainer", new Color(120, 120, 60));
+        drawButton(g2, expertTrainerZone, "expertTrainer", new Color(60, 120, 60));
+        drawButton(g2, backZoneMVM, "Volver", new Color(100, 100, 40));
     }
 
     /**

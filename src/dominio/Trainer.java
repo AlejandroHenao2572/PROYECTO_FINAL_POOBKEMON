@@ -155,17 +155,8 @@ public abstract class Trainer implements Serializable {
         return items;
     }
 
-    /**
-     * Metodo abstracto para cambiar el Pokemon de forma manual
-     * Debe ser implementado por las clases hijas
-     */
-    public abstract void cambiarPokemonManual();
 
-    /**
-     * Metodo abstracto que define la jugada del entrenador durante el turno
-     * Debe ser implementado por las clases hijas
-     *
-     * @param oponente Entrenador oponente
-     */
-    public abstract void realizarTurno(Trainer oponente);
+    public abstract String onAttackSelected(int moveIndex, Trainer oponente);
+
+    public abstract String onItemSelected(int itemIndex);
 }

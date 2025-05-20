@@ -17,14 +17,14 @@ public interface BattleGUIListener {
      * 
      * @param trainer Entrenador humano que inicia su turno
      */
-    void onTurnStarted(HumanTrainer trainer);
+    void onTurnStarted(Trainer trainer);
 
     /**
      * Se ejecuta cuando termina el turno de un entrenador humano
      * 
      * @param trainer Entrenador humano que finaliza su turno
      */
-    void onTurnEnded(HumanTrainer trainer);
+    void onTurnEnded(Trainer trainer);
 
     /**
      * Se ejecuta cuando un pokemon es debilitado
