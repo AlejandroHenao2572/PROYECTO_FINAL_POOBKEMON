@@ -14,11 +14,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.Serializable;
 
-public class BattlePvM  {
+public class BattleMvM  {
     private static final long serialVersionUID = 1L;
-    private HumanTrainer jugador;
-    private AITrainer maquina;
-    private Trainer turnoActual;
+    private AITrainer maquina1;
+    private AITrainer maquina2;
+    private AITrainer turnoActual;
     private transient Timer turnTimer;
     private boolean esperandoAccion;
     private static final int TIEMPO_TURNO = 20;
@@ -27,75 +27,93 @@ public class BattlePvM  {
     private boolean cambioForzado = false;
     private static final Logger LOGGER = Logger.getLogger(Battle.class.getName());
 
-    public BattlePvM(HumanTrainer jugador, AITrainer maquina) {
-        this.jugador = jugador;
-        this.maquina = maquina;
-        // Decide aleatoriamente quién inicia
-        this.turnoActual = (Math.random() < 0.5) ? jugador : maquina;
-        // ASIGNA EL LISTENER A AMBOS ENTRENADORES
-        this.jugador.setListener(new TrainerActionListener(this));
-        this.maquina.setListener(new TrainerActionListener(this));
+    public BattleMvM(AITrainer maquina1, AITrainer maquina2) {
+        this.maquina1 = maquina1;
+        this.maquina2 = maquina2;
+        this.turnoActual = (Math.random() < 0.5) ? maquina1 : maquina2;
+        this.maquina1.setListener(new TrainerActionListener(this));
+        this.maquina2.setListener(new TrainerActionListener(this));
     }
 
-    public static BattlePvM setupBattle(    
-        List<String> nombresEquipoJugador,
-        List<String> nombresEquipoMaquina,
-        Map<String, Integer> itemsJugador,
-        Map<String, Integer> itemsMaquina,
-        String nombreEntrenadorMaquina
+    public static BattleMvM setupBattle(
+        List<String> nombresEquipoMaquina1,
+        List<String> nombresEquipoMaquina2,
+        Map<String, Integer> itemsMaquina1,
+        Map<String, Integer> itemsMaquina2,
+        String tipoMaquina1,
+        String tipoMaquina2
     ) throws POOBkemonException {
-        HumanTrainer jugador = new HumanTrainer("Jugador", "Azul");
-        AITrainer maquina;
-        System.out.println("Nombre Entrenador Maquina: " + nombreEntrenadorMaquina);
-        switch (nombreEntrenadorMaquina) {
+        AITrainer maquina1;
+        switch (tipoMaquina1) {
             case "defensiveTrainer":
-            maquina = new DefensiveTrainer("Maquina", "Rojo");
+            maquina1 = new DefensiveTrainer("Maquina", "Rojo");
                 break;
         case "attackingTrainer":
-            maquina = new AttackingTrainer("Maquina", "Rojo");
+            maquina1 = new AttackingTrainer("Maquina", "Rojo");
                 break;
         case "chaningTrainer":
-            maquina = new ChangingTrainer("Maquina", "Rojo");
+            maquina1 = new ChangingTrainer("Maquina", "Rojo");
                 break;
         case "expertTrainer":
-            maquina = new ExpertTrainer("Maquina", "Rojo");
+            maquina1 = new ExpertTrainer("Maquina", "Rojo");
                 break;
         default:
-            maquina = new AttackingTrainer("Maquina", "Rojo");
+            maquina1 = new AttackingTrainer("Maquina", "Rojo");
+                break;
+        }
+
+        AITrainer maquina2;
+        switch (tipoMaquina1) {
+            case "defensiveTrainer":
+            maquina2 = new DefensiveTrainer("Maquina", "Rojo");
+                break;
+        case "attackingTrainer":
+            maquina2 = new AttackingTrainer("Maquina", "Rojo");
+                break;
+        case "chaningTrainer":
+            maquina2 = new ChangingTrainer("Maquina", "Rojo");
+                break;
+        case "expertTrainer":
+            maquina2 = new ExpertTrainer("Maquina", "Rojo");
+                break;
+        default:
+            maquina2 = new AttackingTrainer("Maquina", "Rojo");
                 break;
         }
 
         try {
-            for (String nombre : nombresEquipoJugador) {
-                Pokemon p = BattleFactory.crearPokemon(nombre, jugador);
-                jugador.agregarPokemon(p);
+            for (String nombre : nombresEquipoMaquina1) {
+                Pokemon p = BattleFactory.crearPokemon(nombre, maquina1);
+                maquina1.agregarPokemon(p);
             }
-            for (String nombre : nombresEquipoMaquina) {
-                Pokemon p = BattleFactory.crearPokemon(nombre, maquina);
-                maquina.agregarPokemon(p);
+            for (String nombre : nombresEquipoMaquina2) {
+                Pokemon p = BattleFactory.crearPokemon(nombre, maquina2);
+                maquina2.agregarPokemon(p);
             }
-            BattleFactory.agregarItems(jugador, itemsJugador);
-            BattleFactory.agregarItems(maquina, itemsMaquina);
+            BattleFactory.agregarItems(maquina1, itemsMaquina1);
+            BattleFactory.agregarItems(maquina2, itemsMaquina2);
+            
+            return new BattleMvM(maquina1, maquina2);
 
-            return new BattlePvM(jugador, maquina);
         } catch (POOBkemonException e) {
             throw e;
         } catch (Exception e) {
             throw new POOBkemonException(POOBkemonException.ERROR_CREAR_BATALLA, e);
         }
     }
-
-    public HumanTrainer getEntrenador1() {
-        return jugador;
+    
+    public AITrainer getEntrenador1() {
+        return maquina1;
     }
 
     public AITrainer getEntrenador2() {
-        return maquina;
+        return maquina2;
+    }
+
+    public Trainer getTurnoActual() {
+        return turnoActual;
     }
     
-    /**
-     * Cancela el temporizador del turno actual
-     */
     public void cancelarTemporizador() {
         if (turnTimer != null) {
             turnTimer.cancel();
@@ -103,13 +121,6 @@ public class BattlePvM  {
         }
     }
 
-    public Trainer getTurnoActual() {
-        return turnoActual;
-    }
-
-    /**
-     * Inicia el temporizador para el turno actual
-     */
     public void iniciarTemporizadorTurno() {
         cancelarTemporizador();
         
@@ -122,9 +133,6 @@ public class BattlePvM  {
         }, TIEMPO_TURNO * 1000);
     }
 
-    /**
-     * Maneja la situación cuando se agota el tiempo para un turno
-     */
     public void tiempoAgotado() {
         if (esperandoAccion) {
             // Penalización por tiempo agotado: pierde 1 PP en cada movimiento
@@ -142,9 +150,6 @@ public class BattlePvM  {
         }
     }
 
-    /**
-     * Finaliza el turno actual y pasa al siguiente
-     */
     public void finalizarTurno() {
         esperandoAccion = false;
         cancelarTemporizador();
@@ -155,15 +160,12 @@ public class BattlePvM  {
      * Cambia el turno al otro entrenador
      */
     public void cambiarTurno() {
-        turnoActual = (turnoActual == jugador) ? maquina : jugador;
+        turnoActual = (turnoActual == maquina1) ? maquina2 : maquina1;
         iniciarTurno();
     }
 
-    /**
-     * Inicia un nuevo turno de batalla
-     */
-    public void iniciarTurno() {
-        if (jugador.estaDerrotado() || maquina.estaDerrotado()) {
+        public void iniciarTurno() {
+        if (maquina1.estaDerrotado() || maquina2.estaDerrotado()) {
             finalizarBatalla();
             return;
         }
@@ -187,12 +189,12 @@ public class BattlePvM  {
         }
     
         // Si es el turno de la máquina, realiza la acción automáticamente
-        if (turnoActual == maquina) {
+        if (turnoActual instanceof AITrainer) {
             realizarTurnoMaquina();
         }
     }
 
-    /**
+        /**
      * Hace que la máquina (IA) realice su turno automáticamente.
      */
     private void realizarTurnoMaquina() {
@@ -202,10 +204,11 @@ public class BattlePvM  {
             public void run() {
                 if (!esperandoAccion) return;
                 // IA decide y ejecuta su acción
-                maquina.decidirAccion(BattlePvM.this, jugador);
+                AITrainer oponente = (turnoActual == maquina1) ? maquina2 : maquina1;
+                turnoActual.decidirAccion(BattleMvM.this, oponente);
                 finalizarTurno();
             }
-        }, 2000); // Espera 2 segundos para simular "pensar"
+        }, 3000); 
     }
 
     public void manejarPokemonDebilitado() {
@@ -221,19 +224,17 @@ public class BattlePvM  {
             return;
         }
 
-        if (turnoActual == maquina) {
-            for (int i = 0; i < maquina.getEquipo().size(); i++) {
-                Pokemon p = maquina.getEquipo().get(i);
-                if (!p.estaDebilitado() && p != maquina.getPokemonActivo()) {
-                    String msg = maquina.cambiarPokemon(i);
+        for (int i = 0; i < turnoActual.getEquipo().size(); i++) {
+                Pokemon p = turnoActual.getEquipo().get(i);
+                if (!p.estaDebilitado() && p != turnoActual.getPokemonActivo()) {
+                    String msg = turnoActual.cambiarPokemon(i);
                     if (listener != null) {
-                        listener.onPokemonChanged(maquina, msg);
+                        listener.onPokemonChanged(turnoActual, msg);
                     }
                     cambioForzado = false; // Solución previa
                     iniciarTurno();
                     return;
                 }
-            }
         }
     }
 
@@ -242,7 +243,7 @@ public class BattlePvM  {
      */
     public void finalizarBatalla() {
         cancelarTemporizador();
-        Trainer ganador = jugador.estaDerrotado() ? maquina : jugador;
+        Trainer ganador = maquina1.estaDerrotado() ? maquina2 : maquina1;
         if (listener != null) {
             listener.onBattleEnded(ganador);
         }
@@ -257,7 +258,7 @@ public class BattlePvM  {
         this.listener = listener;
     }
 
-        /**
+         /**
      * Guarda el estado actual de la batalla en un archivo
      * @param filePath Ruta del archivo donde guardar
      * @throws IOException Si ocurre un error de E/S
@@ -272,11 +273,11 @@ public class BattlePvM  {
         }
     }
 
-    public static BattlePvM cargarPartida(String filePath) throws POOBkemonException {
+    public static BattleMvM cargarPartida(String filePath) throws POOBkemonException {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
-            BattlePvM batalla = (BattlePvM) ois.readObject();
-            batalla.jugador.setListener(new TrainerActionListener(batalla));
-            batalla.maquina.setListener(new TrainerActionListener(batalla));
+            BattleMvM batalla = (BattleMvM) ois.readObject();
+            batalla.maquina1.setListener(new TrainerActionListener(batalla));
+            batalla.maquina2.setListener(new TrainerActionListener(batalla));
             return batalla;
         } catch (IOException | ClassNotFoundException e) {
             LOGGER.log(Level.SEVERE, "Error al cargar la partida", e);
@@ -284,7 +285,7 @@ public class BattlePvM  {
         }
     }
 
-    public void iniciar() {
+     public void iniciar() {
         if (listener != null) {
             listener.onBattleStarted();
         }
@@ -333,7 +334,7 @@ public class BattlePvM  {
         }
     }
 
-        /**
+            /**
      * Procesa la selección de un movimiento por parte del jugador
      * 
      * @param indiceMovimiento Índice del movimiento seleccionado
@@ -346,15 +347,14 @@ public class BattlePvM  {
             throw new POOBkemonException(POOBkemonException.ERROR_MOVIMIENTO_INDICE);
         }
         try {
-            Trainer oponente = (turnoActual == jugador) ? maquina : jugador;
+            Trainer oponente = (turnoActual == maquina1) ? maquina2 : maquina1;
             String message = turnoActual.onAttackSelected(indiceMovimiento, oponente);
             if (listener != null) {
                 listener.onMoveUsed(turnoActual, message);
             }
-            // Si el turno fue del jugador humano, forzamos el avance de turno aquí
-            if (turnoActual == jugador) {
-                finalizarTurno();
-            }
+
+            finalizarTurno();
+  
             return message;
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error inesperado al usar movimiento", e);
@@ -362,13 +362,7 @@ public class BattlePvM  {
         }
     }
 
-        /**
-     * Procesa la selección de cambio de Pokémon por parte del jugador
-     * 
-     * @param indicePokemon Índice del Pokémon seleccionado
-     */
-    
-    public String cambioPokemonSeleccionado(int indicePokemon) throws POOBkemonException {
+     public String cambioPokemonSeleccionado(int indicePokemon) throws POOBkemonException {
         if ((!esperandoAccion && !cambioForzado) || isPaused()) {
             throw new POOBkemonException(POOBkemonException.ERROR_CAMBIO_POKEMON_TURNO);
         }
@@ -389,7 +383,7 @@ public class BattlePvM  {
             }
             if (cambioForzado) {
                 cambioForzado = false;
-            } else if (turnoActual == jugador) {
+            } else {
                 finalizarTurno();
             }
             return message;
@@ -419,12 +413,10 @@ public class BattlePvM  {
             String message = turnoActual.onItemSelected(indiceItem);
             if (listener != null) {
                 listener.onMoveUsed(turnoActual, message);
-            }
-            if (turnoActual == jugador) {
-                finalizarTurno();
-            }
+            } {
+            finalizarTurno();
             return message;
-        } catch (Exception e) {
+        } }catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error inesperado al usar ítem", e);
             throw new POOBkemonException("Error inesperado al usar ítem", e);
         }
@@ -436,8 +428,8 @@ public class BattlePvM  {
 
     private static class TrainerActionListener implements TrainerListener {
         private static final long serialVersionUID = 1L;
-        private final BattlePvM battle;
-        public TrainerActionListener(BattlePvM battle) {
+        private final BattleMvM battle;
+        public TrainerActionListener(BattleMvM battle) {
             this.battle = battle;
         }
         @Override
@@ -454,7 +446,6 @@ public class BattlePvM  {
         return listener;
     }
 
- 
 }
 interface TrainerListener extends Serializable {
     void onActionPerformed();

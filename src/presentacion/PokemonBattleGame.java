@@ -52,7 +52,7 @@ public class PokemonBattleGame {
         }
     }
 
-        public static void iniciarBatallaPvM(
+    public static void iniciarBatallaPvM(
         List<String> nombresEquipoJugador,
         List<String> nombresEquipoMaquina,
         Map<String, Integer> itemsJugador,
@@ -63,6 +63,30 @@ public class PokemonBattleGame {
             BattlePvM battle = BattlePvM.setupBattle(nombresEquipoJugador, nombresEquipoMaquina, itemsJugador, itemsMaquina, nombreEntrenadorMaquina);
             SwingUtilities.invokeLater(() -> {
                 MainWindowPvM mainWindow = new MainWindowPvM((HumanTrainer) battle.getEntrenador1(), (AITrainer) battle.getEntrenador2());
+                mainWindow.setVisible(true);
+                mainWindow.startBattle();
+            });
+        } catch (POOBkemonException e) {
+            LOGGER.log(Level.WARNING, "Error al iniciar la batalla: " + e.getMessage(), e);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error al iniciar batalla", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error inesperado al iniciar la batalla: " + e.getMessage(), e);
+            JOptionPane.showMessageDialog(null, "Error inesperado al iniciar la batalla.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public static void iniciarBatallaMvM(
+        List<String> nombresEquipoMaquina1,
+        List<String> nombresEquipoMaquina2,
+        Map<String, Integer> itemsMaquina1,
+        Map<String, Integer> itemsMaquina2,
+        String tipoMaquina1,
+        String tipoMaquina2
+    ) {
+        try {
+            BattleMvM battle = BattleMvM.setupBattle(nombresEquipoMaquina1, nombresEquipoMaquina2, itemsMaquina1, itemsMaquina2, tipoMaquina1, tipoMaquina2);
+            SwingUtilities.invokeLater(() -> {
+                MainWindowMvM mainWindow = new MainWindowMvM((AITrainer) battle.getEntrenador1(), (AITrainer) battle.getEntrenador2());
                 mainWindow.setVisible(true);
                 mainWindow.startBattle();
             });

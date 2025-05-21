@@ -66,4 +66,6 @@ public abstract class AITrainer extends Trainer {
     }
 
     public abstract String decidirAccion(BattlePvM batalla, Trainer oponente);
+
+    public abstract String decidirAccion(BattleMvM batalla, Trainer oponente);
 }

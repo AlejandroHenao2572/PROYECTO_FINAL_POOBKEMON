@@ -273,17 +273,7 @@ public class GamePanel extends JPanel implements Runnable {
                 break;
 
             case MVM_MODE_SELECTION:
-                if (defensiveTrainerZone.contains(clickPoint)) {
-                    MvMSetUp("defensiveTrainer");
-                } else if (attackingTrainerZone.contains(clickPoint)) {
-                    MvMSetUp("attackingTrainer");
-                } else if (chaningTrainerZone.contains(clickPoint)) {
-                    MvMSetUp("chaningTrainer");
-                } else if (expertTrainerZone.contains(clickPoint)) {
-                    MvMSetUp("expertTrainer");
-                } else if (backZoneMVM.contains(clickPoint)) {
-                    currentState = GameState.MAIN_MENU;
-                }
+                MvMSetUp();
                 break;
 
             case IN_GAME:
@@ -341,8 +331,19 @@ public class GamePanel extends JPanel implements Runnable {
         });
     }
 
-    private void MvMSetUp(String trainerType) {
-        System.out.println("En construccion");
+    private void MvMSetUp() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                if (parentFrame != null) {
+                    parentFrame.dispose();
+                }
+
+                // Crear nueva instancia de PvMSetUp
+                MvMSetUp mvmSetup = new MvMSetUp();
+                mvmSetup.setVisible(true);
+            }
+        });
     }
 
 
