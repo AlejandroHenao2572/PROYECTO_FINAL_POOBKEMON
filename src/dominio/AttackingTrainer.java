@@ -67,10 +67,8 @@ public class AttackingTrainer extends AITrainer {
             }
         }
         // Si encuentra uno, lo usa
-        if (mejorMovimiento != -1) {
-            String msg = onAttackSelected(mejorMovimiento, oponente);
-            batalla.getListener().onMoveUsed(this, msg);
-            return msg;
+        if (mejorMovimiento != -1) { 
+            return onAttackSelected(mejorMovimiento, oponente);
         }
 
         // Si no hay movimientos ofensivos, usa el primer ataque utilizable

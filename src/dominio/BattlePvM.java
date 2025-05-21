@@ -45,7 +45,25 @@ public class BattlePvM  {
         String nombreEntrenadorMaquina
     ) throws POOBkemonException {
         HumanTrainer jugador = new HumanTrainer("Jugador", "Azul");
-        AITrainer maquina = new AttackingTrainer(nombreEntrenadorMaquina, "Rojo");
+        AITrainer maquina;
+        System.out.println("Nombre Entrenador Maquina: " + nombreEntrenadorMaquina);
+        switch (nombreEntrenadorMaquina) {
+            case "defensiveTrainer":
+            maquina = new DefensiveTrainer("Maquina", "Rojo");
+                break;
+        case "attackingTrainer":
+            maquina = new AttackingTrainer("Maquina", "Rojo");
+                break;
+        case "chaningTrainer":
+            maquina = new ChangingTrainer("Maquina", "Rojo");
+                break;
+        case "expertTrainer":
+            maquina = new ExpertTrainer("Maquina", "Rojo");
+                break;
+        default:
+            maquina = new AttackingTrainer("Maquina", "Rojo");
+                break;
+        }
 
         try {
             for (String nombre : nombresEquipoJugador) {
@@ -371,7 +389,6 @@ public class BattlePvM  {
             }
             if (cambioForzado) {
                 cambioForzado = false;
-                cambiarTurno();
             } else if (turnoActual == jugador) {
                 finalizarTurno();
             }

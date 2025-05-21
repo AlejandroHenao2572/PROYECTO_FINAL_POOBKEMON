@@ -217,7 +217,8 @@ public class MainWindowPvM extends JFrame implements BattleGUIListener {
     @Override
     public void onPokemonDebilitado(Trainer trainer) {
         actionPanel.addBattleText(trainer.getPokemonActivo().getNombre() + " se ha debilitado!");
-        if (trainer == battle.getTurnoActual()) {
+        if (trainer instanceof HumanTrainer) {
+            actionPanel.setCurrentPlayer((HumanTrainer) battle.getEntrenador1());
             SwingUtilities.invokeLater(() -> {
                 actionPanel.showSwitchOptions();
             });
@@ -257,6 +258,13 @@ public class MainWindowPvM extends JFrame implements BattleGUIListener {
     @Override
     public void onMoveUsed(Trainer trainer, String result) {
         actionPanel.addBattleText(result);
+        if (trainer instanceof AITrainer) {
+            actionPanel.disableButtons();
+            Timer timer = new Timer(1500, e -> actionPanel.enableButtons());
+            timer.setRepeats(false);
+            timer.start();
+        }
+        
         updateUI();
     }
 
