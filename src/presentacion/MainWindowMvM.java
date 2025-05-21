@@ -194,9 +194,7 @@ public class MainWindowMvM extends JFrame implements BattleGUIListener {
         updateTurnIndicator(trainer);
         actionPanel.setCurrentPlayer(trainer);
         updateUI();
-        if (trainer instanceof HumanTrainer) {
-            actionPanel.addBattleText("¿Qué debería hacer " + trainer.getPokemonActivo().getNombre() + "?");
-        }
+        actionPanel.addBattleText("¿Qué debería hacer " + trainer.getPokemonActivo().getNombre() + "?");
     }
 
     private void updateTurnIndicator(Trainer currentTrainer) {

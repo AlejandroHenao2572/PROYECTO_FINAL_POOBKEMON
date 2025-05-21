@@ -120,7 +120,9 @@ public class AttackingTrainer extends AITrainer {
         for (int i = 0; i < pokemonActivo.getMovimientos().size(); i++) {
             Movimiento m = pokemonActivo.getMovimientos().get(i);
             if (m.esUtilizable()) {
-                return onAttackSelected(i, oponente);
+                String msg = onAttackSelected(i, oponente);
+                batalla.getListener().onMoveUsed(this, msg);
+                return msg;
             }
         }
 

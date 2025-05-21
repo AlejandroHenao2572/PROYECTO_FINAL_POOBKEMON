@@ -153,7 +153,14 @@ public class BattleMvM  {
     public void finalizarTurno() {
         esperandoAccion = false;
         cancelarTemporizador();
-        cambiarTurno();
+        // Espera 2 segundos antes de cambiar el turno
+        Timer delayTimer = new Timer();
+        delayTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                cambiarTurno();
+            }
+        }, 1000);
     }
 
     /**
