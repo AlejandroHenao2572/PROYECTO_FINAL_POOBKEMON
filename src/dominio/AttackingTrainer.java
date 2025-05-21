@@ -17,21 +17,6 @@ public class AttackingTrainer extends AITrainer {
     public AttackingTrainer(String nombre, String color) {
         super(nombre, color);
     }
-
-    @Override
-    public String onAttackSelected(int moveIndex, Trainer oponente) {
-        if (moveIndex < 0 || moveIndex >= pokemonActivo.getMovimientos().size()) {
-            return "";
-        }
-        Movimiento movimiento = pokemonActivo.getMovimientos().get(moveIndex);
-        if (pokemonActivo.sinPP()) {
-            Movimiento forcejeo = new Forcejeo();
-            return forcejeo.ejecutar(pokemonActivo, oponente.getPokemonActivo());
-        } else if (movimiento.esUtilizable()) {
-            return movimiento.ejecutar(pokemonActivo, oponente.getPokemonActivo());
-        }
-        return "";
-    }
     
     @Override
     public String decidirAccion(BattlePvM batalla, Trainer oponente) {
@@ -75,9 +60,7 @@ public class AttackingTrainer extends AITrainer {
         for (int i = 0; i < pokemonActivo.getMovimientos().size(); i++) {
             Movimiento m = pokemonActivo.getMovimientos().get(i);
             if (m.esUtilizable()) {
-                String msg = onAttackSelected(i, oponente);
-                batalla.getListener().onMoveUsed(this, msg);
-                return msg;
+                return onAttackSelected(i, oponente);
             }
         }
 
@@ -93,28 +76,6 @@ public class AttackingTrainer extends AITrainer {
 
         // Si no puede hacer nada, pasa turno
         return "";
-    }
-
-    @Override
-    public String onItemSelected(int itemIndex) {
-        if (itemIndex < 0 || itemIndex >= items.size()) return "";
-        Item item = items.get(itemIndex);
-        String msg = item.usarEn(pokemonActivo); // O el método correcto para usar el ítem
-        items.remove(itemIndex); // Si el ítem se consume
-
-        return msg;
-    }
-
-    @Override
-    public String cambiarPokemon(int indice) {
-        if (indice < 0 || indice >= equipo.size()) return "";
-        Pokemon nuevo = equipo.get(indice);
-        if (nuevo == pokemonActivo || nuevo.estaDebilitado()) return "";
-        Pokemon anterior = pokemonActivo;
-        pokemonActivo = nuevo;
-        String msg = nombre + " cambió a " + nuevo.getNombre();
-        
-        return msg;
     }
 
 }

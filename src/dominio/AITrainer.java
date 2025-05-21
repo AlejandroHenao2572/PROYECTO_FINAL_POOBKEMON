@@ -27,9 +27,43 @@ public abstract class AITrainer extends Trainer {
         this.listener = listener;
     }
     
-    public String onAttackSelected(int moveIndex, Trainer oponente){return "";};
 
-    public String onItemSelected(int itemIndex){return "";};
+    @Override
+    public String onAttackSelected(int moveIndex, Trainer oponente) {
+        if (moveIndex < 0 || moveIndex >= pokemonActivo.getMovimientos().size()) {
+            return "";
+        }
+        Movimiento movimiento = pokemonActivo.getMovimientos().get(moveIndex);
+        if (pokemonActivo.sinPP()) {
+            Movimiento forcejeo = new Forcejeo();
+            return forcejeo.ejecutar(pokemonActivo, oponente.getPokemonActivo());
+        } else if (movimiento.esUtilizable()) {
+            return movimiento.ejecutar(pokemonActivo, oponente.getPokemonActivo());
+        }
+        return "";
+    }
+
+    @Override
+    public String onItemSelected(int itemIndex) {
+        if (itemIndex < 0 || itemIndex >= items.size()) return "";
+        Item item = items.get(itemIndex);
+        String msg = item.usarEn(pokemonActivo); // O el método correcto para usar el ítem
+        items.remove(itemIndex); // Si el ítem se consume
+
+        return msg;
+    }
+
+    @Override
+    public String cambiarPokemon(int indice) {
+        if (indice < 0 || indice >= equipo.size()) return "";
+        Pokemon nuevo = equipo.get(indice);
+        if (nuevo == pokemonActivo || nuevo.estaDebilitado()) return "";
+        Pokemon anterior = pokemonActivo;
+        pokemonActivo = nuevo;
+        String msg = nombre + " cambió a " + nuevo.getNombre();
         
+        return msg;
+    }
+
     public abstract String decidirAccion(BattlePvM batalla, Trainer oponente);
 }

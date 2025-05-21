@@ -36,7 +36,7 @@ public class ExpertTrainer extends AITrainer {
     
     @Override
     public String decidirAccion(BattlePvM batalla, Trainer oponente) {
-        // 1. Si el Pokémon activo está muy dañado, intenta curarse o cambiar
+         // 1. Si el Pokémon activo está muy dañado, intenta curarse o cambiar
         if (pokemonActivo.getPsActual() < pokemonActivo.getPs() * 0.3) {
             // Intenta usar objeto de curación
             for (int i = 0; i < items.size(); i++) {
@@ -76,9 +76,7 @@ public class ExpertTrainer extends AITrainer {
         for (int i = 0; i < pokemonActivo.getMovimientos().size(); i++) {
             Movimiento m = pokemonActivo.getMovimientos().get(i);
             if (m.esUtilizable()) {
-                String msg = onAttackSelected(i, oponente);
-                batalla.getListener().onMoveUsed(this, msg);
-                return msg;
+                return onAttackSelected(i, oponente);
             }
         }
 
@@ -96,25 +94,4 @@ public class ExpertTrainer extends AITrainer {
         return "";
     }
 
-    @Override
-    public String onItemSelected(int itemIndex) {
-        if (itemIndex < 0 || itemIndex >= items.size()) return "";
-        Item item = items.get(itemIndex);
-        String msg = item.usarEn(pokemonActivo); // O el método correcto para usar el ítem
-        items.remove(itemIndex); // Si el ítem se consume
-
-        return msg;
-    }
-
-    @Override
-    public String cambiarPokemon(int indice) {
-        if (indice < 0 || indice >= equipo.size()) return "";
-        Pokemon nuevo = equipo.get(indice);
-        if (nuevo == pokemonActivo || nuevo.estaDebilitado()) return "";
-        Pokemon anterior = pokemonActivo;
-        pokemonActivo = nuevo;
-        String msg = nombre + " cambió a " + nuevo.getNombre();
-        
-        return msg;
-    }
 }  

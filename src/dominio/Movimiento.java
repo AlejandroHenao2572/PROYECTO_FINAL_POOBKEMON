@@ -71,4 +71,24 @@ public abstract class Movimiento implements Serializable {
      * @param objetivo Pokemon que recibe el movimiento
      */
     public abstract String ejecutar(Pokemon atacante, Pokemon objetivo);
+
+    public double calcularEfectividad(Pokemon rival) {
+        // Ejemplo simple: solo considera algunos tipos comunes
+        String tipoRival = rival.getTipo(); // Asume que el Pokémon tiene un método getTipo()
+        if (tipo.equals("Fuego")) {
+            if (tipoRival.equals("Planta")) return 2.0;
+            if (tipoRival.equals("Agua")) return 0.5;
+            if (tipoRival.equals("Fuego")) return 0.5;
+        } else if (tipo.equals("Agua")) {
+            if (tipoRival.equals("Fuego")) return 2.0;
+            if (tipoRival.equals("Planta")) return 0.5;
+            if (tipoRival.equals("Agua")) return 0.5;
+        } else if (tipo.equals("Planta")) {
+            if (tipoRival.equals("Agua")) return 2.0;
+            if (tipoRival.equals("Fuego")) return 0.5;
+            if (tipoRival.equals("Planta")) return 0.5;
+        }
+        // Por defecto, efectividad normal
+        return 1.0;
+    }
 }
