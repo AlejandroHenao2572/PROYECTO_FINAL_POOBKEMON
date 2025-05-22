@@ -37,7 +37,7 @@ public class Battle implements Serializable {
             java.util.logging.FileHandler fileHandler = new java.util.logging.FileHandler("battle_exceptions.log", true);
             fileHandler.setFormatter(new java.util.logging.SimpleFormatter());
             LOGGER.addHandler(fileHandler);
-            LOGGER.setUseParentHandlers(false); // Opcional: para que no salga en consola
+            LOGGER.setUseParentHandlers(false);
         } catch (IOException e) {
             System.err.println("No se pudo inicializar el log de Battle: " + e.getMessage());
         }
@@ -54,8 +54,6 @@ public class Battle implements Serializable {
         this.entrenador2 = entrenador2;
         this.turnoActual = lanzarMoneda();
         this.esperandoAccion = false;
-        
-        // Configurar listeners de los entrenadores
         this.entrenador1.setListener(new TrainerActionListener(this));
         this.entrenador2.setListener(new TrainerActionListener(this));
     }
@@ -375,7 +373,6 @@ public class Battle implements Serializable {
                     listener.onPokemonRevivido(turnoActual, pokemon);
                 }
                 
-                // Si revivimos al Pokémon activo, continuar el turno
                 if (pokemon == turnoActual.getPokemonActivo()) {
                     esperandoAccion = true;
                     iniciarTemporizadorTurno();

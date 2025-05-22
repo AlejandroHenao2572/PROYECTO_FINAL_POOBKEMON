@@ -9,8 +9,10 @@ import java.util.logging.Logger;
  * Representa movimientos que usan ataque/defensa fisica
  * para calcular el daño infligido al oponente
  * 
- * Autores David Patacon y Daniel Hueso
- * Version 1.0
+ * 
+ * @author David Patacon
+ * @author Daniel Hueso
+ * @version 1.0
  */
 public class MovimientoFisico extends Movimiento implements TablaTipos {
     
@@ -44,7 +46,7 @@ public class MovimientoFisico extends Movimiento implements TablaTipos {
             Random rand = new Random();
             if (rand.nextInt(100) >= precision) {
                 message = atacante.getNombre() + " falló el ataque!";
-                usar(); // igual consume PP
+                usar(); 
                 return message;
             }
 
@@ -53,7 +55,6 @@ public class MovimientoFisico extends Movimiento implements TablaTipos {
                 multiplicador *= getMultiplicador(tipo, objetivo.getTipoSecundario());
             }
 
-            // STAB
             if (atacante.getTipo().equals(tipo)) {
                 multiplicador *= 1.5;
             }
@@ -64,7 +65,6 @@ public class MovimientoFisico extends Movimiento implements TablaTipos {
 
             objetivo.recibirDaño(dano);
             usar();
-            // System.out.println(multiplicador); // Elimina o comenta este print para producción
             message = String.format("%s usó %s y causó %d de daño (x%.1f)%n", atacante.getNombre(), nombre, dano, multiplicador);
         } catch (POOBkemonException e) {
             logger.log(Level.WARNING, "Error al ejecutar MovimientoFisico: " + e.getMessage(), e);

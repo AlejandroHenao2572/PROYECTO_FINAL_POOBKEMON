@@ -8,8 +8,9 @@ import java.util.logging.Logger;
  * Representa movimientos que usan ataque/defensa especial
  * para calcular el daño infligido
  * 
- * Autores David Patacon y Daniel Hueso
- * Version 1.0
+ * @author David Patacon
+ * @author Daniel Hueso
+ * @version 1.0
  */
 public class MovimientoEspecial extends Movimiento implements TablaTipos {
     

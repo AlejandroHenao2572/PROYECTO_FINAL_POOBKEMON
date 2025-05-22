@@ -7,8 +7,9 @@ import java.io.Serializable;
  * Representa un movimiento generico que puede usar un pokemon
  * Define atributos y comportamientos comunes para todos los movimientos
  * 
- * Autores David Patacon y Daniel Hueso
- * Version 1.0
+ * @author David Patacon
+ * @author Daniel Hueso
+ * @version 1.0
  */
 public abstract class Movimiento implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -55,26 +56,56 @@ public abstract class Movimiento implements Serializable {
         if (pp > 0) pp--;
     }
 
-    // Metodos de acceso
+    /**
+     * Obtiene el nombre del movimiento
+     * @return nombre del movimiento
+     */
     public String getNombre() { return nombre; }
+
+    /**
+     * Obtiene el tipo del movimiento
+     * @return tipo del movimiento
+     */
     public String getTipo() { return tipo; }
+
+    /**
+     * Obtiene la potencia del movimiento
+     * @return potencia del movimiento
+     */
     public int getPotencia() { return potencia; }
+
+    /**
+     * Obtiene la precision del movimiento
+     * @return precision del movimiento
+     */
     public int getPrecision() { return precision; }
+
+    /**
+     * Obtiene los PP actuales del movimiento
+     * @return PP actuales
+     */
     public int getPP() { return pp; }
+
+    /**
+     * Obtiene los PP maximos del movimiento
+     * @return PP maximos
+     */
     public int getPPMaximos() { return ppMaximos; }
+
+    /**
+     * Obtiene la prioridad del movimiento
+     * @return prioridad del movimiento
+     */
     public int getPrioridad() { return prioridad; }
 
     /**
-     * Ejecuta el efecto del movimiento
+     * Calcula la efectividad del movimiento contra un pokemon rival
      * 
-     * @param atacante Pokemon que realiza els movimiento
-     * @param objetivo Pokemon que recibe el movimiento
+     * @param rival Pokemon que recibe el movimiento
+     * @return multiplicador de efectividad (2.0 super efectivo 0.5 no muy efectivo 1.0 normal)
      */
-    public abstract String ejecutar(Pokemon atacante, Pokemon objetivo);
-
     public double calcularEfectividad(Pokemon rival) {
-        // Ejemplo simple: solo considera algunos tipos comunes
-        String tipoRival = rival.getTipo(); // Asume que el Pokémon tiene un método getTipo()
+        String tipoRival = rival.getTipo(); 
         if (tipo.equals("Fuego")) {
             if (tipoRival.equals("Planta")) return 2.0;
             if (tipoRival.equals("Agua")) return 0.5;
@@ -88,7 +119,15 @@ public abstract class Movimiento implements Serializable {
             if (tipoRival.equals("Fuego")) return 0.5;
             if (tipoRival.equals("Planta")) return 0.5;
         }
-        // Por defecto, efectividad normal
         return 1.0;
     }
+
+    /**
+     * Ejecuta el efecto del movimiento
+     * 
+     * @param atacante Pokemon que realiza el movimiento
+     * @param objetivo Pokemon que recibe el movimiento
+     * @return String con el resultado de la accion
+     */
+    public abstract String ejecutar(Pokemon atacante, Pokemon objetivo);
 }

@@ -5,8 +5,9 @@ package dominio;
  * Movimiento que causa daño al oponente y autodaño al usuario
  * Tipo Normal con potencia fija y precision perfecta
  *
- * Autores David Patacon y Daniel Hueso
- * Version 1.0
+ * @author David Patacon
+ * @author Daniel Hueso
+ * @version 1.0
  */
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,21 +34,21 @@ public class Forcejeo extends MovimientoFisico {
      * @param atacante Pokemon que ejecuta el movimiento
      * @param objetivo Pokemon que recibe el ataque
      */
-@Override
+    @Override
     public String ejecutar(Pokemon atacante, Pokemon objetivo) {
         Logger logger = Logger.getLogger(Forcejeo.class.getName());
         String message;
         try {
             // Calculo de daño normal
-            int dano = (int)((getPotencia() * (double)atacante.getAtaque() / objetivo.getDefensa()) / 2);
-            objetivo.recibirDaño(dano);
+            int daño = (int)((getPotencia() * (double)atacante.getAtaque() / objetivo.getDefensa()) / 2);
+            objetivo.recibirDaño(daño);
 
             // El atacante recibe la mitad del daño infligido
-            int autoDano = dano / 2;
-            atacante.recibirDaño(autoDano);
+            int autoDaño = daño / 2;
+            atacante.recibirDaño(autoDaño);
 
-            message = "Forcejeo causó " + dano + " de daño a " + objetivo.getNombre() +
-                    " y " + autoDano + " de autodano a " + atacante.getNombre();
+            message = "Forcejeo causó " + daño + " de daño a " + objetivo.getNombre() +
+                    " y " + autoDaño + " de autodaño a " + atacante.getNombre();
         } catch (POOBkemonException e) {
             logger.log(Level.WARNING, "Error al ejecutar Forcejeo: " + e.getMessage(), e);
             message = "Error al ejecutar Forcejeo: " + e.getMessage();

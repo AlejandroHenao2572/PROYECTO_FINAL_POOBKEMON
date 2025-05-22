@@ -7,8 +7,9 @@ import java.util.logging.Logger;
  * Representa movimientos que alteran estados en lugar de causar daño
  * Pueden afectar estadisticas, condiciones o propiedades del objetivo
  * 
- * Autores David Patacon y Daniel Hueso
- * Version 1.0
+ * @author David Patacon
+ * @author Daniel Hueso
+ * @version 1.0
  */
 public class MovimientoEstado extends Movimiento {
     
@@ -69,6 +70,8 @@ public class MovimientoEstado extends Movimiento {
                     estadisticaAfectada = "defensa especial";
                     break;
                 default:
+                    aumento = atacante.aumentarEstadisticas("ps", 10);
+                    estadisticaAfectada = "PS";
                     break;
             }
             message = String.format("%s usó %s! %s aumentó en %d puntos.",
