@@ -80,9 +80,9 @@ public class BattleFactory implements Serializable {
 
         case "charizard":
             movimientos.add(new MovimientoEspecial("Lanzallamas", "Fuego", 90, 100, 15));
-            movimientos.add(new MovimientoFisico("Garra Dragón", "Dragón", 80, 100, 15));
+            movimientos.add(new MovimientoFisico("Garra Dragon", "Dragon", 80, 100, 15));
             movimientos.add(new MovimientoFisico("Ala de Acero", "Acero", 70, 90, 25));
-            movimientos.add(new MovimientoEstado("Danza Dragón", "Dragón", 0, 100, "Aumenta ataque"));
+            movimientos.add(new MovimientoEstado("Danza Dragon", "Dragon", 0, 100, "Aumenta ataque"));
             break;
 
         case "torkoal":
@@ -102,7 +102,7 @@ public class BattleFactory implements Serializable {
         case "milotic":
             movimientos.add(new MovimientoEspecial("Surf", "Agua", 90, 100, 15));
             movimientos.add(new MovimientoFisico("Golpe Cuerpo", "Normal", 85, 100, 15));
-            movimientos.add(new MovimientoFisico("Cola Dragón", "Dragón", 60, 90, 10));
+            movimientos.add(new MovimientoFisico("Cola Dragon", "Dragon", 60, 90, 10));
             movimientos.add(new MovimientoEstado("Pulso Cura", "Agua", 0, 100, "Aumenta puntos de salud"));
             break;
 
@@ -118,21 +118,21 @@ public class BattleFactory implements Serializable {
             movimientos.add(new MovimientoEspecial("Eco Voz", "Normal", 75, 100, 10));
             movimientos.add(new MovimientoFisico("Hoja Aguda", "Planta", 70, 100, 15));
             movimientos.add(new MovimientoFisico("Golpe Roca", "Lucha", 40, 100, 15));
-            movimientos.add(new MovimientoEstado("Agilidad", "Psíquico", 0, 100, "Aumenta velocidad"));
+            movimientos.add(new MovimientoEstado("Agilidad", "Psiquico", 0, 100, "Aumenta velocidad"));
             break;
 
         case "raichu":
-            movimientos.add(new MovimientoEspecial("Rayo", "Eléctrico", 90, 100, 15));
-            movimientos.add(new MovimientoFisico("Puño Trueno", "Eléctrico", 75, 100, 15));
+            movimientos.add(new MovimientoEspecial("Rayo", "Electrico", 90, 100, 15));
+            movimientos.add(new MovimientoFisico("Puño Trueno", "Electrico", 75, 100, 15));
             movimientos.add(new MovimientoFisico("Doble Patada", "Lucha", 30, 100, 30));
             movimientos.add(new MovimientoEstado("Refuerzo", "Normal", 0, 100, "Aumenta ataque"));
             break;
 
         case "manectric":
-            movimientos.add(new MovimientoEspecial("Chispa", "Eléctrico", 65, 100, 20));
-            movimientos.add(new MovimientoFisico("Colmillo Rayo", "Eléctrico", 65, 95, 15));
+            movimientos.add(new MovimientoEspecial("Chispa", "Electrico", 65, 100, 20));
+            movimientos.add(new MovimientoFisico("Colmillo Rayo", "Electrico", 65, 95, 15));
             movimientos.add(new MovimientoFisico("Mordisco", "Siniestro", 60, 100, 25));
-            movimientos.add(new MovimientoEstado("Carga", "Eléctrico", 0, 100, "Aumenta ataque Especial"));
+            movimientos.add(new MovimientoEstado("Carga", "Electrico", 0, 100, "Aumenta ataque Especial"));
             break;
 
         case "delibird":
@@ -153,7 +153,7 @@ public class BattleFactory implements Serializable {
             movimientos.add(new MovimientoEspecial("Pulso Umbrío", "Siniestro", 80, 100, 15));
             movimientos.add(new MovimientoFisico("Avalancha", "Roca", 75, 90, 10));
             movimientos.add(new MovimientoFisico("Triturar", "Siniestro", 80, 100, 15));
-            movimientos.add(new MovimientoEstado("Danza Dragón", "Dragón", 0, 100, "Aumenta ataque"));
+            movimientos.add(new MovimientoEstado("Danza Dragon", "Dragon", 0, 100, "Aumenta ataque"));
             break;
 
         case "kabutops":
@@ -174,7 +174,7 @@ public class BattleFactory implements Serializable {
             movimientos.add(new MovimientoEspecial("Surf", "Agua", 90, 100, 15));
             movimientos.add(new MovimientoFisico("Terremoto", "Tierra", 100, 100, 10));
             movimientos.add(new MovimientoFisico("Golpe Cabeza", "Normal", 130, 100, 10));
-            movimientos.add(new MovimientoEstado("Amnesia", "Psíquico", 0, 100, "Aumenta defensa Especial"));
+            movimientos.add(new MovimientoEstado("Amnesia", "Psiquico", 0, 100, "Aumenta defensa Especial"));
             break;
 
         case "scizor":
@@ -188,7 +188,7 @@ public class BattleFactory implements Serializable {
             movimientos.add(new MovimientoEspecial("Zumbido", "Bicho", 90, 100, 10));
             movimientos.add(new MovimientoFisico("Picadura", "Bicho", 60, 100, 20));
             movimientos.add(new MovimientoFisico("Ala de Plata", "Volador", 60, 95, 15));
-            movimientos.add(new MovimientoEstado("Agilidad", "Psíquico", 0, 100, "Aumenta velocidad"));
+            movimientos.add(new MovimientoEstado("Agilidad", "Psiquico", 0, 100, "Aumenta velocidad"));
             break;
 
         case "gengar":
@@ -206,31 +206,31 @@ public class BattleFactory implements Serializable {
             break;
 
         case "dragonite":
-            movimientos.add(new MovimientoEspecial("Pulso Dragón", "Dragón", 85, 100, 10));
-            movimientos.add(new MovimientoFisico("Garra Dragón", "Dragón", 80, 100, 15));
+            movimientos.add(new MovimientoEspecial("Pulso Dragon", "Dragon", 85, 100, 10));
+            movimientos.add(new MovimientoFisico("Garra Dragon", "Dragon", 80, 100, 15));
             movimientos.add(new MovimientoFisico("Ala Aérea", "Volador", 60, 100, 20));
-            movimientos.add(new MovimientoEstado("Danza Dragón", "Dragón", 0, 100, "Aumenta ataque"));
+            movimientos.add(new MovimientoEstado("Danza Dragon", "Dragon", 0, 100, "Aumenta ataque"));
             break;
 
         case "altaria":
-            movimientos.add(new MovimientoEspecial("Pulso Dragón", "Dragón", 85, 100, 10));
+            movimientos.add(new MovimientoEspecial("Pulso Dragon", "Dragon", 85, 100, 10));
             movimientos.add(new MovimientoFisico("Pico Taladro", "Volador", 80, 100, 20));
-            movimientos.add(new MovimientoFisico("Garra Dragón", "Dragón", 80, 100, 15));
-            movimientos.add(new MovimientoEstado("Danza Dragón", "Dragón", 0, 100, "Aumenta ataque"));
+            movimientos.add(new MovimientoFisico("Garra Dragon", "Dragon", 80, 100, 15));
+            movimientos.add(new MovimientoEstado("Danza Dragon", "Dragon", 0, 100, "Aumenta ataque"));
             break;
 
         case "mewtwo":
-            movimientos.add(new MovimientoEspecial("Psíquico", "Psíquico", 90, 100, 10));
+            movimientos.add(new MovimientoEspecial("Psiquico", "Psiquico", 90, 100, 10));
             movimientos.add(new MovimientoFisico("Puño Fuego", "Fuego", 75, 100, 15));
             movimientos.add(new MovimientoFisico("Golpe", "Normal", 70, 100, 20));
-            movimientos.add(new MovimientoEstado("Poder Reserva", "Psíquico", 0, 100, "Aumenta ataque Especial"));
+            movimientos.add(new MovimientoEstado("Poder Reserva", "Psiquico", 0, 100, "Aumenta ataque Especial"));
             break;
 
         case "claydol":
             movimientos.add(new MovimientoEspecial("Poder Pasado", "Roca", 60, 100, 5));
-            movimientos.add(new MovimientoFisico("Psicocorte", "Psíquico", 70, 100, 20));
+            movimientos.add(new MovimientoFisico("Psicocorte", "Psiquico", 70, 100, 20));
             movimientos.add(new MovimientoFisico("Excavar", "Tierra", 80, 100, 10));
-            movimientos.add(new MovimientoEstado("Reflejo", "Psíquico", 0, 100, "Aumenta defensa"));
+            movimientos.add(new MovimientoEstado("Reflejo", "Psiquico", 0, 100, "Aumenta defensa"));
             break;
 
         case "machamp":
@@ -262,7 +262,7 @@ public class BattleFactory implements Serializable {
             break;
 
         case "metagross":
-            movimientos.add(new MovimientoEspecial("Psicocarga", "Psíquico", 80, 100, 10));
+            movimientos.add(new MovimientoEspecial("Psicocarga", "Psiquico", 80, 100, 10));
             movimientos.add(new MovimientoFisico("Puño Meteoro", "Acero", 90, 90, 10));
             movimientos.add(new MovimientoFisico("Cabeza de Hierro", "Acero", 80, 100, 15));
             movimientos.add(new MovimientoEstado("Pulimento", "Roca", 0, 100, "Aumenta velocidad"));
@@ -290,10 +290,10 @@ public class BattleFactory implements Serializable {
             break;
 
         case "snorlax":
-            movimientos.add(new MovimientoEspecial("Chispazo", "Eléctrico", 80, 100, 15));
+            movimientos.add(new MovimientoEspecial("Chispazo", "Electrico", 80, 100, 15));
             movimientos.add(new MovimientoFisico("Golpe Cuerpo", "Normal", 85, 100, 15));
             movimientos.add(new MovimientoFisico("Terratemblor", "Tierra", 60, 100, 20));
-            movimientos.add(new MovimientoEstado("Descanso", "Psíquico", 0, 100, "Aumenta puntos de salud"));
+            movimientos.add(new MovimientoEstado("Descanso", "Psiquico", 0, 100, "Aumenta puntos de salud"));
             break;
 
         case "zangoose":
@@ -304,7 +304,7 @@ public class BattleFactory implements Serializable {
             break;
 
         case "gardevoir":
-            movimientos.add(new MovimientoEspecial("Psíquico", "Psíquico", 90, 100, 10));
+            movimientos.add(new MovimientoEspecial("Psiquico", "Psiquico", 90, 100, 10));
             movimientos.add(new MovimientoFisico("Drenadoras", "Hada", 40, 100, 10));
             movimientos.add(new MovimientoFisico("Fuerza Lunar", "Hada", 95, 100, 10));
             movimientos.add(new MovimientoEstado("Deseo", "Normal", 0, 100, "Aumenta puntos de salud"));
@@ -325,17 +325,17 @@ public class BattleFactory implements Serializable {
             break;
 
         case "chimecho":
-            movimientos.add(new MovimientoEspecial("Psíquico", "Psíquico", 90, 100, 10));
-            movimientos.add(new MovimientoFisico("Ala Mágica", "Psíquico", 60, 100, 20));
-            movimientos.add(new MovimientoFisico("Golpe Zen", "Psíquico", 80, 90, 10));
-            movimientos.add(new MovimientoEstado("Paz Mental", "Psíquico", 0, 100, "Aumenta ataque Especial"));
+            movimientos.add(new MovimientoEspecial("Psiquico", "Psiquico", 90, 100, 10));
+            movimientos.add(new MovimientoFisico("Ala Mágica", "Psiquico", 60, 100, 20));
+            movimientos.add(new MovimientoFisico("Golpe Zen", "Psiquico", 80, 90, 10));
+            movimientos.add(new MovimientoEstado("Paz Mental", "Psiquico", 0, 100, "Aumenta ataque Especial"));
             break;
 
                 
         default:
             movimientos.add(new MovimientoFisico("Placaje", "Normal", 40, 100, 35));
             movimientos.add(new MovimientoFisico("Golpe Rápido", "Normal", 40, 100, 30));
-            movimientos.add(new MovimientoEspecial("Rayo Confuso", "Psíquico", 50, 100, 10));
+            movimientos.add(new MovimientoEspecial("Rayo Confuso", "Psiquico", 50, 100, 10));
             movimientos.add(new MovimientoEstado("Gruñido", "Normal", 0, 100, "Aumenta ataque")); 
         }
         
@@ -424,7 +424,7 @@ public class BattleFactory implements Serializable {
                 pokemon.setVelocidad(350);
                 pokemon.setAtaqueEspecial(295);
                 pokemon.setDefensaEspecial(280);
-                pokemon.setTipoPrincipal("Eléctrico");
+                pokemon.setTipoPrincipal("Electrico");
                 pokemon.setTipoSecundario(null);
                 break;
 
@@ -435,7 +435,7 @@ public class BattleFactory implements Serializable {
                 pokemon.setVelocidad(375);
                 pokemon.setAtaqueEspecial(350);
                 pokemon.setDefensaEspecial(260);
-                pokemon.setTipoPrincipal("Eléctrico");
+                pokemon.setTipoPrincipal("Electrico");
                 pokemon.setTipoSecundario(null);
                 break;
 
@@ -556,7 +556,7 @@ public class BattleFactory implements Serializable {
                 pokemon.setVelocidad(280);
                 pokemon.setAtaqueEspecial(320);
                 pokemon.setDefensaEspecial(300);
-                pokemon.setTipoPrincipal("Dragón");
+                pokemon.setTipoPrincipal("Dragon");
                 pokemon.setTipoSecundario("Volador");
                 break;
 
@@ -567,7 +567,7 @@ public class BattleFactory implements Serializable {
                 pokemon.setVelocidad(280);
                 pokemon.setAtaqueEspecial(330);
                 pokemon.setDefensaEspecial(300);
-                pokemon.setTipoPrincipal("Dragón");
+                pokemon.setTipoPrincipal("Dragon");
                 pokemon.setTipoSecundario("Volador");
                 break;
 
@@ -578,7 +578,7 @@ public class BattleFactory implements Serializable {
                 pokemon.setVelocidad(370);
                 pokemon.setAtaqueEspecial(440);
                 pokemon.setDefensaEspecial(330);
-                pokemon.setTipoPrincipal("Psíquico");
+                pokemon.setTipoPrincipal("Psiquico");
                 pokemon.setTipoSecundario(null);
                 break;
 
@@ -590,7 +590,7 @@ public class BattleFactory implements Serializable {
                 pokemon.setAtaqueEspecial(310);
                 pokemon.setDefensaEspecial(350);
                 pokemon.setTipoPrincipal("Tierra");
-                pokemon.setTipoSecundario("Psíquico");
+                pokemon.setTipoSecundario("Psiquico");
                 break;
 
             case "machamp":
@@ -645,7 +645,7 @@ public class BattleFactory implements Serializable {
                 pokemon.setAtaqueEspecial(280);
                 pokemon.setDefensaEspecial(320);
                 pokemon.setTipoPrincipal("Acero");
-                pokemon.setTipoSecundario("Psíquico");
+                pokemon.setTipoSecundario("Psiquico");
                 break;
 
             case "aggron":
@@ -710,7 +710,7 @@ public class BattleFactory implements Serializable {
                 pokemon.setVelocidad(320);
                 pokemon.setAtaqueEspecial(350);
                 pokemon.setDefensaEspecial(350);
-                pokemon.setTipoPrincipal("Psíquico");
+                pokemon.setTipoPrincipal("Psiquico");
                 pokemon.setTipoSecundario("Hada");
                 break;
 
@@ -743,7 +743,7 @@ public class BattleFactory implements Serializable {
                 pokemon.setVelocidad(320);
                 pokemon.setAtaqueEspecial(330);
                 pokemon.setDefensaEspecial(350);
-                pokemon.setTipoPrincipal("Psíquico");
+                pokemon.setTipoPrincipal("Psiquico");
                 pokemon.setTipoSecundario(null);
                 break;
 
