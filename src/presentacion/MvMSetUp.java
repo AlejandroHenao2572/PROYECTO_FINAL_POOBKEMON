@@ -159,14 +159,14 @@ public class MvMSetUp extends JFrame {
      */
     private void crearPanelMaquina2() {
         panelMaquina2 = new JPanel();
-        panelMaquina2.setBackground(new Color(180, 255, 180));
+        panelMaquina2.setBackground(new Color(180, 220, 255));
         panelMaquina2.setLayout(new BorderLayout(0, 10));
         panelMaquina2.setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 2), new EmptyBorder(10, 10, 10, 10)));
 
         // Titulo del panel
         JLabel titulo = new JLabel("Maquina 2", SwingConstants.CENTER);
         titulo.setOpaque(true);
-        titulo.setBackground(new Color(50, 180, 50));
+        titulo.setBackground(new Color(50, 120, 200));
         titulo.setForeground(Color.WHITE);
         titulo.setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 2), new EmptyBorder(5, 5, 5, 5)));
         titulo.setFont(new Font("Pokemon GB", Font.BOLD, 24));
@@ -180,7 +180,7 @@ public class MvMSetUp extends JFrame {
         tipoMaquinaBox2.setSelectedIndex(0);
 
         JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setBackground(new Color(180, 255, 180));
+        topPanel.setBackground(new Color(180, 220, 255));
         topPanel.add(tipoMaquinaBox2, BorderLayout.CENTER);
         panelMaquina2.add(topPanel, BorderLayout.BEFORE_FIRST_LINE);
 
@@ -194,7 +194,7 @@ public class MvMSetUp extends JFrame {
 
         // Panel para mostrar el equipo
         JPanel equipoPanel = new JPanel(new BorderLayout(0, 5));
-        equipoPanel.setBackground(new Color(180, 255, 180));
+        equipoPanel.setBackground(new Color(180, 220, 255));
         equipoPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 1), new EmptyBorder(5, 5, 5, 5)));
         equipoPanel.setPreferredSize(new Dimension(0, 220));
 
@@ -203,10 +203,10 @@ public class MvMSetUp extends JFrame {
         equipoPanel.add(equipoLabel, BorderLayout.NORTH);
 
         JPanel pokemonesPanel = new JPanel(new GridLayout(6, 1, 0, 2));
-        pokemonesPanel.setBackground(new Color(180, 255, 180));
+        pokemonesPanel.setBackground(new Color(180, 220, 255));
         for (String poke : nombresEquipoMaquina2) {
             JPanel pokeRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 2));
-            pokeRow.setBackground(new Color(180, 255, 180));
+            pokeRow.setBackground(new Color(180, 220, 255));
             JLabel iconLabel = new JLabel(imagenesPokemones.get(poke));
             iconLabel.setPreferredSize(new Dimension(48, 48));
             JLabel nameLabel = new JLabel(poke);
@@ -226,11 +226,11 @@ public class MvMSetUp extends JFrame {
 
         // Panel para mostrar los items
         JPanel itemPanel = new JPanel(new GridLayout(4, 1, 0, 5));
-        itemPanel.setBackground(new Color(180, 255, 180));
+        itemPanel.setBackground(new Color(180, 220, 255));
         itemPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 1), new EmptyBorder(10, 10, 10, 10)));
         for (String item : itemsDisponibles) {
             JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 50, 2));
-            row.setBackground(new Color(180, 255, 180));
+            row.setBackground(new Color(180, 220, 255));
             JLabel iconLabel = new JLabel(imagenesItems.get(item));
             iconLabel.setPreferredSize(new Dimension(32, 32));
             JLabel itemLabel = new JLabel(item + ": " + itemsMaquina2.get(item));
@@ -245,7 +245,7 @@ public class MvMSetUp extends JFrame {
 
         // Boton para iniciar la batalla MvM
         JButton iniciar = new JButton("Iniciar Batalla MvM");
-        iniciar.setBackground(new Color(50, 180, 50));
+        iniciar.setBackground(new Color(50, 120, 200));
         iniciar.setForeground(Color.WHITE);
         iniciar.setFocusPainted(false);
         iniciar.setFont(new Font("Pokemon GB", Font.BOLD, 16));

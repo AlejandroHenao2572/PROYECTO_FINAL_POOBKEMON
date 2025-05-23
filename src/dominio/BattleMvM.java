@@ -14,6 +14,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.Serializable;
 
+/**
+ * Clase BattleMvM
+ *
+ * Gestiona una batalla entre dos entrenadores controlados por IA (Maquina vs Maquina).
+ * Permite configurar los equipos, items y tipos de IA de cada maquina.
+ * Controla el flujo de la batalla, los turnos, el uso de movimientos e items,
+ * el cambio de Pokemon y la finalizacion de la batalla.
+ * Permite guardar y cargar el estado de la batalla.
+ *
+ * @author David Patacon
+ * @author Daniel Hueso
+ * @version 1.0
+ */
 public class BattleMvM  {
     private static final long serialVersionUID = 1L;
     private AITrainer maquina1;
@@ -27,6 +40,11 @@ public class BattleMvM  {
     private boolean cambioForzado = false;
     private static final Logger LOGGER = Logger.getLogger(Battle.class.getName());
 
+    /**
+     * Constructor de la batalla Maquina vs Maquina
+     * @param maquina1 Primer entrenador IA
+     * @param maquina2 Segundo entrenador IA
+     */
     public BattleMvM(AITrainer maquina1, AITrainer maquina2) {
         this.maquina1 = maquina1;
         this.maquina2 = maquina2;
@@ -35,6 +53,17 @@ public class BattleMvM  {
         this.maquina2.setListener(new TrainerActionListener(this));
     }
 
+    /**
+     * Configura una nueva batalla MvM con los equipos, items y tipos de IA dados
+     * @param nombresEquipoMaquina1 Nombres de los Pokemon de la maquina 1
+     * @param nombresEquipoMaquina2 Nombres de los Pokemon de la maquina 2
+     * @param itemsMaquina1 Items de la maquina 1
+     * @param itemsMaquina2 Items de la maquina 2
+     * @param tipoMaquina1 Tipo de IA de la maquina 1
+     * @param tipoMaquina2 Tipo de IA de la maquina 2
+     * @return Instancia de BattleMvM lista para iniciar
+     * @throws POOBkemonException Si ocurre un error al crear la batalla
+     */
     public static BattleMvM setupBattle(
         List<String> nombresEquipoMaquina1,
         List<String> nombresEquipoMaquina2,
@@ -102,18 +131,33 @@ public class BattleMvM  {
         }
     }
     
+    /**
+     * Devuelve el primer entrenador IA
+     * @return maquina1
+     */
     public AITrainer getEntrenador1() {
         return maquina1;
     }
 
+    /**
+     * Devuelve el segundo entrenador IA
+     * @return maquina2
+     */
     public AITrainer getEntrenador2() {
         return maquina2;
     }
 
+    /**
+     * Devuelve el entrenador cuyo turno esta activo
+     * @return turnoActual
+     */
     public Trainer getTurnoActual() {
         return turnoActual;
     }
     
+    /**
+     * Cancela el temporizador del turno actual
+     */
     public void cancelarTemporizador() {
         if (turnTimer != null) {
             turnTimer.cancel();
@@ -121,9 +165,12 @@ public class BattleMvM  {
         }
     }
 
+    /**
+     * Inicia el temporizador para el turno actual
+     */
     public void iniciarTemporizadorTurno() {
         cancelarTemporizador();
-        
+
         turnTimer = new Timer();
         turnTimer.schedule(new TimerTask() {
             @Override
@@ -133,27 +180,33 @@ public class BattleMvM  {
         }, TIEMPO_TURNO * 1000);
     }
 
+    /**
+     * Accion a realizar cuando se agota el tiempo del turno
+     */
     public void tiempoAgotado() {
         if (esperandoAccion) {
-            // Penalización por tiempo agotado: pierde 1 PP en cada movimiento
+            // Penalizacion por tiempo agotado: pierde 1 PP en cada movimiento
             for (Movimiento m : turnoActual.getPokemonActivo().getMovimientos()) {
                 if (m.getPP() > 0) {
                     m.usar(); // Consume 1 PP
                 }
             }
-            
+
             if (listener != null) {
                 listener.onTurnEnded(turnoActual);
             }
-            
+
             finalizarTurno();
         }
     }
 
+    /**
+     * Finaliza el turno actual y programa el cambio de turno
+     */
     public void finalizarTurno() {
         esperandoAccion = false;
         cancelarTemporizador();
-        // Espera 2 segundos antes de cambiar el turno
+        // Espera 1 segundo antes de cambiar el turno
         Timer delayTimer = new Timer();
         delayTimer.schedule(new TimerTask() {
             @Override
@@ -171,37 +224,40 @@ public class BattleMvM  {
         iniciarTurno();
     }
 
-        public void iniciarTurno() {
+    /**
+     * Inicia el turno del entrenador actual
+     */
+    public void iniciarTurno() {
         if (maquina1.estaDerrotado() || maquina2.estaDerrotado()) {
             finalizarBatalla();
             return;
         }
-    
-        // Verificar si el Pokémon activo está debilitado
+
+        // Verificar si el Pokemon activo esta debilitado
         if (turnoActual.getPokemonActivo().estaDebilitado()) {
             manejarPokemonDebilitado();
             return;
         }
-    
-        // Resto de la lógica normal del turno
+
+        // Si el Pokemon activo no tiene PP, agregar Forcejeo
         if (turnoActual.getPokemonActivo().sinPP()) {
             turnoActual.getPokemonActivo().getMovimientos().add(FORCEJEO);
         }
-    
+
         esperandoAccion = true;
         iniciarTemporizadorTurno();
-    
+
         if (listener != null) {
             listener.onTurnStarted(turnoActual);
         }
-    
-        // Si es el turno de la máquina, realiza la acción automáticamente
+
+        // Si es el turno de la maquina, realiza la accion automaticamente
         if (turnoActual instanceof AITrainer) {
             realizarTurnoMaquina();
         }
     }
 
-        /**
+    /**
      * Hace que la máquina (IA) realice su turno automáticamente.
      */
     private void realizarTurnoMaquina() {
@@ -218,6 +274,9 @@ public class BattleMvM  {
         }, 3000); 
     }
 
+    /**
+     * Maneja el caso en que el Pokemon activo esta debilitado
+     */
     public void manejarPokemonDebilitado() {
         cambioForzado = true;
         cancelarTemporizador();
@@ -256,19 +315,18 @@ public class BattleMvM  {
         }
     }
 
-        /**
+    /**
      * Establece el listener para eventos de la interfaz grafica
-     * 
      * @param listener Objeto que recibira los eventos de la batalla
      */
     public void setListener(BattleGUIListener listener) {
         this.listener = listener;
     }
 
-         /**
+    /**
      * Guarda el estado actual de la batalla en un archivo
      * @param filePath Ruta del archivo donde guardar
-     * @throws IOException Si ocurre un error de E/S
+     * @throws POOBkemonException Si ocurre un error al guardar
      */
     public void guardarPartida(String filePath) throws POOBkemonException {
         try (ObjectOutputStream oos = new ObjectOutputStream(
@@ -280,6 +338,12 @@ public class BattleMvM  {
         }
     }
 
+    /**
+     * Carga una batalla desde un archivo
+     * @param filePath Ruta del archivo a cargar
+     * @return Instancia de BattleMvM cargada
+     * @throws POOBkemonException Si ocurre un error al cargar
+     */
     public static BattleMvM cargarPartida(String filePath) throws POOBkemonException {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
             BattleMvM batalla = (BattleMvM) ois.readObject();
@@ -292,6 +356,9 @@ public class BattleMvM  {
         }
     }
 
+    /**
+     * Inicia la batalla y notifica al listener
+     */
      public void iniciar() {
         if (listener != null) {
             listener.onBattleStarted();
@@ -299,38 +366,38 @@ public class BattleMvM  {
         iniciarTurno();
     }
  
-        /**
+    /**
      * Procesa el uso de un item de revivir
-     * @param itemIndex Índice del item en la mochila
-     * @param pokemonIndex Índice del Pokémon a revivir
+     * @param itemIndex Indice del item en la mochila
+     * @param pokemonIndex Indice del Pokemon a revivir
      */
     public void usarItemRevivir(int itemIndex, int pokemonIndex) {
         if (!esperandoAccion) return;
-        
+
         try {
-            // Validar índices
+            // Validar indices
             if (itemIndex < 0 || itemIndex >= turnoActual.getItems().size() ||
                 pokemonIndex < 0 || pokemonIndex >= turnoActual.getEquipo().size()) {
                 return;
             }
-            
+
             Item item = turnoActual.getItems().get(itemIndex);
             Pokemon pokemon = turnoActual.getEquipo().get(pokemonIndex);
-            
-            // Verificar que el item sea de revivir y el Pokémon esté debilitado
+
+            // Verificar que el item sea de revivir y el Pokemon este debilitado
             if (item instanceof Revive && pokemon.estaDebilitado()) {
                 // Usar el item
                 item.usarEn(pokemon);
-                
+
                 // Eliminar el item de la mochila
                 turnoActual.getItems().remove(itemIndex);
-                
+
                 // Notificar a la interfaz
                 if (listener != null) {
                     listener.onPokemonRevivido(turnoActual, pokemon);
                 }
-                
-                // Si revivimos al Pokémon activo, continuar el turno
+
+                // Si revivimos al Pokemon activo, continuar el turno
                 if (pokemon == turnoActual.getPokemonActivo()) {
                     esperandoAccion = true;
                     iniciarTemporizadorTurno();
@@ -341,10 +408,11 @@ public class BattleMvM  {
         }
     }
 
-            /**
-     * Procesa la selección de un movimiento por parte del jugador
-     * 
-     * @param indiceMovimiento Índice del movimiento seleccionado
+    /**
+     * Procesa la seleccion de un movimiento por parte del jugador
+     * @param indiceMovimiento Indice del movimiento seleccionado
+     * @return Mensaje descriptivo de la accion
+     * @throws POOBkemonException Si ocurre un error en la seleccion
      */
     public String movimientoSeleccionado(int indiceMovimiento) throws POOBkemonException {
         if (!esperandoAccion || isPaused()) {
@@ -369,7 +437,13 @@ public class BattleMvM  {
         }
     }
 
-     public String cambioPokemonSeleccionado(int indicePokemon) throws POOBkemonException {
+    /**
+     * Procesa la seleccion de cambio de Pokemon por parte del jugador
+     * @param indicePokemon Indice del Pokemon a cambiar
+     * @return Mensaje descriptivo del cambio
+     * @throws POOBkemonException Si ocurre un error en la seleccion
+     */
+    public String cambioPokemonSeleccionado(int indicePokemon) throws POOBkemonException {
         if ((!esperandoAccion && !cambioForzado) || isPaused()) {
             throw new POOBkemonException(POOBkemonException.ERROR_CAMBIO_POKEMON_TURNO);
         }
@@ -405,9 +479,10 @@ public class BattleMvM  {
 
 
     /**
-     * Procesa la selección de uso de ítem por parte del jugador
-     * 
-     * @param indiceItem Índice del ítem seleccionado
+     * Procesa la seleccion de uso de item por parte del jugador
+     * @param indiceItem Indice del item seleccionado
+     * @return Mensaje descriptivo del uso
+     * @throws POOBkemonException Si ocurre un error en la seleccion
      */
     public String itemSeleccionado(int indiceItem) throws POOBkemonException {
         if (!esperandoAccion || isPaused()) {
@@ -429,10 +504,18 @@ public class BattleMvM  {
         }
     }
 
+    /**
+     * Indica si la batalla esta pausada (siempre falso en MvM)
+     * @return false
+     */
     public boolean isPaused() {
         return  false;
     }
 
+    
+    /**
+     * Listener interno para acciones de los entrenadores IA
+     */
     private static class TrainerActionListener implements TrainerListener {
         private static final long serialVersionUID = 1L;
         private final BattleMvM battle;
@@ -445,15 +528,26 @@ public class BattleMvM  {
         }
     }
 
+    /**
+     * Indica si el cambio de Pokemon es forzado
+     * @return true si el cambio es forzado
+     */
     public boolean isCambioForzado() {
         return cambioForzado;
     }
 
+    /**
+     * Devuelve el listener de la batalla
+     * @return listener
+     */
     public BattleGUIListener getListener() {
         return listener;
     }
 
 }
+/**
+ * Interfaz para escuchar acciones de los entrenadores
+ */
 interface TrainerListener extends Serializable {
     void onActionPerformed();
 }

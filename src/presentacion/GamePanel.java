@@ -228,7 +228,8 @@ public class GamePanel extends JPanel implements Runnable {
                 } else if (pvmZone.contains(clickPoint)) {
                     currentState = GameState.PVM_MODE_SELECTION;
                 } else if (mvmZone.contains(clickPoint)) {
-                    currentState = GameState.MVM_MODE_SELECTION;
+                    currentState = GameState.IN_GAME;
+                    MvMSetUp();
                 }
                 break;
 
@@ -454,10 +455,6 @@ public class GamePanel extends JPanel implements Runnable {
 
             case PVM_MODE_SELECTION:
                 drawPvmModeSelection(g2);
-                break;
-
-            case MVM_MODE_SELECTION:
-                drawMvmModeSelection(g2);
                 break;
 
             case IN_GAME:
