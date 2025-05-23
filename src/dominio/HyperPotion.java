@@ -6,8 +6,9 @@ import java.util.logging.Logger;
  * Item que restaura 200 PS a un Pokemon
  * No funciona en Pokemon debilitados
  * 
- * Autores David Patacon y Daniel Hueso
- * Version 1.0
+ * @author David Patacon
+ * @author Daniel Hueso
+ * @version 1.0
  */
 public class HyperPotion extends Item {
     private static final int CURA_PS = 200;
