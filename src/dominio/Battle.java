@@ -17,8 +17,12 @@ import java.util.logging.Logger;
 
 /** 
  * Esta clase maneja la logica de una batalla entre entrenadores humanos
- * Autores David Patacon y Daniel Hueso
- * Version 2.0
+ * Permite gestionar turnos ataques cambios de pokemon uso de items y eventos de la interfaz
+ * Incluye metodos para guardar y cargar el estado de la batalla
+ * 
+ * @author David Patacon
+ * @author Daniel Hueso
+ * @version 1.0
  */
 public class Battle implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -58,6 +62,17 @@ public class Battle implements Serializable {
         this.entrenador2.setListener(new TrainerActionListener(this));
     }
 
+
+    /**
+     * Metodo estatico para crear una batalla con los equipos e items dados
+     * 
+     * @param nombresEquipo1 Lista de nombres de los pokemon del primer entrenador
+     * @param nombresEquipo2 Lista de nombres de los pokemon del segundo entrenador
+     * @param items1 Mapa de items para el primer entrenador
+     * @param items2 Mapa de items para el segundo entrenador
+     * @return Una nueva instancia de Battle
+     * @throws POOBkemonException si ocurre un error al crear la batalla
+     */
     public static Battle setupBattle(
             List<String> nombresEquipo1,
             List<String> nombresEquipo2,
@@ -148,6 +163,10 @@ public class Battle implements Serializable {
         }
     }
     
+    /**
+     * Maneja la situacion cuando el pokemon activo esta debilitado
+     * Notifica al listener y verifica si el entrenador esta derrotado
+     */
     public void manejarPokemonDebilitado() {
         cambioForzado = true;
         cancelarTemporizador();
@@ -163,6 +182,7 @@ public class Battle implements Serializable {
 
     /**
      * Inicia el temporizador para el turno actual
+     * Si el tiempo se agota se llama a tiempoAgotado
      */
     public void iniciarTemporizadorTurno() {
         cancelarTemporizador();
@@ -176,8 +196,9 @@ public class Battle implements Serializable {
         }, TIEMPO_TURNO * 1000);
     }
 
+
     /**
-     * Cancela el temporizador del turno actual
+     * Cancela el temporizador del turno actual si existe
      */
     public void cancelarTemporizador() {
         if (turnTimer != null) {
@@ -187,7 +208,9 @@ public class Battle implements Serializable {
     }
 
     /**
-     * Maneja la situación cuando se agota el tiempo para un turno
+     * Maneja la situacion cuando se agota el tiempo para un turno
+     * Penaliza al jugador perdiendo 1 PP en cada movimiento
+     * Notifica al listener y finaliza el turno
      */
     public void tiempoAgotado() {
         if (esperandoAccion) {
@@ -208,6 +231,7 @@ public class Battle implements Serializable {
 
     /**
      * Finaliza el turno actual y pasa al siguiente
+     * Cancela el temporizador y cambia el turno
      */
     public void finalizarTurno() {
         esperandoAccion = false;
@@ -216,7 +240,7 @@ public class Battle implements Serializable {
     }
 
     /**
-     * Cambia el turno al otro entrenador
+     * Cambia el turno al otro entrenador y llama a iniciarTurno
      */
     public void cambiarTurno() {
         turnoActual = (turnoActual == entrenador1) ? entrenador2 : entrenador1;
@@ -225,6 +249,7 @@ public class Battle implements Serializable {
 
     /**
      * Finaliza la batalla y determina al ganador
+     * Notifica al listener el resultado
      */
     public void finalizarBatalla() {
         cancelarTemporizador();
@@ -235,9 +260,11 @@ public class Battle implements Serializable {
     }
 
     /**
-     * Procesa la selección de un movimiento por parte del jugador
+     * Procesa la seleccion de un movimiento por parte del jugador
      * 
-     * @param indiceMovimiento Índice del movimiento seleccionado
+     * @param indiceMovimiento Indice del movimiento seleccionado
+     * @return Mensaje del resultado del ataque
+     * @throws POOBkemonException si ocurre un error en la seleccion
      */
     public String movimientoSeleccionado(int indiceMovimiento) throws POOBkemonException {
         if (!esperandoAccion || isPaused()) {
@@ -260,11 +287,12 @@ public class Battle implements Serializable {
     }
 
     /**
-     * Procesa la selección de cambio de Pokémon por parte del jugador
+     * Procesa la seleccion de cambio de Pokemon por parte del jugador
      * 
-     * @param indicePokemon Índice del Pokémon seleccionado
+     * @param indicePokemon Indice del Pokemon seleccionado
+     * @return Mensaje del resultado del cambio
+     * @throws POOBkemonException si ocurre un error en la seleccion
      */
-    
     public String cambioPokemonSeleccionado(int indicePokemon) throws POOBkemonException {
         if ((!esperandoAccion && !cambioForzado) || isPaused()) {
             throw new POOBkemonException(POOBkemonException.ERROR_CAMBIO_POKEMON_TURNO);
@@ -302,9 +330,11 @@ public class Battle implements Serializable {
 
 
     /**
-     * Procesa la selección de uso de ítem por parte del jugador
+     * Procesa la seleccion de uso de item por parte del jugador
      * 
-     * @param indiceItem Índice del ítem seleccionado
+     * @param indiceItem Indice del item seleccionado
+     * @return Mensaje del resultado del uso del item
+     * @throws POOBkemonException si ocurre un error en la seleccion
      */
     public String itemSeleccionado(int indiceItem) throws POOBkemonException {
         if (!esperandoAccion || isPaused()) {
@@ -325,33 +355,54 @@ public class Battle implements Serializable {
         }
     }
 
-    // Métodos getter
+    /**
+     * Devuelve el primer entrenador humano de la batalla
+     * 
+     * @return entrenador1 primer entrenador humano
+     */
     public HumanTrainer getEntrenador1() {
         return entrenador1;
     }
 
+    /**
+     * Devuelve el segundo entrenador humano de la batalla
+     * 
+     * @return entrenador2 segundo entrenador humano
+     */
     public HumanTrainer getEntrenador2() {
         return entrenador2;
     }
 
+    /**
+     * Devuelve el entrenador cuyo turno esta activo actualmente
+     * 
+     * @return turnoActual entrenador que tiene el turno
+     */
     public HumanTrainer getTurnoActual() {
         return turnoActual;
     }
     
+    /**
+     * Indica si el cambio de pokemon es forzado por debilitamiento
+     * 
+     * @return true si el cambio es forzado false en caso contrario
+     */
     public boolean isCambioForzado() {
         return cambioForzado;
     }
 
+
     /**
      * Procesa el uso de un item de revivir
-     * @param itemIndex Índice del item en la mochila
-     * @param pokemonIndex Índice del Pokémon a revivir
+     * 
+     * @param itemIndex Indice del item en la mochila
+     * @param pokemonIndex Indice del Pokemon a revivir
      */
     public void usarItemRevivir(int itemIndex, int pokemonIndex) {
         if (!esperandoAccion) return;
         
         try {
-            // Validar índices
+            // Validar indices
             if (itemIndex < 0 || itemIndex >= turnoActual.getItems().size() ||
                 pokemonIndex < 0 || pokemonIndex >= turnoActual.getEquipo().size()) {
                 return;
@@ -360,7 +411,7 @@ public class Battle implements Serializable {
             Item item = turnoActual.getItems().get(itemIndex);
             Pokemon pokemon = turnoActual.getEquipo().get(pokemonIndex);
             
-            // Verificar que el item sea de revivir y el Pokémon esté debilitado
+            // Verificar que el item sea de revivir y el Pokemon este debilitado
             if (item instanceof Revive && pokemon.estaDebilitado()) {
                 // Usar el item
                 item.usarEn(pokemon);
@@ -373,6 +424,7 @@ public class Battle implements Serializable {
                     listener.onPokemonRevivido(turnoActual, pokemon);
                 }
                 
+                // Si revivimos al Pokemon activo continuar el turno
                 if (pokemon == turnoActual.getPokemonActivo()) {
                     esperandoAccion = true;
                     iniciarTemporizadorTurno();
@@ -383,14 +435,20 @@ public class Battle implements Serializable {
         }
     }
 
+    /**
+     * Indica si la batalla esta pausada
+     * 
+     * @return false si la batalla no esta pausada
+     */
     public boolean isPaused() {
         return  false;
     }
 
     /**
      * Guarda el estado actual de la batalla en un archivo
+     * 
      * @param filePath Ruta del archivo donde guardar
-     * @throws IOException Si ocurre un error de E/S
+     * @throws POOBkemonException Si ocurre un error al guardar
      */
     public void guardarPartida(String filePath) throws POOBkemonException {
         try (ObjectOutputStream oos = new ObjectOutputStream(
@@ -402,12 +460,13 @@ public class Battle implements Serializable {
         }
     }
 
+
     /**
      * Carga una batalla desde un archivo
+     * 
      * @param filePath Ruta del archivo a cargar
      * @return La batalla cargada
-     * @throws IOException Si ocurre un error de E/S
-     * @throws ClassNotFoundException Si la clase no se encuentra
+     * @throws POOBkemonException Si ocurre un error al cargar
      */
     public static Battle cargarPartida(String filePath) throws POOBkemonException {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
@@ -421,23 +480,26 @@ public class Battle implements Serializable {
         }
     }
     
+    /**
+     * Clase interna para escuchar acciones de los entrenadores y notificar a la batalla
+     */
     private static class TrainerActionListener implements TrainerListener {
-    private static final long serialVersionUID = 1L;
-    private final Battle battle;
-    
-    public TrainerActionListener(Battle battle) {
-        this.battle = battle;
+        private static final long serialVersionUID = 1L;
+        private final Battle battle;
+        
+        public TrainerActionListener(Battle battle) {
+            this.battle = battle;
+        }
+        
+        @Override
+        public void onActionPerformed() {
+            battle.finalizarTurno();
+        }
     }
-    
-    @Override
-    public void onActionPerformed() {
-        battle.finalizarTurno();
-    }
-}
 }
 
 /**
- * Interfaz para notificar a Battle cuando un entrenador completa su acción
+ * Interfaz para notificar a Battle cuando un entrenador completa su accion
  */
 interface TrainerListener extends Serializable {
     void onActionPerformed();

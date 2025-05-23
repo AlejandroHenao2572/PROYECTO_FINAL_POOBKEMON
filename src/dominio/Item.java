@@ -7,8 +7,9 @@ import java.io.Serializable;
  * Representa un item generico que puede usarse sobre pokemones
  * Las clases concretas deben implementar el efecto especifico
  * 
- * Autores David Patacon y Daniel Hueso
- * Version 1.0
+ * @author David Patacon
+ * @author Daniel Hueso
+ * @version 1.0
  */
 public abstract class Item implements Serializable{
     protected String nombre;
