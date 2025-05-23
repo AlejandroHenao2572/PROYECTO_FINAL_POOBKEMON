@@ -81,253 +81,254 @@ public class BattleFactory implements Serializable {
         case "charizard":
             movimientos.add(new MovimientoEspecial("Lanzallamas", "Fuego", 90, 100, 15));
             movimientos.add(new MovimientoFisico("Garra Dragón", "Dragón", 80, 100, 15));
-            movimientos.add(new MovimientoFisico("Giro Fuego", "Fuego", 60, 100, 25));
+            movimientos.add(new MovimientoFisico("Ala de Acero", "Acero", 70, 90, 25));
             movimientos.add(new MovimientoEstado("Danza Dragón", "Dragón", 0, 100, "Aumenta ataque"));
             break;
 
         case "torkoal":
-            movimientos.add(new MovimientoEspecial("Llamarada", "Fuego", 120, 85, 5));
-            movimientos.add(new MovimientoEspecial("Rayo Solar", "Planta", 120, 100, 10));
-            movimientos.add(new MovimientoEstado("Pantalla de Humo", "Normal", 0, 100, "Aumenta defensa especial"));
-            movimientos.add(new MovimientoFisico("Giro Fuego", "Fuego", 60, 100, 25));
+            movimientos.add(new MovimientoEspecial("Llamarada", "Fuego", 110, 85, 5));
+            movimientos.add(new MovimientoFisico("Cuerpo Pesado", "Acero", 100, 100, 10));
+            movimientos.add(new MovimientoFisico("Rueda Fuego", "Fuego", 60, 100, 25));
+            movimientos.add(new MovimientoEstado("Fortaleza", "Normal", 0, 100, "Aumenta defensa"));
             break;
 
         case "blastoise":
-            movimientos.add(new MovimientoEspecial("Pistola Agua", "Agua", 40, 100, 25));
-            movimientos.add(new MovimientoFisico("Cabeza de Hierro", "Acero", 80, 100, 15));
-            movimientos.add(new MovimientoEspecial("Hidro Bomba", "Agua", 110, 80, 5));
-            movimientos.add(new MovimientoEstado("Reflejo", "Psíquico", 0, 100, "Aumenta defensa"));
+            movimientos.add(new MovimientoEspecial("Hidrobomba", "Agua", 110, 80, 5));
+            movimientos.add(new MovimientoFisico("Cabezazo", "Normal", 130, 100, 10));
+            movimientos.add(new MovimientoFisico("Cascada", "Agua", 80, 100, 15));
+            movimientos.add(new MovimientoEstado("Defensa Férrea", "Acero", 0, 100, "Aumenta defensa"));
             break;
 
         case "milotic":
-            movimientos.add(new MovimientoEspecial("Hidro Bomba", "Agua", 110, 80, 5));
-            movimientos.add(new MovimientoEstado("Recuperación", "Normal", 0, 100, "Restaura HP"));
-            movimientos.add(new MovimientoEspecial("Rayo Hielo", "Hielo", 90, 100, 10));
-            movimientos.add(new MovimientoEstado("Danza Lluvia", "Agua", 0, 100, "Aumenta ataque especial"));
+            movimientos.add(new MovimientoEspecial("Surf", "Agua", 90, 100, 15));
+            movimientos.add(new MovimientoFisico("Golpe Cuerpo", "Normal", 85, 100, 15));
+            movimientos.add(new MovimientoFisico("Cola Dragón", "Dragón", 60, 90, 10));
+            movimientos.add(new MovimientoEstado("Pulso Cura", "Agua", 0, 100, "Aumenta puntos de salud"));
             break;
 
         case "venusaur":
-            movimientos.add(new MovimientoEspecial("Rayo Solar", "Planta", 120, 100, 10));
-            movimientos.add(new MovimientoEspecial("Bomba Lodo", "Veneno", 65, 100, 10));
-            movimientos.add(new MovimientoEstado("Drenadoras", "Planta", 0, 100, "Restaura HP"));
-            movimientos.add(new MovimientoFisico("Ataque Rápido", "Normal", 40, 100, 30));
+            movimientos.add(new MovimientoEspecial("Energibola", "Planta", 90, 100, 10));
+            movimientos.add(new MovimientoFisico("Látigo Cepa", "Planta", 45, 100, 25));
+            movimientos.add(new MovimientoFisico("Bomba Lodo", "Veneno", 90, 100, 10));
+            movimientos.add(new MovimientoEstado("Crecimiento", "Normal", 0, 100, "Aumenta ataque Especial"));
+
             break;
 
         case "sceptile":
-            movimientos.add(new MovimientoFisico("Hoja Aguda", "Planta", 70, 100, 25));
-            movimientos.add(new MovimientoEspecial("Rayo Solar", "Planta", 120, 100, 10));
-            movimientos.add(new MovimientoEstado("Drenadoras", "Planta", 0, 100, "Restaura HP"));
-            movimientos.add(new MovimientoFisico("Golpe Cuerpo", "Normal", 85, 100, 15));
+            movimientos.add(new MovimientoEspecial("Eco Voz", "Normal", 75, 100, 10));
+            movimientos.add(new MovimientoFisico("Hoja Aguda", "Planta", 70, 100, 15));
+            movimientos.add(new MovimientoFisico("Golpe Roca", "Lucha", 40, 100, 15));
+            movimientos.add(new MovimientoEstado("Agilidad", "Psíquico", 0, 100, "Aumenta velocidad"));
             break;
 
         case "raichu":
-            movimientos.add(new MovimientoEspecial("Impactrueno", "Eléctrico", 40, 100, 30));
-            movimientos.add(new MovimientoFisico("Cola Férrea", "Acero", 65, 95, 20));
-            movimientos.add(new MovimientoFisico("Ataque Rápido", "Normal", 40, 100, 30));
-            movimientos.add(new MovimientoEstado("Reflejo", "Psíquico", 0, 100, "Aumenta defensa"));
+            movimientos.add(new MovimientoEspecial("Rayo", "Eléctrico", 90, 100, 15));
+            movimientos.add(new MovimientoFisico("Puño Trueno", "Eléctrico", 75, 100, 15));
+            movimientos.add(new MovimientoFisico("Doble Patada", "Lucha", 30, 100, 30));
+            movimientos.add(new MovimientoEstado("Refuerzo", "Normal", 0, 100, "Aumenta ataque"));
             break;
 
         case "manectric":
-            movimientos.add(new MovimientoEspecial("Rayo", "Eléctrico", 90, 100, 15));
+            movimientos.add(new MovimientoEspecial("Chispa", "Eléctrico", 65, 100, 20));
+            movimientos.add(new MovimientoFisico("Colmillo Rayo", "Eléctrico", 65, 95, 15));
             movimientos.add(new MovimientoFisico("Mordisco", "Siniestro", 60, 100, 25));
-            movimientos.add(new MovimientoEstado("Pantalla Luz", "Eléctrico", 0, 100, "Reduce daño especial"));
-            movimientos.add(new MovimientoEspecial("Voltio Cruel", "Eléctrico", 70, 100, 15));
+            movimientos.add(new MovimientoEstado("Carga", "Eléctrico", 0, 100, "Aumenta ataque Especial"));
             break;
 
         case "delibird":
+            movimientos.add(new MovimientoEspecial("Viento Hielo", "Hielo", 55, 95, 15));
+            movimientos.add(new MovimientoFisico("Ataque Rápido", "Normal", 40, 100, 30));
             movimientos.add(new MovimientoFisico("Pico Taladro", "Volador", 80, 100, 20));
-            movimientos.add(new MovimientoEspecial("Rayo Hielo", "Hielo", 90, 100, 10));
-            movimientos.add(new MovimientoFisico("Golpe Bajo", "Lucha", 70, 95, 20));
-            movimientos.add(new MovimientoEstado("Entrega", "Normal", 0, 100, "Pasa objeto"));
+            movimientos.add(new MovimientoEstado("Doble Equipo", "Normal", 0, 100, "Aumenta velocidad"));
             break;
 
         case "glalie":
-            movimientos.add(new MovimientoEspecial("Rayo Hielo", "Hielo", 90, 100, 10));
-            movimientos.add(new MovimientoFisico("Cabeza de Hierro", "Acero", 80, 100, 15));
-            movimientos.add(new MovimientoFisico("Golpe Cuerpo", "Normal", 85, 100, 15));
-            movimientos.add(new MovimientoEstado("Pantalla de Humo", "Normal", 0, 100, "Aumenta defensa especial"));
+            movimientos.add(new MovimientoEspecial("Ventisca", "Hielo", 110, 70, 5));
+            movimientos.add(new MovimientoFisico("Golpe Cabeza", "Normal", 130, 100, 10));
+            movimientos.add(new MovimientoFisico("Triturar", "Siniestro", 80, 100, 15));
+            movimientos.add(new MovimientoEstado("Danza Espada", "Normal", 0, 100, "Aumenta ataque"));
             break;
 
         case "tyranitar":
-            movimientos.add(new MovimientoFisico("Trituradora", "Siniestro", 80, 100, 15));
-            movimientos.add(new MovimientoFisico("Roca Afilada", "Roca", 75, 95, 20));
-            movimientos.add(new MovimientoFisico("Golpe Cuerpo", "Normal", 85, 100, 15));
+            movimientos.add(new MovimientoEspecial("Pulso Umbrío", "Siniestro", 80, 100, 15));
+            movimientos.add(new MovimientoFisico("Avalancha", "Roca", 75, 90, 10));
+            movimientos.add(new MovimientoFisico("Triturar", "Siniestro", 80, 100, 15));
             movimientos.add(new MovimientoEstado("Danza Dragón", "Dragón", 0, 100, "Aumenta ataque"));
             break;
 
         case "kabutops":
-            movimientos.add(new MovimientoFisico("Tajo Cruzado", "Bicho", 80, 100, 20));
-            movimientos.add(new MovimientoFisico("Corte Furia", "Roca", 75, 95, 15));
-            movimientos.add(new MovimientoFisico("Golpe Cuerpo", "Normal", 85, 100, 15));
+            movimientos.add(new MovimientoEspecial("Aqua Aro", "Agua", 0, 100, 20));
+            movimientos.add(new MovimientoFisico("Tajo Umbrío", "Siniestro", 70, 100, 15));
+            movimientos.add(new MovimientoFisico("Roca Afilada", "Roca", 100, 80, 5));
             movimientos.add(new MovimientoEstado("Danza Espada", "Normal", 0, 100, "Aumenta ataque"));
             break;
 
         case "donphan":
-            movimientos.add(new MovimientoFisico("Tierra Viva", "Tierra", 90, 100, 10));
-            movimientos.add(new MovimientoFisico("Colmillo Rayo", "Eléctrico", 65, 95, 15));
-            movimientos.add(new MovimientoFisico("Golpe Cuerpo", "Normal", 85, 100, 15));
-            movimientos.add(new MovimientoEstado("Danza Espada", "Normal", 0, 100, "Aumenta ataque"));
+            movimientos.add(new MovimientoEspecial("Tierra Viva", "Tierra", 90, 100, 10));
+            movimientos.add(new MovimientoFisico("Rodar", "Roca", 30, 90, 20));
+            movimientos.add(new MovimientoFisico("Terratemblor", "Tierra", 60, 100, 20));
+            movimientos.add(new MovimientoEstado("Defensa Férrea", "Acero", 0, 100, "Aumenta defensa"));
             break;
 
         case "whiscash":
-            movimientos.add(new MovimientoEspecial("Hidro Bomba", "Agua", 110, 80, 5));
-            movimientos.add(new MovimientoFisico("Golpe Roca", "Roca", 75, 95, 15));
-            movimientos.add(new MovimientoFisico("Colmillo Rayo", "Eléctrico", 65, 95, 15));
-            movimientos.add(new MovimientoEstado("Recuperación", "Normal", 0, 100, "Restaura HP"));
+            movimientos.add(new MovimientoEspecial("Surf", "Agua", 90, 100, 15));
+            movimientos.add(new MovimientoFisico("Terremoto", "Tierra", 100, 100, 10));
+            movimientos.add(new MovimientoFisico("Golpe Cabeza", "Normal", 130, 100, 10));
+            movimientos.add(new MovimientoEstado("Amnesia", "Psíquico", 0, 100, "Aumenta defensa Especial"));
             break;
 
         case "scizor":
-            movimientos.add(new MovimientoFisico("Tijera X", "Bicho", 80, 100, 15));
-            movimientos.add(new MovimientoFisico("Golpe Cuerpo", "Normal", 85, 100, 15));
-            movimientos.add(new MovimientoFisico("Puño Fuego", "Fuego", 75, 95, 15));
+            movimientos.add(new MovimientoEspecial("Corte Vacío", "Bicho", 70, 100, 10));
+            movimientos.add(new MovimientoFisico("Puño Bala", "Acero", 40, 100, 30));
+            movimientos.add(new MovimientoFisico("Ala de Acero", "Acero", 70, 90, 25));
             movimientos.add(new MovimientoEstado("Danza Espada", "Normal", 0, 100, "Aumenta ataque"));
             break;
 
         case "masquerain":
-            movimientos.add(new MovimientoFisico("Picotazo", "Bicho", 35, 100, 35));
-            movimientos.add(new MovimientoEspecial("Onda Certera", "Agua", 60, 100, 20));
-            movimientos.add(new MovimientoFisico("Aire Afilado", "Volador", 60, 100, 25));
-            movimientos.add(new MovimientoEstado("Reflejo", "Psíquico", 0, 100, "Aumenta defensa"));
+            movimientos.add(new MovimientoEspecial("Zumbido", "Bicho", 90, 100, 10));
+            movimientos.add(new MovimientoFisico("Picadura", "Bicho", 60, 100, 20));
+            movimientos.add(new MovimientoFisico("Ala de Plata", "Volador", 60, 95, 15));
+            movimientos.add(new MovimientoEstado("Agilidad", "Psíquico", 0, 100, "Aumenta velocidad"));
             break;
 
         case "gengar":
             movimientos.add(new MovimientoEspecial("Bola Sombra", "Fantasma", 80, 100, 15));
-            movimientos.add(new MovimientoEspecial("Psíquico", "Psíquico", 90, 100, 10));
-            movimientos.add(new MovimientoFisico("Puño Fuego", "Fuego", 75, 95, 15));
-            movimientos.add(new MovimientoEstado("Confusión", "Psíquico", 0, 100, "Confunde al rival"));
+            movimientos.add(new MovimientoFisico("Lengüetazo", "Fantasma", 30, 100, 30));
+            movimientos.add(new MovimientoFisico("Puño Sombra", "Fantasma", 60, 100, 15));
+            movimientos.add(new MovimientoEstado("Maquinación", "Siniestro", 0, 100, "Aumenta ataque Especial"));
             break;
 
         case "banette":
-            movimientos.add(new MovimientoFisico("Golpe Sombra", "Fantasma", 70, 100, 20));
-            movimientos.add(new MovimientoFisico("Desarme", "Siniestro", 30, 100, 15));
-            movimientos.add(new MovimientoEstado("Truco", "Fantasma", 0, 100, "Roba objeto"));
-            movimientos.add(new MovimientoEspecial("Bola Sombra", "Fantasma", 80, 100, 15));
+            movimientos.add(new MovimientoEspecial("Tinieblas", "Fantasma", 80, 100, 15));
+            movimientos.add(new MovimientoFisico("Puño Sombra", "Fantasma", 60, 100, 15));
+            movimientos.add(new MovimientoFisico("Mismo Destino", "Fantasma", 0, 100, 5));
+            movimientos.add(new MovimientoEstado("Maquinación", "Siniestro", 0, 100, "Aumenta ataque Especial"));
             break;
 
         case "dragonite":
-            movimientos.add(new MovimientoFisico("Golpe Dragón", "Dragón", 90, 100, 15));
-            movimientos.add(new MovimientoFisico("Cabezazo", "Normal", 70, 100, 15));
-            movimientos.add(new MovimientoEspecial("Hiperrayo", "Normal", 150, 90, 5));
+            movimientos.add(new MovimientoEspecial("Pulso Dragón", "Dragón", 85, 100, 10));
+            movimientos.add(new MovimientoFisico("Garra Dragón", "Dragón", 80, 100, 15));
+            movimientos.add(new MovimientoFisico("Ala Aérea", "Volador", 60, 100, 20));
             movimientos.add(new MovimientoEstado("Danza Dragón", "Dragón", 0, 100, "Aumenta ataque"));
             break;
 
         case "altaria":
+            movimientos.add(new MovimientoEspecial("Pulso Dragón", "Dragón", 85, 100, 10));
             movimientos.add(new MovimientoFisico("Pico Taladro", "Volador", 80, 100, 20));
-            movimientos.add(new MovimientoEspecial("Rayo Hielo", "Hielo", 90, 100, 10));
-            movimientos.add(new MovimientoFisico("Danza Dragón", "Dragón", 0, 100, 10));
-            movimientos.add(new MovimientoEstado("Reflejo", "Psíquico", 0, 100, "Aumenta defensa"));
+            movimientos.add(new MovimientoFisico("Garra Dragón", "Dragón", 80, 100, 15));
+            movimientos.add(new MovimientoEstado("Danza Dragón", "Dragón", 0, 100, "Aumenta ataque"));
             break;
 
         case "mewtwo":
             movimientos.add(new MovimientoEspecial("Psíquico", "Psíquico", 90, 100, 10));
-            movimientos.add(new MovimientoEspecial("Rayo", "Eléctrico", 90, 100, 15));
-            movimientos.add(new MovimientoEspecial("Hiperrayo", "Normal", 150, 90, 5));
-            movimientos.add(new MovimientoEstado("Pantalla Luz", "Psíquico", 0, 100, "Reduce daño especial"));
+            movimientos.add(new MovimientoFisico("Puño Fuego", "Fuego", 75, 100, 15));
+            movimientos.add(new MovimientoFisico("Golpe", "Normal", 70, 100, 20));
+            movimientos.add(new MovimientoEstado("Poder Reserva", "Psíquico", 0, 100, "Aumenta ataque Especial"));
             break;
 
         case "claydol":
-            movimientos.add(new MovimientoEspecial("Psíquico", "Psíquico", 90, 100, 10));
-            movimientos.add(new MovimientoFisico("Terremoto", "Tierra", 100, 100, 10));
+            movimientos.add(new MovimientoEspecial("Poder Pasado", "Roca", 60, 100, 5));
+            movimientos.add(new MovimientoFisico("Psicocorte", "Psíquico", 70, 100, 20));
+            movimientos.add(new MovimientoFisico("Excavar", "Tierra", 80, 100, 10));
             movimientos.add(new MovimientoEstado("Reflejo", "Psíquico", 0, 100, "Aumenta defensa"));
-            movimientos.add(new MovimientoEspecial("Rayo", "Eléctrico", 90, 100, 15));
             break;
 
         case "machamp":
-            movimientos.add(new MovimientoFisico("Puño Dinámico", "Lucha", 100, 100, 5));
-            movimientos.add(new MovimientoFisico("Golpe Cuerpo", "Normal", 85, 100, 15));
-            movimientos.add(new MovimientoFisico("Terremoto", "Tierra", 100, 100, 10));
-            movimientos.add(new MovimientoEstado("Danza Espada", "Normal", 0, 100, "Aumenta ataque"));
+            movimientos.add(new MovimientoEspecial("Rayo Confuso", "Fantasma", 0, 100, 10));
+            movimientos.add(new MovimientoFisico("Puño Dinámico", "Lucha", 100, 50, 5));
+            movimientos.add(new MovimientoFisico("Tajo Cruzado", "Lucha", 100, 80, 5));
+            movimientos.add(new MovimientoEstado("Aumento", "Normal", 0, 100, "Aumenta ataque"));
             break;
 
         case "hariyama":
-            movimientos.add(new MovimientoFisico("Puño Fuego", "Fuego", 75, 95, 15));
-            movimientos.add(new MovimientoFisico("Puño Dinámico", "Lucha", 100, 100, 5));
-            movimientos.add(new MovimientoFisico("Golpe Cuerpo", "Normal", 85, 100, 15));
-            movimientos.add(new MovimientoEstado("Danza Espada", "Normal", 0, 100, "Aumenta ataque"));
+            movimientos.add(new MovimientoEspecial("Fuerza Bruta", "Lucha", 120, 100, 5));
+            movimientos.add(new MovimientoFisico("Golpe Karate", "Lucha", 50, 100, 25));
+            movimientos.add(new MovimientoFisico("Puño Incremento", "Lucha", 40, 100, 20));
+            movimientos.add(new MovimientoEstado("Corpulencia", "Lucha", 0, 100, "Aumenta ataque"));
             break;
 
         case "togetic":
-            movimientos.add(new MovimientoEspecial("Deseo", "Normal", 0, 100, 15));
-            movimientos.add(new MovimientoEspecial("Viento Plata", "Volador", 60, 100, 25));
-            movimientos.add(new MovimientoEstado("Reflejo", "Psíquico", 0, 100, "Aumenta defensa"));
-            movimientos.add(new MovimientoFisico("Ataque Rápido", "Normal", 40, 100, 30));
+            movimientos.add(new MovimientoEspecial("Poder Oculto", "Hada", 60, 100, 20));
+            movimientos.add(new MovimientoFisico("Doble Golpe", "Normal", 35, 90, 10));
+            movimientos.add(new MovimientoFisico("Golpe Aéreo", "Volador", 60, 100, 20));
+            movimientos.add(new MovimientoEstado("Deseo", "Normal", 0, 100, "Aumenta puntos de salud"));
             break;
 
         case "swellow":
-            movimientos.add(new MovimientoFisico("Pico Taladro", "Volador", 80, 100, 20));
-            movimientos.add(new MovimientoFisico("Golpe Aéreo", "Volador", 85, 95, 15));
+            movimientos.add(new MovimientoEspecial("Eco Voz", "Normal", 75, 100, 10));
             movimientos.add(new MovimientoFisico("Ataque Rápido", "Normal", 40, 100, 30));
+            movimientos.add(new MovimientoFisico("Golpe Aéreo", "Volador", 60, 100, 20));
             movimientos.add(new MovimientoEstado("Danza Espada", "Normal", 0, 100, "Aumenta ataque"));
             break;
 
         case "metagross":
-            movimientos.add(new MovimientoFisico("Puño Meteoro", "Acero", 120, 85, 10));
-            movimientos.add(new MovimientoFisico("Cabezazo Zen", "Psíquico", 80, 100, 15));
-            movimientos.add(new MovimientoFisico("Terremoto", "Tierra", 100, 100, 10));
-            movimientos.add(new MovimientoEstado("Danza Espada", "Normal", 0, 100, "Aumenta ataque"));
+            movimientos.add(new MovimientoEspecial("Psicocarga", "Psíquico", 80, 100, 10));
+            movimientos.add(new MovimientoFisico("Puño Meteoro", "Acero", 90, 90, 10));
+            movimientos.add(new MovimientoFisico("Cabeza de Hierro", "Acero", 80, 100, 15));
+            movimientos.add(new MovimientoEstado("Pulimento", "Roca", 0, 100, "Aumenta velocidad"));
             break;
 
         case "aggron":
-            movimientos.add(new MovimientoFisico("Cabezazo Zen", "Acero", 80, 100, 15));
-            movimientos.add(new MovimientoFisico("Terremoto", "Tierra", 100, 100, 10));
-            movimientos.add(new MovimientoFisico("Golpe Cuerpo", "Normal", 85, 100, 15));
-            movimientos.add(new MovimientoEstado("Danza Espada", "Normal", 0, 100, "Aumenta ataque"));
+            movimientos.add(new MovimientoEspecial("Eco Metálico", "Acero", 85, 100, 10));
+            movimientos.add(new MovimientoFisico("Avalancha", "Roca", 75, 90, 10));
+            movimientos.add(new MovimientoFisico("Golpe Cabeza", "Normal", 130, 100, 10));
+            movimientos.add(new MovimientoEstado("Defensa Férrea", "Acero", 0, 100, "Aumenta defensa"));
             break;
 
         case "weezing":
-            movimientos.add(new MovimientoEspecial("Lanzallamas", "Fuego", 90, 100, 15));
-            movimientos.add(new MovimientoEspecial("Bomba Lodo", "Veneno", 65, 100, 10));
-            movimientos.add(new MovimientoFisico("Explosión", "Normal", 250, 100, 5));
-            movimientos.add(new MovimientoEstado("Tóxico", "Veneno", 0, 90, "Envenena al rival"));
+            movimientos.add(new MovimientoEspecial("Lanza Mugre", "Veneno", 90, 100, 10));
+            movimientos.add(new MovimientoFisico("Derribo", "Normal", 90, 85, 20));
+            movimientos.add(new MovimientoFisico("Autodestrucción", "Normal", 200, 100, 5));
+            movimientos.add(new MovimientoEstado("Derribo Tóxico", "Veneno", 0, 100, "Aumenta defensa"));
             break;
 
         case "nidoking":
-            movimientos.add(new MovimientoFisico("Golpe Roca", "Roca", 75, 95, 15));
-            movimientos.add(new MovimientoFisico("Terremoto", "Tierra", 100, 100, 10));
-            movimientos.add(new MovimientoEspecial("Bomba Lodo", "Veneno", 65, 100, 10));
-            movimientos.add(new MovimientoFisico("Puño Fuego", "Fuego", 75, 95, 15));
+            movimientos.add(new MovimientoEspecial("Tierra Viva", "Tierra", 90, 100, 10));
+            movimientos.add(new MovimientoFisico("Cola Veneno", "Veneno", 50, 100, 25));
+            movimientos.add(new MovimientoFisico("Tajo Cruzado", "Lucha", 100, 80, 5));
+            movimientos.add(new MovimientoEstado("Maquinación", "Siniestro", 0, 100, "Aumenta ataque Especial"));
             break;
 
         case "snorlax":
+            movimientos.add(new MovimientoEspecial("Chispazo", "Eléctrico", 80, 100, 15));
             movimientos.add(new MovimientoFisico("Golpe Cuerpo", "Normal", 85, 100, 15));
-            movimientos.add(new MovimientoFisico("Puño Fuego", "Fuego", 75, 95, 15));
-            movimientos.add(new MovimientoEstado("Descanso", "Psíquico", 0, 100, "Restaura HP"));
-            movimientos.add(new MovimientoFisico("Terremoto", "Tierra", 100, 100, 10));
+            movimientos.add(new MovimientoFisico("Terratemblor", "Tierra", 60, 100, 20));
+            movimientos.add(new MovimientoEstado("Descanso", "Psíquico", 0, 100, "Aumenta puntos de salud"));
             break;
 
         case "zangoose":
-            movimientos.add(new MovimientoFisico("Garra Umbría", "Siniestro", 70, 100, 25));
-            movimientos.add(new MovimientoFisico("Golpe Cuerpo", "Normal", 85, 100, 15));
-            movimientos.add(new MovimientoFisico("Ataque Rápido", "Normal", 40, 100, 30));
+            movimientos.add(new MovimientoEspecial("Pulso Umbrío", "Siniestro", 80, 100, 15));
+            movimientos.add(new MovimientoFisico("Garra Umbría", "Siniestro", 70, 100, 15));
+            movimientos.add(new MovimientoFisico("Tajo Cruzado", "Normal", 70, 100, 20));
             movimientos.add(new MovimientoEstado("Danza Espada", "Normal", 0, 100, "Aumenta ataque"));
             break;
 
         case "gardevoir":
             movimientos.add(new MovimientoEspecial("Psíquico", "Psíquico", 90, 100, 10));
-            movimientos.add(new MovimientoEspecial("Rayo", "Eléctrico", 90, 100, 15));
-            movimientos.add(new MovimientoEstado("Pantalla Luz", "Psíquico", 0, 100, "Reduce daño especial"));
-            movimientos.add(new MovimientoFisico("Ataque Rápido", "Normal", 40, 100, 30));
+            movimientos.add(new MovimientoFisico("Drenadoras", "Hada", 40, 100, 10));
+            movimientos.add(new MovimientoFisico("Fuerza Lunar", "Hada", 95, 100, 10));
+            movimientos.add(new MovimientoEstado("Deseo", "Normal", 0, 100, "Aumenta puntos de salud"));
             break;
 
         case "clefable":
-            movimientos.add(new MovimientoEspecial("Deseo", "Normal", 0, 100, 15));
-            movimientos.add(new MovimientoEspecial("Rayo", "Eléctrico", 90, 100, 15));
-            movimientos.add(new MovimientoEstado("Amortiguador", "Hada", 0, 100, "Reduce daño"));
-            movimientos.add(new MovimientoFisico("Ataque Rápido", "Normal", 40, 100, 30));
+            movimientos.add(new MovimientoEspecial("Fuerza Lunar", "Hada", 95, 100, 10));
+            movimientos.add(new MovimientoFisico("Doble Bofetón", "Normal", 15, 85, 10));
+            movimientos.add(new MovimientoFisico("Puño Meteoro", "Acero", 90, 90, 10));
+            movimientos.add(new MovimientoEstado("Deseo", "Normal", 0, 100, "Aumenta puntos de salud"));
             break;
 
         case "absol":
-            movimientos.add(new MovimientoFisico("Golpe Sombra", "Fantasma", 70, 100, 20));
-            movimientos.add(new MovimientoFisico("Golpe Critico", "Siniestro", 100, 90, 10));
-            movimientos.add(new MovimientoFisico("Corte Furia", "Siniestro", 75, 95, 15));
+            movimientos.add(new MovimientoEspecial("Pulso Umbrío", "Siniestro", 80, 100, 15));
+            movimientos.add(new MovimientoFisico("Tajo Umbrío", "Siniestro", 70, 100, 15));
+            movimientos.add(new MovimientoFisico("Golpe Bajo", "Siniestro", 70, 100, 5));
             movimientos.add(new MovimientoEstado("Danza Espada", "Normal", 0, 100, "Aumenta ataque"));
             break;
 
         case "chimecho":
             movimientos.add(new MovimientoEspecial("Psíquico", "Psíquico", 90, 100, 10));
-            movimientos.add(new MovimientoEspecial("Rayo", "Eléctrico", 90, 100, 15));
-            movimientos.add(new MovimientoEstado("Recuperación", "Normal", 0, 100, "Restaura HP"));
-            movimientos.add(new MovimientoEstado("Pantalla Luz", "Psíquico", 0, 100, "Reduce daño especial"));
+            movimientos.add(new MovimientoFisico("Ala Mágica", "Psíquico", 60, 100, 20));
+            movimientos.add(new MovimientoFisico("Golpe Zen", "Psíquico", 80, 90, 10));
+            movimientos.add(new MovimientoEstado("Paz Mental", "Psíquico", 0, 100, "Aumenta ataque Especial"));
             break;
 
                 

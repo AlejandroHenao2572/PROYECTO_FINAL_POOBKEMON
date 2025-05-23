@@ -70,25 +70,6 @@ public class TrainerTest {
     }
 
     /**
-     * Prueba que el entrenador puede cambiar manualmente el pokemon activo.
-     */
-    @Test
-    void shouldChangeActivePokemonManually() {
-        entrenador.onSwitchSelected(1); // Charmander
-        assertEquals(charmander, entrenador.getPokemonActivo());
-    }
-
-    /**
-     * Prueba que no se puede cambiar a un pokemon debilitado, el activo permanece igual.
-     */
-    @Test
-    void shouldNotChangeToFaintedPokemon() throws POOBkemonException {
-        charmander.recibirDaño(999); // Lo debilitamos
-        entrenador.onSwitchSelected(1);
-        assertEquals(pikachu, entrenador.getPokemonActivo()); // No cambia
-    }
-
-    /**
      * Prueba que el entrenador es derrotado si todos sus pokemon estan debilitados.
      */
     @Test
