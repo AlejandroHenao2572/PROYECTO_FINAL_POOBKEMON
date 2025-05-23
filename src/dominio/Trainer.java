@@ -23,8 +23,8 @@ public abstract class Trainer implements Serializable {
     /**
      * Constructor del entrenador
      *
-     * @param nombre Nombre del entrenador
-     * @param color Color que representa al entrenador
+     * @param nombre nombre del entrenador
+     * @param color color que representa al entrenador
      */
     public Trainer(String nombre, String color) {
         this.nombre = nombre;
@@ -49,7 +49,7 @@ public abstract class Trainer implements Serializable {
     /**
      * Agrega un item a la lista de items del entrenador
      *
-     * @param item Item a agregar
+     * @param item item a agregar
      */
     public void agregarItem(Item item) {
         items.add(item);
@@ -58,23 +58,24 @@ public abstract class Trainer implements Serializable {
     /**
      * Cambia el Pokemon activo por otro en el equipo si no esta debilitado
      *
-     * @param indice Indice del Pokemon en el equipo
+     * @param indice indice del Pokemon en el equipo
+     * @return mensaje del resultado del cambio
      */
     public String cambiarPokemon(int indice) {
         if (indice >= 0 && indice < equipo.size()) {
             Pokemon nuevoPokemon = equipo.get(indice);
             if (!nuevoPokemon.estaDebilitado()) {
-                // Solo generar mensaje si es un cambio real
                 if (nuevoPokemon != pokemonActivo) {
                     pokemonActivo = nuevoPokemon;
                     return nombre + " ha cambiado a " + pokemonActivo.getNombre();
                 }
                 return nombre + " ya tiene a " + pokemonActivo.getNombre() + " en combate";
             }
-            return "No puedes cambiar a un Pokémon debilitado";
+            return "No puedes cambiar a un Pokemon debilitado";
         }
-        return "Índice de Pokémon no válido";
+        return "Indice de Pokemon no valido";
     }
+
     /**
      * Verifica si todos los Pokemon del equipo estan debilitados
      *
@@ -101,7 +102,7 @@ public abstract class Trainer implements Serializable {
     /**
      * Obtiene el nombre del entrenador
      *
-     * @return Nombre del entrenador
+     * @return nombre del entrenador
      */
     public String getNombre() {
         return nombre;
@@ -110,7 +111,7 @@ public abstract class Trainer implements Serializable {
     /**
      * Obtiene el color del entrenador
      *
-     * @return Color del entrenador
+     * @return color del entrenador
      */
     public String getColor() {
         return color;
@@ -119,12 +120,17 @@ public abstract class Trainer implements Serializable {
     /**
      * Obtiene la lista de Pokemon del equipo
      *
-     * @return Lista del equipo de Pokemon
+     * @return lista del equipo de Pokemon
      */
     public ArrayList<Pokemon> getEquipo() {
         return equipo;
     }
-    
+
+    /**
+     * Obtiene la lista de Pokemon debilitados del equipo
+     *
+     * @return lista de Pokemon debilitados
+     */
     public ArrayList<Pokemon> getPokemonsDebilitados() {
         ArrayList<Pokemon> debiles = new ArrayList<>();
         for(Pokemon p : equipo){
@@ -135,7 +141,11 @@ public abstract class Trainer implements Serializable {
         return debiles;
     }
 
-      
+    /**
+     * Obtiene la lista de Pokemon activos del equipo
+     *
+     * @return lista de Pokemon no debilitados
+     */
     public ArrayList<Pokemon> getPokemonsActivos() {
         ArrayList<Pokemon> vivos = new ArrayList<>();
         for(Pokemon p : equipo){
@@ -149,14 +159,26 @@ public abstract class Trainer implements Serializable {
     /**
      * Obtiene la lista de items del entrenador
      *
-     * @return Lista de items
+     * @return lista de items
      */
     public ArrayList<Item> getItems() {
         return items;
     }
 
-
+    /**
+     * Metodo abstracto para ejecutar un ataque seleccionado
+     *
+     * @param moveIndex indice del movimiento
+     * @param oponente entrenador oponente
+     * @return mensaje del resultado del ataque
+     */
     public abstract String onAttackSelected(int moveIndex, Trainer oponente);
 
+    /**
+     * Metodo abstracto para usar un item seleccionado
+     *
+     * @param itemIndex indice del item
+     * @return mensaje del resultado del uso del item
+     */
     public abstract String onItemSelected(int itemIndex);
 }

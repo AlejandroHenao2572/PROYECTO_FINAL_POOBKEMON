@@ -5,8 +5,9 @@ package dominio;
  * Implementa un entrenador con estrategia basada en cambios de Pokemon
  * Hereda de AITrainer y personaliza el comportamiento de combate
  * 
- * Autores David Patacon y Daniel Hueso
- * Version 1.0
+ * @author David Patacon
+ * @author Daniel Hueso
+ * @version 1.0
  */
 public class ChangingTrainer extends AITrainer {
 
@@ -20,6 +21,13 @@ public class ChangingTrainer extends AITrainer {
         super(nombre, color);
     }
 
+    /**
+     * Ejecuta un ataque seleccionado contra el oponente
+     * 
+     * @param moveIndex indice del movimiento a usar
+     * @param oponente entrenador rival
+     * @return mensaje del resultado del ataque
+     */
     @Override
     public String onAttackSelected(int moveIndex, Trainer oponente) {
         if (moveIndex < 0 || moveIndex >= pokemonActivo.getMovimientos().size()) {
@@ -34,10 +42,21 @@ public class ChangingTrainer extends AITrainer {
         }
         return "";
     }
-    
+
+    /**
+     * Decide la accion de la IA en una batalla PvM
+     * Si hay un pokemon con mejor efectividad contra el rival lo cambia
+     * Si no hay mejor cambio usa el primer ataque utilizable
+     * Si no puede atacar intenta usar item de curacion
+     * Si no puede hacer nada pasa turno
+     * 
+     * @param batalla referencia a la batalla PvM
+     * @param oponente entrenador rival
+     * @return mensaje de la accion realizada
+     */
     @Override
     public String decidirAccion(BattlePvM batalla, Trainer oponente) {
-        // 1. Si hay un Pokémon con mejor efectividad contra el rival, cámbialo
+        // 1. Busca un pokemon con mejor efectividad contra el rival y lo cambia
         int mejorIndice = -1;
         double mejorEfectividad = -1.0;
         Pokemon rival = oponente.getPokemonActivo();
@@ -59,20 +78,20 @@ public class ChangingTrainer extends AITrainer {
             }
         }
 
-        // Si encontró un Pokémon con mejor efectividad, lo cambia
+        // Si encontro un pokemon con mejor efectividad lo cambia
         if (mejorIndice != -1) {
             return cambiarPokemon(mejorIndice);
         }
 
-        // 2. Si no hay mejor cambio, usa el primer ataque utilizable
+        // 2. Si no hay mejor cambio usa el primer ataque utilizable
         for (int i = 0; i < pokemonActivo.getMovimientos().size(); i++) {
             Movimiento m = pokemonActivo.getMovimientos().get(i);
-            if (m.esUtilizable()) {
+            if (m.esUtilizable() && (m instanceof MovimientoFisico)) {
                 return onAttackSelected(i, oponente);
             }
         }
 
-        // 3. Si no puede atacar, intenta usar ítem de curación
+        // 3. Si no puede atacar intenta usar item de curacion
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
             if (item instanceof Potion || item instanceof SuperPotion || item instanceof HyperPotion) {
@@ -80,15 +99,26 @@ public class ChangingTrainer extends AITrainer {
             }
         }
 
-        // 4. Si no puede hacer nada, pasa turno
+        // 4. Si no puede hacer nada pasa turno
         return "";
     }
 
+    /**
+     * Decide la accion de la IA en una batalla MvM
+     * Si el pokemon activo esta muy danado intenta curarse o cambiar
+     * Si no esta danado busca movimientos ofensivos y si no hay usa el primer ataque utilizable
+     * Si no puede atacar intenta cambiar de pokemon
+     * Si no puede hacer nada pasa turno
+     * 
+     * @param batalla referencia a la batalla MvM
+     * @param oponente entrenador rival
+     * @return mensaje de la accion realizada
+     */
     @Override
     public String decidirAccion(BattleMvM batalla, Trainer oponente) {
-        // 1. Si el Pokémon activo está muy dañado, intenta curarse o cambiar
+        // 1. Si el pokemon activo esta muy danado intenta curarse o cambiar
         if (pokemonActivo.getPsActual() < pokemonActivo.getPs() * 0.3) {
-            // Intenta usar objeto de curación
+            // Intenta usar objeto de curacion
             for (int i = 0; i < items.size(); i++) {
                 Item item = items.get(i);
                 if (item instanceof Potion || item instanceof SuperPotion || item instanceof HyperPotion) {
@@ -97,7 +127,7 @@ public class ChangingTrainer extends AITrainer {
                     return msg;
                 }
             }
-            // Si hay otro Pokémon sano, cambia
+            // Si hay otro pokemon sano cambia
             for (int i = 0; i < equipo.size(); i++) {
                 Pokemon p = equipo.get(i);
                 if (!p.estaDebilitado() && p != pokemonActivo) {
@@ -108,7 +138,7 @@ public class ChangingTrainer extends AITrainer {
             }
         }
 
-        // 2. Busca movimientos ofensivos (que suban ataque/ataque especial o bajen defensa/defensa especial del rival)
+        // 2. Busca movimientos ofensivos fisicos o especiales
         int mejorMovimiento = -1;
         for (int i = 0; i < pokemonActivo.getMovimientos().size(); i++) {
             Movimiento m = pokemonActivo.getMovimientos().get(i);
@@ -117,12 +147,12 @@ public class ChangingTrainer extends AITrainer {
                 break;
             }
         }
-        // Si encuentra uno, lo usa
+        // Si encuentra uno lo usa
         if (mejorMovimiento != -1) { 
             return onAttackSelected(mejorMovimiento, oponente);
         }
 
-        // Si no hay movimientos ofensivos, usa el primer ataque utilizable
+        // Si no hay movimientos ofensivos usa el primer ataque utilizable
         for (int i = 0; i < pokemonActivo.getMovimientos().size(); i++) {
             Movimiento m = pokemonActivo.getMovimientos().get(i);
             if (m.esUtilizable()) {
@@ -130,7 +160,7 @@ public class ChangingTrainer extends AITrainer {
             }
         }
 
-        // Si no puede atacar, intenta cambiar de Pokémon
+        // Si no puede atacar intenta cambiar de pokemon
         for (int i = 0; i < equipo.size(); i++) {
             Pokemon p = equipo.get(i);
             if (!p.estaDebilitado() && p != pokemonActivo) {
@@ -140,7 +170,7 @@ public class ChangingTrainer extends AITrainer {
             }
         }
 
-        // Si no puede hacer nada, pasa turno
+        // Si no puede hacer nada pasa turno
         return "";
     }
 
