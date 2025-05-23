@@ -8,33 +8,74 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
+/**
+ * Clase que representa el panel grafico principal de la batalla
+ * Muestra la informacion de los entrenadores y sus Pokemon
+ * Incluye imagenes de los Pokemon, barras de vida, nombres, niveles y pokeballs
+ * Permite pausar y reanudar la batalla
+ * 
+ * @author David Patacon
+ * @author Daniel Hueso
+ * @version 1.0
+ */
 public class BattlePanel extends JPanel {
+    // Entrenador jugador
     private Trainer player;
+    // Entrenador enemigo
     private Trainer enemy;
+    // Imagen del Pokemon del jugador
     private JLabel playerPokemonImage;
+    // Imagen del Pokemon enemigo
     private JLabel enemyPokemonImage;
+    // Barra de vida del jugador
     private JProgressBar playerHpBar;
+    // Barra de vida del enemigo
     private JProgressBar enemyHpBar;
+    // Nombre del Pokemon del jugador
     private JLabel playerPokemonName;
+    // Nombre del Pokemon enemigo
     private JLabel enemyPokemonName;
+    // Nivel del Pokemon del jugador
     private JLabel playerPokemonLevel;
+    // Nivel del Pokemon enemigo
     private JLabel enemyPokemonLevel;
+    // Nombre del entrenador jugador
     private JLabel playerNameLabel;
+    // Nombre del entrenador enemigo
     private JLabel enemyNameLabel;
-    private transient  Image backgroundImage;
-    private Dimension pokemonSize = new Dimension(200, 200); // Tamaño aumentado
-    private Point enemyPokemonPosition = new Point(490, 80);  // Posición ajustada
-    private Point playerPokemonPosition = new Point(80, 240); // Posición ajustada
-    private Point enemyInfoPosition = new Point(140, 120);  
-    private Point playerInfoPosition = new Point(350, 350); 
-    private Dimension infoPanelSize = new Dimension(270, 90); 
+    // Imagen de fondo de la batalla
+    private transient Image backgroundImage;
+    // Tamaño de las imagenes de los Pokemon
+    private Dimension pokemonSize = new Dimension(200, 200);
+    // Posicion de la imagen del Pokemon enemigo
+    private Point enemyPokemonPosition = new Point(490, 80);
+    // Posicion de la imagen del Pokemon jugador
+    private Point playerPokemonPosition = new Point(80, 240);
+    // Posicion del panel de info del enemigo
+    private Point enemyInfoPosition = new Point(140, 120);
+    // Posicion del panel de info del jugador
+    private Point playerInfoPosition = new Point(350, 350);
+    // Tamaño de los paneles de info
+    private Dimension infoPanelSize = new Dimension(270, 90);
+    // Panel de pokeballs del jugador
     private JPanel playerPokeballPanel;
+    // Panel de pokeballs del enemigo
     private JPanel enemyPokeballPanel;
-    private transient  ImageIcon fullBallIcon;
-    private transient  ImageIcon emptyBallIcon;
+    // Icono de pokeball llena
+    private transient ImageIcon fullBallIcon;
+    // Icono de pokeball vacia
+    private transient ImageIcon emptyBallIcon;
+    // Boton de pausa
     private JButton pauseButton;
+    // Estado de pausa
     private boolean isPaused = false;
 
+    /**
+     * Constructor del panel de batalla
+     * Inicializa los componentes graficos y la informacion de los entrenadores
+     * @param player1 Primer entrenador
+     * @param player2 Segundo entrenador
+     */
     public BattlePanel(Trainer player1, Trainer player2) {
         this.player = player1;
         this.enemy = player2;
@@ -45,22 +86,29 @@ public class BattlePanel extends JPanel {
         loadBackgroundImage();
         setupPokemonDisplays();
         setupInfoPanels();
-        setupPauseButton(); 
+        setupPauseButton();
         fullBallIcon = new ImageIcon(getClass().getClassLoader().getResource("graficos/items/pokeball_full.png"));
         emptyBallIcon = new ImageIcon(getClass().getClassLoader().getResource("graficos/items/pokeball_empty.png"));
     }
 
+    /**
+     * Carga la imagen de fondo de la batalla
+     * Si no se encuentra la imagen usa un color de fondo por defecto
+     */
     private void loadBackgroundImage() {
         try {
             backgroundImage = ImageIO.read(getClass().getClassLoader().getResource("graficos/fondo2.png"));
             backgroundImage = backgroundImage.getScaledInstance(800, 600, Image.SCALE_SMOOTH);
         } catch (IOException | NullPointerException e) {
             backgroundImage = null;
-            System.out.println("No se cargó la imagen de fondo");
+            System.out.println("No se cargo la imagen de fondo");
             setBackground(new Color(120, 200, 80));
         }
     }
 
+    /**
+     * Configura y agrega las imagenes de los Pokemon al panel
+     */
     private void setupPokemonDisplays() {
         enemyPokemonImage = new JLabel();
         enemyPokemonImage.setOpaque(false);
@@ -85,6 +133,9 @@ public class BattlePanel extends JPanel {
         add(playerPokemonImage);
     }
 
+    /**
+     * Configura y agrega los paneles de informacion de los Pokemon
+     */
     private void setupInfoPanels() {
         JPanel enemyInfo = createInfoPanel(false);
         enemyInfo.setBounds(enemyInfoPosition.x, enemyInfoPosition.y, 
@@ -97,7 +148,11 @@ public class BattlePanel extends JPanel {
         add(playerInfo);
     }
 
-
+    /**
+     * Crea un panel de informacion para un Pokemon
+     * @param isPlayer true si es el panel del jugador, false si es del enemigo
+     * @return JPanel con la informacion del Pokemon
+     */
     private JPanel createInfoPanel(boolean isPlayer) {
         Pokemon pokemon = isPlayer ? player.getPokemonActivo() : enemy.getPokemonActivo();
 
@@ -115,7 +170,7 @@ public class BattlePanel extends JPanel {
 
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setOpaque(false);
-        topPanel.setBorder(BorderFactory.createEmptyBorder(8, 15, 5, 15)); // Más espacio interno
+        topPanel.setBorder(BorderFactory.createEmptyBorder(8, 15, 5, 15));
 
         JLabel nameLabel = new JLabel(pokemon.getNombre());
         int fontSize = pokemon.getNombre().length() > 12 ? 14 : 16;
@@ -123,7 +178,7 @@ public class BattlePanel extends JPanel {
         nameLabel.setForeground(Color.WHITE);
 
         JLabel levelLabel = new JLabel("Lv" + pokemon.getNivel());
-        levelLabel.setFont(new Font("Pokemon GB", Font.BOLD, 16)); // Tamaño aumentado
+        levelLabel.setFont(new Font("Pokemon GB", Font.BOLD, 16));
         levelLabel.setForeground(Color.WHITE);
         levelLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
@@ -175,6 +230,13 @@ public class BattlePanel extends JPanel {
         return panel;
     }
 
+    /**
+     * Carga la imagen del Pokemon y la asigna al JLabel correspondiente
+     * Si no encuentra la imagen usa un placeholder
+     * @param pokemonName Nombre del Pokemon
+     * @param imageLabel JLabel donde se muestra la imagen
+     * @param isPlayer true si es el Pokemon del jugador, false si es del enemigo
+     */
     private void loadPokemonImage(String pokemonName, JLabel imageLabel, boolean isPlayer) {
         try {
             String imagePath = "graficos/pokemones/" +
@@ -183,24 +245,18 @@ public class BattlePanel extends JPanel {
             URL imageUrl = getClass().getClassLoader().getResource(imagePath);
 
             if (imageUrl != null) {
-                // Cargar el GIF original
+                // Cargar el GIF original y escalarlo
                 ImageIcon originalIcon = new ImageIcon(imageUrl);
-                
-                // Escalar el GIF manteniendo la relación de aspecto
                 Image scaledImage = originalIcon.getImage().getScaledInstance(
                     pokemonSize.width, 
                     pokemonSize.height, 
                     Image.SCALE_DEFAULT);
-                
-                // Crear un nuevo ImageIcon con la imagen escalada
                 ImageIcon scaledIcon = new ImageIcon(scaledImage);
-                
-                // Configurar el JLabel para mostrar el GIF escalado
+
                 JLabel gifLabel = new JLabel(scaledIcon) {
                     @Override
                     public void paintComponent(Graphics g) {
                         Graphics2D g2d = (Graphics2D) g;
-                        // Configurar renderizado de alta calidad
                         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, 
                                         RenderingHints.VALUE_INTERPOLATION_BILINEAR);
                         g2d.setRenderingHint(RenderingHints.KEY_RENDERING, 
@@ -210,7 +266,6 @@ public class BattlePanel extends JPanel {
                         super.paintComponent(g);
                     }
                 };
-                
                 gifLabel.setOpaque(false);
                 gifLabel.setBounds(
                     isPlayer ? playerPokemonPosition.x : enemyPokemonPosition.x,
@@ -218,8 +273,6 @@ public class BattlePanel extends JPanel {
                     pokemonSize.width,
                     pokemonSize.height
                 );
-                
-                // Reemplazar el JLabel existente
                 remove(imageLabel);
                 if (isPlayer) {
                     playerPokemonImage = gifLabel;
@@ -240,7 +293,7 @@ public class BattlePanel extends JPanel {
                 );
             }
         } catch (Exception e) {
-            System.err.println("Error cargando imagen de Pokémon: " + e.getMessage());
+            System.err.println("Error cargando imagen de Pokemon: " + e.getMessage());
             imageLabel.setIcon(createPlaceholderIcon());
             imageLabel.setText(pokemonName);
             imageLabel.setOpaque(false);
@@ -253,12 +306,15 @@ public class BattlePanel extends JPanel {
         }
     }
 
+    /**
+     * Crea un icono de imagen por defecto si no se encuentra la imagen del Pokemon
+     * @return ImageIcon placeholder
+     */
     private ImageIcon createPlaceholderIcon() {
         try {
             URL placeholderUrl = getClass().getClassLoader().getResource("graficos/pokemones/placeholder.gif");
             if (placeholderUrl != null) {
                 ImageIcon icon = new ImageIcon(placeholderUrl);
-                // Escalar el placeholder al nuevo tamaño
                 Image scaledImage = icon.getImage().getScaledInstance(
                     pokemonSize.width, 
                     pokemonSize.height, 
@@ -271,6 +327,9 @@ public class BattlePanel extends JPanel {
         return null;
     }
 
+    /**
+     * Actualiza la informacion y las imagenes de los Pokemon en el panel
+     */
     public void updatePokemonStats() {
         // Actualizar stats del jugador
         Pokemon playerPokemon = player.getPokemonActivo();
@@ -297,28 +356,34 @@ public class BattlePanel extends JPanel {
         revalidate();
     }
 
+    /**
+     * Configura y agrega los nombres de los entrenadores al panel
+     */
     private void setupPlayerNames() {
         JPanel namesPanel = new JPanel(new GridLayout(1, 2));
         namesPanel.setOpaque(false);
         namesPanel.setBounds(0, 0, getWidth(), 30);
-        
+
         playerNameLabel = new JLabel(player.getNombre(), SwingConstants.CENTER);
         playerNameLabel.setFont(new Font("Pokemon GB", Font.BOLD, 14));
         playerNameLabel.setForeground(Color.WHITE);
         playerNameLabel.setBackground(new Color(200, 0, 0, 150));
         playerNameLabel.setOpaque(true);
-        
+
         enemyNameLabel = new JLabel(enemy.getNombre(), SwingConstants.CENTER);
         enemyNameLabel.setFont(new Font("Pokemon GB", Font.BOLD, 14));
         enemyNameLabel.setForeground(Color.WHITE);
         enemyNameLabel.setBackground(new Color(0, 0, 200, 150));
         enemyNameLabel.setOpaque(true);
-        
+
         namesPanel.add(playerNameLabel);
         namesPanel.add(enemyNameLabel);
         add(namesPanel);
     }
 
+    /**
+     * Configura el boton de pausa y su comportamiento
+     */
     private void setupPauseButton() {
         pauseButton = new JButton("Pausa");
         pauseButton.setFont(new Font("Pokemon GB", Font.BOLD, 12));
@@ -327,7 +392,7 @@ public class BattlePanel extends JPanel {
         pauseButton.setContentAreaFilled(false);
         pauseButton.setForeground(Color.WHITE);
         pauseButton.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
-        
+
         pauseButton.addActionListener(e -> {
             isPaused = !isPaused;
             if (isPaused) {
@@ -339,10 +404,14 @@ public class BattlePanel extends JPanel {
             }
             firePropertyChange("pauseState", !isPaused, isPaused);
         });
-        
+
         add(pauseButton);
     }
 
+    /**
+     * Actualiza el color de la barra de vida segun el porcentaje de HP
+     * @param hpBar Barra de vida a actualizar
+     */
     private void updateHpBarColor(JProgressBar hpBar) {
         double percentage = (double) hpBar.getValue() / hpBar.getMaximum();
         if (percentage < 0.2) {
@@ -354,6 +423,11 @@ public class BattlePanel extends JPanel {
         }
     }
 
+    /**
+     * Actualiza el panel de pokeballs segun el estado de los Pokemon del equipo
+     * @param panel Panel de pokeballs
+     * @param equipo Lista de Pokemon del entrenador
+     */
     private void updatePokeballPanel(JPanel panel, ArrayList<Pokemon> equipo) {
         panel.removeAll();
         for (Pokemon p : equipo) {
@@ -365,10 +439,18 @@ public class BattlePanel extends JPanel {
         panel.repaint();
     }
 
+    /**
+     * Indica si la batalla esta en pausa
+     * @return true si esta pausada, false en caso contrario
+     */
     public boolean isPaused() {
         return isPaused;
     }
 
+    /**
+     * Dibuja el fondo de la batalla si existe una imagen cargada
+     * @param g Objeto Graphics para dibujar
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -388,22 +470,22 @@ public class BattlePanel extends JPanel {
     public void updatePlayers(Trainer player1, Trainer player2) {
         this.player = player1;
         this.enemy = player2;
-        
+
         // Actualizar nombres de los jugadores
         playerNameLabel.setText(player1.getNombre());
         enemyNameLabel.setText(player2.getNombre());
-        
-        // Actualizar imágenes y stats de los Pokémon activos
+
+        // Actualizar imagenes y stats de los Pokemon activos
         loadPokemonImage(player1.getPokemonActivo().getNombre(), playerPokemonImage, true);
         loadPokemonImage(player2.getPokemonActivo().getNombre(), enemyPokemonImage, false);
-        
-        // Actualizar paneles de información
+
+        // Actualizar paneles de informacion
         updatePokemonStats();
-        
+
         // Actualizar paneles de pokeballs
         updatePokeballPanel(playerPokeballPanel, player1.getEquipo());
         updatePokeballPanel(enemyPokeballPanel, player2.getEquipo());
-        
+
         // Forzar redibujado del panel
         revalidate();
         repaint();

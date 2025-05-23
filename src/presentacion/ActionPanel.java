@@ -11,6 +11,7 @@ import java.util.ArrayList;
 /**
  * Clase que representa el panel de acciones del juego
  * Permite al jugador elegir entre luchar cambiar de Pokemon usar un item o huir
+ * Gestiona la interfaz de botones y la visualizacion de la ultima accion realizada
  *
  * @author David Patacon
  * @author Daniel Hueso
@@ -139,7 +140,7 @@ public class ActionPanel extends JPanel {
         // Obtener el equipo del jugador actual
         ArrayList<Pokemon> equipo = currentPlayer.getEquipo();
         
-        // Crear botones para cada Pokémon
+        // Crear botones para cada Pokemon
         for (int i = 0; i < equipo.size(); i++) {
             Pokemon pokemon = equipo.get(i);
             JButton pokemonButton = new JButton(pokemon.getNombre() + 
@@ -150,21 +151,21 @@ public class ActionPanel extends JPanel {
             pokemonButton.setFocusPainted(false);
             pokemonButton.setBorder(createRoundedBorder());
     
-            // Solo permitir cambiar a Pokémon no debilitados y que no sean el actual
+            // Solo permitir cambiar a Pokemon no debilitados y que no sean el actual
             if (pokemon.estaDebilitado() || pokemon == currentPlayer.getPokemonActivo()) {
                 pokemonButton.setEnabled(false);
             } else {
                 int pokemonIndex = i;
                 pokemonButton.addActionListener(e -> {
                     mainWindow.switchPokemonSelected(pokemonIndex);
-                    resetButtons(); // Restablecer la interfaz después de la selección
+                    resetButtons(); // Restablecer la interfaz despues de la seleccion
                 });
             }
     
             buttonPanel.add(pokemonButton);
         }
     
-        // Botón de volver (solo si no es un cambio obligatorio)
+        // Botón de volver 
         if (!mainWindow.getBattle().isCambioForzado()) {
             JButton backButton = new JButton("VOLVER");
             backButton.setFont(new Font("Pokemon GB", Font.BOLD, 12));
@@ -231,13 +232,13 @@ public class ActionPanel extends JPanel {
     }
 
     /**
-     * Muestra las opciones para seleccionar qué Pokémon revivir
-     * @param itemIndex Índice del item de revivir en la mochila
+     * Muestra las opciones para seleccionar que Pokemon revivir
+     * @param itemIndex indice del item de revivir en la mochila
      */
     private void showReviveOptions(int itemIndex) {
         buttonPanel.removeAll();
         
-        // Obtener Pokémon debilitados
+        // Obtener Pokemon debilitados
         ArrayList<Pokemon> debilitados = currentPlayer.getPokemonsDebilitados();
         
         if (debilitados.isEmpty()) {
@@ -246,7 +247,7 @@ public class ActionPanel extends JPanel {
             noDebilitadosLabel.setForeground(Color.WHITE);
             buttonPanel.add(noDebilitadosLabel);
         } else {
-            // Mostrar opciones para cada Pokémon debilitado
+            // Mostrar opciones para cada Pokemon debilitado
             for (int i = 0; i < currentPlayer.getEquipo().size(); i++) {
                 Pokemon pokemon = currentPlayer.getEquipo().get(i);
                 if (pokemon.estaDebilitado()) {
@@ -267,7 +268,7 @@ public class ActionPanel extends JPanel {
             }
         }
 
-        // Botón de volver
+        // Boton de volver
         JButton backButton = new JButton("VOLVER");
         backButton.setFont(new Font("Pokemon GB", Font.BOLD, 12));
         backButton.setForeground(Color.WHITE);
@@ -287,7 +288,6 @@ public class ActionPanel extends JPanel {
      */
     private void resetButtons() {
         buttonPanel.removeAll();
-
         String[] buttonLabels = {"LUCHAR", "POKEMON", "MOCHILA", "HUIR"};
         for (String label : buttonLabels) {
             JButton button = new JButton(label);
@@ -313,7 +313,6 @@ public class ActionPanel extends JPanel {
 
             buttonPanel.add(button);
         }
-
         buttonPanel.revalidate();
         buttonPanel.repaint();
     }
@@ -327,18 +326,16 @@ public class ActionPanel extends JPanel {
         // Limpiar el texto anterior
         lastActionLabel.setText("");
         
-        // Forzar actualización inmediata
         lastActionLabel.revalidate();
         lastActionLabel.repaint();
         
-        // Añadir el nuevo texto con formato HTML para mejor visualizacion 
+        // Añadir el nuevo texto 
         lastActionLabel.setText("<html><div style='text-align: center; width: 100%;'>" + 
                             text.replace("\n", "<br>") + "</div></html>");
         
-        // Crear efecto de "typing" si deseas
         new Thread(() -> {
             try {
-                Thread.sleep(25); // Pequeño retraso para asegurar la actualización
+                Thread.sleep(25); 
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -350,7 +347,7 @@ public class ActionPanel extends JPanel {
     }
 
     /**
- * Deshabilita todos los botones del panel
+    * Deshabilita todos los botones del panel
     */
     public void disableButtons() {
         Component[] components = buttonPanel.getComponents();
@@ -371,8 +368,7 @@ public class ActionPanel extends JPanel {
                 component.setEnabled(true);
             }
         }
-        // Si es necesario resetear los botones
-        if (components.length == 4) { // Solo si son los botones principales
+        if (components.length == 4) { 
             resetButtons();
         }
     }
@@ -386,9 +382,12 @@ public class ActionPanel extends JPanel {
         this.currentPlayer = player;
     }
 
+    /**
+     * Crea un borde redondeado para los botones
+     * 
+     * @return Borde redondeado
+     */
     private Border createRoundedBorder() {
-        return new LineBorder(Color.BLACK, 1, true); // grosor 2, redondeado true
+        return new LineBorder(Color.BLACK, 1, true);   
     }
-
-    
 }

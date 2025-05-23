@@ -7,15 +7,35 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
 
+/**
+ * Ventana de configuracion para batallas Player vs Machine (PvM)
+ * Permite al usuario seleccionar su equipo de Pokemon y los items que llevara a la batalla,
+ * mientras que la maquina genera su equipo e items de forma aleatoria.
+ * Permite elegir el tipo de IA de la maquina.
+ * Muestra visualmente los equipos y los items seleccionados para ambos participantes.
+ * Al confirmar la seleccion, inicia la batalla llamando a PokemonBattleGame.iniciarBatallaPvM.
+ * 
+ * @author David Patacon
+ * @author Daniel Hueso
+ * @version 1.0
+ */
 public class PvMSetUp extends JFrame {
-    private JPanel panelJugador, panelMaquina;
+
+    // Panel para el jugador humano
+    private JPanel panelJugador;
+    // Panel para la maquina
+    private JPanel panelMaquina;
+
+    // Modelo y lista para mostrar el equipo seleccionado por el jugador
     private DefaultListModel<String> equipoJugadorModel = new DefaultListModel<>();
     private JList<String> equipoListJugador = new JList<>(equipoJugadorModel);
 
+    // Mapas para imagenes de pokemones e items
     private HashMap<String, ImageIcon> imagenesPokemones = new HashMap<>();
     private JLabel imagenPokemonJugador = new JLabel();
     private HashMap<String, ImageIcon> imagenesItems = new HashMap<>();
 
+    // Lista de nombres de pokemones disponibles
     private ArrayList<String> listaPokemones = new ArrayList<>(Arrays.asList(
         "charizard", "blastoise", "venusaur", "gengar", "dragonite", "snorlax", "raichu",
         "togetic", "tyranitar", "gardevoir", "metagross", "donphan", "machamp", "delibird",
@@ -24,15 +44,25 @@ public class PvMSetUp extends JFrame {
         "swellow", "aggron", "weezing", "nidoking", "zangoose", "clefable", "absol", "chimecho"
     ));
 
+    // Listas para los nombres de los equipos seleccionados
     private ArrayList<String> nombresEquipoJugador = new ArrayList<>();
     private ArrayList<String> nombresEquipoMaquina = new ArrayList<>();
 
+    // Mapas para los items seleccionados por jugador y maquina
     private HashMap<String, Integer> itemsJugador = new HashMap<>();
     private HashMap<String, Integer> itemsMaquina = new HashMap<>();
+    // Lista de items disponibles
     private final String[] itemsDisponibles = {"Potion", "SuperPotion", "HyperPotion", "Revive"};
 
+    // Tipo de IA seleccionada para la maquina
     private String trainerType;
 
+    /**
+     * Constructor de la ventana de configuracion PvM
+     * Inicializa la interfaz, paneles y equipos para jugador y maquina
+     * 
+     * @param tipoMaquina Tipo de IA para la maquina (por ejemplo: attackingTrainer, defensiveTrainer, etc)
+     */
     public PvMSetUp(String tipoMaquina) {
         setTitle("Player vs Machine - " + tipoMaquina);
         setSize(1280, 720);
@@ -41,7 +71,7 @@ public class PvMSetUp extends JFrame {
         setLocationRelativeTo(null);
         getContentPane().setBackground(new Color(20, 20, 20));
 
-        // Cargar fuente Pokemon GB
+        // Cargar fuente Pokemon GB para la interfaz
         try {
             Font pokemonFont = Font.createFont(Font.TRUETYPE_FONT,
                 getClass().getResourceAsStream("/graficos/PokemonGB.ttf"));
@@ -51,20 +81,26 @@ public class PvMSetUp extends JFrame {
             System.err.println("Error al cargar la fuente Pokemon GB: " + e.getMessage());
         }
 
-        cargarImagenes();
-        crearPanelJugador();
-        crearPanelMaquina(tipoMaquina);
-        trainerType = tipoMaquina;
+        cargarImagenes(); // Cargar imagenes de pokemones e items
+        crearPanelJugador(); // Crear panel para el jugador humano
+        crearPanelMaquina(tipoMaquina); // Crear panel para la maquina
+        trainerType = tipoMaquina; // Guardar el tipo de IA seleccionado
         add(panelJugador);
         add(panelMaquina);
     }
 
+    /**
+     * Crea el panel de seleccion de equipo y items para el jugador humano
+     * Permite seleccionar hasta 6 pokemones y hasta 7 items en total
+     * Al confirmar, valida la seleccion y llama a PokemonBattleGame.iniciarBatallaPvM
+     */
     private void crearPanelJugador() {
         panelJugador = new JPanel();
         panelJugador.setBackground(new Color(200, 200, 255));
         panelJugador.setLayout(new BorderLayout(0, 10));
         panelJugador.setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 2), new EmptyBorder(10, 10, 10, 10)));
 
+        // Titulo del panel
         JLabel titulo = new JLabel("Jugador", SwingConstants.CENTER);
         titulo.setOpaque(true);
         titulo.setBackground(new Color(100, 100, 255));
@@ -74,6 +110,7 @@ public class PvMSetUp extends JFrame {
         titulo.setPreferredSize(new Dimension(0, 40));
         panelJugador.add(titulo, BorderLayout.NORTH);
 
+        // Panel para seleccionar pokemones y mostrar imagen
         JPanel seleccionPanel = new JPanel(new GridLayout(3, 1, 0, 5));
         seleccionPanel.setBackground(new Color(200, 200, 255));
         seleccionPanel.setPreferredSize(new Dimension(0, 200));
@@ -110,6 +147,7 @@ public class PvMSetUp extends JFrame {
         centralPanel.setBackground(new Color(200, 200, 255));
         centralPanel.add(seleccionPanel, BorderLayout.NORTH);
 
+        // Panel para seleccionar items y su cantidad
         JPanel itemPanel = new JPanel(new GridLayout(4, 1, 0, 5));
         itemPanel.setBackground(new Color(200, 200, 255));
         itemPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 1), new EmptyBorder(10, 10, 10, 10)));
@@ -137,6 +175,7 @@ public class PvMSetUp extends JFrame {
         centralPanel.add(itemPanel, BorderLayout.CENTER);
         panelJugador.add(centralPanel, BorderLayout.CENTER);
 
+        // Panel para mostrar el equipo seleccionado y confirmar
         JPanel equipoPanel = new JPanel(new BorderLayout(0, 5));
         equipoPanel.setBackground(new Color(200, 200, 255));
         equipoPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 1), new EmptyBorder(5, 5, 5, 5)));
@@ -164,20 +203,23 @@ public class PvMSetUp extends JFrame {
                 itemsJugador.clear();
                 int totalItems = 0;
 
+                // Validar cantidad de pokemones seleccionados
                 if (equipoJugadorModel.size() < 1 || equipoJugadorModel.size() > 6) {
-                    JOptionPane.showMessageDialog(null, "Debes seleccionar entre 1 y 6 Pokémon.");
+                    JOptionPane.showMessageDialog(null, "Debes seleccionar entre 1 y 6 Pokemon.");
                     return;
                 }
 
+                // Validar cantidad total de items
                 for (String item : itemsDisponibles) {
                     int cantidad = (int) spinners.get(item).getValue();
                     totalItems += cantidad;
                 }
                 if (totalItems > 7) {
-                    JOptionPane.showMessageDialog(null, "No puedes seleccionar más de 7 ítems.");
+                    JOptionPane.showMessageDialog(null, "No puedes seleccionar mas de 7 items.");
                     return;
                 }
 
+                // Guardar items seleccionados
                 for (String item : itemsDisponibles) {
                     int cantidad = (int) spinners.get(item).getValue();
                     if (cantidad > 0) {
@@ -185,12 +227,14 @@ public class PvMSetUp extends JFrame {
                     }
                 }
 
+                // Guardar pokemones seleccionados
                 for (int i = 0; i < equipoJugadorModel.size(); i++) {
                     nombresEquipoJugador.add(equipoJugadorModel.get(i));
                 }
 
-                JOptionPane.showMessageDialog(null, "Equipo confirmado. ¡Comienza la batalla!");
+                JOptionPane.showMessageDialog(null, "Equipo confirmado. Comienza la batalla!");
 
+                // Iniciar la batalla PvM
                 PokemonBattleGame.iniciarBatallaPvM(
                      new ArrayList<>(nombresEquipoJugador),
                      new ArrayList<>(nombresEquipoMaquina),
@@ -206,13 +250,19 @@ public class PvMSetUp extends JFrame {
         panelJugador.add(equipoPanel, BorderLayout.SOUTH);
     }
 
+    /**
+     * Crea el panel de equipo e items para la maquina
+     * Selecciona aleatoriamente 6 pokemones y asigna items por defecto
+     * 
+     * @param tipoMaquina Tipo de IA de la maquina
+     */
     private void crearPanelMaquina(String tipoMaquina) {
         panelMaquina = new JPanel();
-        panelMaquina.setBackground(new Color(255, 120, 120)); // Panel rojo para la máquina
+        panelMaquina.setBackground(new Color(255, 120, 120)); // Panel rojo para la maquina
         panelMaquina.setLayout(new BorderLayout(0, 10));
         panelMaquina.setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 2), new EmptyBorder(10, 10, 10, 10)));
 
-        JLabel titulo = new JLabel("Máquina (" + tipoMaquina + ")", SwingConstants.CENTER);
+        JLabel titulo = new JLabel("Maquina (" + tipoMaquina + ")", SwingConstants.CENTER);
         titulo.setOpaque(true);
         titulo.setBackground(new Color(180, 50, 50));
         titulo.setForeground(Color.WHITE);
@@ -221,7 +271,7 @@ public class PvMSetUp extends JFrame {
         titulo.setPreferredSize(new Dimension(0, 40));
         panelMaquina.add(titulo, BorderLayout.NORTH);
 
-        // Selección aleatoria de 6 pokemones para la máquina
+        // Seleccion aleatoria de 6 pokemones para la maquina
         nombresEquipoMaquina.clear();
         ArrayList<String> copiaPokemones = new ArrayList<>(listaPokemones);
         Collections.shuffle(copiaPokemones);
@@ -234,17 +284,14 @@ public class PvMSetUp extends JFrame {
         equipoPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 1), new EmptyBorder(5, 5, 5, 5)));
         equipoPanel.setPreferredSize(new Dimension(0, 220));
 
-        JLabel equipoLabel = new JLabel("Equipo de la máquina:");
+        JLabel equipoLabel = new JLabel("Equipo de la maquina:");
         equipoLabel.setFont(new Font("Pokemon GB", Font.BOLD, 14));
         equipoPanel.add(equipoLabel, BorderLayout.NORTH);
 
-
-        
         JPanel pokemonesPanel = new JPanel(new GridLayout(6, 1, 0, 2));
         pokemonesPanel.setBackground(new Color(255, 180, 180));
         for (String poke : nombresEquipoMaquina) {
             JPanel pokeRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 2)); 
-            
             pokeRow.setBackground(new Color(255, 180, 180));
             JLabel iconLabel = new JLabel(imagenesPokemones.get(poke));
             iconLabel.setPreferredSize(new Dimension(48, 48));
@@ -257,7 +304,7 @@ public class PvMSetUp extends JFrame {
         }
         equipoPanel.add(pokemonesPanel, BorderLayout.CENTER);
 
-        // Items de la máquina: 2 de cada uno, excepto Revive (1)
+        // Items de la maquina: 2 de cada uno, excepto Revive (1)
         itemsMaquina.clear();
         for (String item : itemsDisponibles) {
             itemsMaquina.put(item, item.equals("Revive") ? 1 : 2);
@@ -283,6 +330,10 @@ public class PvMSetUp extends JFrame {
         panelMaquina.add(equipoPanel, BorderLayout.CENTER);
     }
 
+    /**
+     * Carga las imagenes de los pokemones y los items para mostrar en la interfaz
+     * Escala las imagenes para que se ajusten a los paneles
+     */
     private void cargarImagenes() {
         for (String nombre : listaPokemones) {
             try {

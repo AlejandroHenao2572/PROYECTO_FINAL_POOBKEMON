@@ -14,8 +14,9 @@ import javax.imageio.ImageIO;
  * Lee la informacion del mapa desde un archivo de texto y almacena los tiles
  * en una matriz para su posterior representacion en la pantalla.
  *
- * Autores: David Patacon y Daniel Hueso
- * Version: 1.0
+ * @author David Patacon
+ * @author Daniel Hueso
+ * @version 1.0
  */
 public class TileManager {
     GamePanel gp;

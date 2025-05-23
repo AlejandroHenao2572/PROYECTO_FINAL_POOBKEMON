@@ -11,24 +11,32 @@ import java.util.HashMap;
 /**
  * Clase PvPNormalSetUp
  *
- * Esta clase permite a dos jugadores configurar sus equipos Pokemon e items
- * para una batalla en modo normal.
+ * Permite a dos jugadores humanos configurar sus equipos Pokemon e items
+ * para una batalla en modo normal (PvP).
+ * Cada jugador puede seleccionar hasta 6 Pokemon y hasta 7 items (con maximo 1 Revive).
+ * Muestra visualmente los equipos y los items seleccionados para ambos jugadores.
+ * Al confirmar ambos equipos, inicia la batalla llamando a PokemonBattleGame.iniciarBatalla.
  *
- * Autores: David Patacon y Daniel Hueso
- * Version: 1.0
+ * @author David Patacon
+ * @author Daniel Hueso
+ * @version 1.0
  */
 public class PvPNormalSetUp extends JFrame {
+    // Paneles para cada jugador
     private JPanel panelJugador1, panelJugador2;
+    // Modelos y listas para mostrar los equipos seleccionados
     private DefaultListModel<String> equipo1Model = new DefaultListModel<>();
     private DefaultListModel<String> equipo2Model = new DefaultListModel<>();
     private JList<String> equipoList1 = new JList<>(equipo1Model);
     private JList<String> equipoList2 = new JList<>(equipo2Model);
 
+    // Mapas para imagenes de pokemones e items
     private HashMap<String, ImageIcon> imagenesPokemones = new HashMap<>();
     private JLabel imagenPokemon1 = new JLabel();
     private JLabel imagenPokemon2 = new JLabel();
     private HashMap<String, ImageIcon> imagenesItems = new HashMap<>();
 
+    // Lista de nombres de pokemones disponibles
     private ArrayList<String> listaPokemones = new ArrayList<>() {{
         add("charizard"); add("blastoise"); add("venusaur");
         add("gengar"); add("dragonite"); add("snorlax"); add("raichu");
@@ -41,14 +49,21 @@ public class PvPNormalSetUp extends JFrame {
         add("zangoose"); add("clefable"); add("absol"); add("chimecho");
     }};
 
+    // Listas para los nombres de los equipos seleccionados por cada jugador
     private ArrayList<String> nombresEquipo1 = new ArrayList<>();
     private ArrayList<String> nombresEquipo2 = new ArrayList<>();
 
+    // Mapas para los items seleccionados por cada jugador
     private HashMap<String, Integer> itemsJugador1 = new HashMap<>();
     private HashMap<String, Integer> itemsJugador2 = new HashMap<>();
+    // Lista de items disponibles
     private final String[] itemsDisponibles = {"Potion", "SuperPotion", "HyperPotion", "Revive"};
 
-     public PvPNormalSetUp() {
+    /**
+     * Constructor de la ventana de configuracion PvP Normal
+     * Inicializa la interfaz, paneles y equipos para ambos jugadores
+     */
+    public PvPNormalSetUp() {
         setTitle("PvP MODO NORMAL");
         setSize(1280, 720); // Tamaño ligeramente mayor
         setLayout(new GridLayout(1, 2));
@@ -66,14 +81,22 @@ public class PvPNormalSetUp extends JFrame {
             System.err.println("Error al cargar la fuente Pokemon GB: " + e.getMessage());
         }
 
-        cargarImagenes();
-        crearPanelJugador(panelJugador1 = new JPanel(), 1);
-        crearPanelJugador(panelJugador2 = new JPanel(), 2);
+        cargarImagenes(); // Cargar imagenes de pokemones e items
+        crearPanelJugador(panelJugador1 = new JPanel(), 1); // Panel para jugador 1
+        crearPanelJugador(panelJugador2 = new JPanel(), 2); // Panel para jugador 2
 
         add(panelJugador1);
         add(panelJugador2);
     }
 
+    /**
+     * Crea el panel de seleccion de equipo y items para un jugador
+     * Permite seleccionar hasta 6 pokemones y hasta 7 items en total
+     * Al confirmar, valida la seleccion y si ambos equipos estan listos, inicia la batalla
+     * 
+     * @param panel Panel a configurar
+     * @param jugador Numero de jugador (1 o 2)
+     */
     private void crearPanelJugador(JPanel panel, int jugador) {
         Color colorFondo = jugador == 1 ? new Color(255, 100, 100) : new Color(100, 100, 255);
         Color colorSecundario = jugador == 1 ? new Color(255, 200, 200) : new Color(200, 200, 255);
@@ -82,6 +105,7 @@ public class PvPNormalSetUp extends JFrame {
         panel.setLayout(new BorderLayout(0, 10));
         panel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 2), new EmptyBorder(10, 10, 10, 10)));
 
+        // Titulo del panel
         JLabel titulo = new JLabel("Jugador " + jugador, SwingConstants.CENTER);
         titulo.setOpaque(true);
         titulo.setBackground(colorFondo);
@@ -91,6 +115,7 @@ public class PvPNormalSetUp extends JFrame {
         titulo.setPreferredSize(new Dimension(0, 40));
         panel.add(titulo, BorderLayout.NORTH);
 
+        // Panel para seleccionar pokemones y mostrar imagen
         JPanel seleccionPanel = new JPanel(new GridLayout(3, 1, 0, 5));
         seleccionPanel.setBackground(colorSecundario);
         seleccionPanel.setPreferredSize(new Dimension(0, 200));
@@ -129,6 +154,7 @@ public class PvPNormalSetUp extends JFrame {
         centralPanel.setBackground(colorSecundario);
         centralPanel.add(seleccionPanel, BorderLayout.NORTH);
 
+        // Panel para seleccionar items y su cantidad
         JPanel itemPanel = new JPanel(new GridLayout(4, 1, 0, 5));
         itemPanel.setBackground(colorSecundario);
         itemPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 1), new EmptyBorder(10, 10, 10, 10)));
@@ -156,6 +182,7 @@ public class PvPNormalSetUp extends JFrame {
         centralPanel.add(itemPanel, BorderLayout.CENTER);
         panel.add(centralPanel, BorderLayout.CENTER);
 
+        // Panel para mostrar el equipo seleccionado y confirmar
         JPanel equipoPanel = new JPanel(new BorderLayout(0, 5));
         equipoPanel.setBackground(colorSecundario);
         equipoPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 1), new EmptyBorder(5, 5, 5, 5)));
@@ -183,6 +210,10 @@ public class PvPNormalSetUp extends JFrame {
         panel.add(equipoPanel, BorderLayout.SOUTH);
     }
 
+    /**
+     * Carga las imagenes de los pokemones y los items para mostrar en la interfaz
+     * Escala las imagenes para que se ajusten a los paneles
+     */
     private void cargarImagenes() {
         for (String nombre : listaPokemones) {
             try {
@@ -204,6 +235,10 @@ public class PvPNormalSetUp extends JFrame {
         }
     }
 
+    /**
+     * Listener para el boton de confirmar equipo de cada jugador
+     * Valida la seleccion de pokemones y items, y si ambos equipos estan listos, inicia la batalla
+     */
     private class ConfirmarEquipoListener implements ActionListener {
         int jugador;
         HashMap<String, JSpinner> spinners;
@@ -214,54 +249,56 @@ public class PvPNormalSetUp extends JFrame {
         }
 
         @Override
-    public void actionPerformed(ActionEvent e) {
-        DefaultListModel<String> model = jugador == 1 ? equipo1Model : equipo2Model;
-        ArrayList<String> equipo = jugador == 1 ? nombresEquipo1 : nombresEquipo2;
-        HashMap<String, Integer> items = jugador == 1 ? itemsJugador1 : itemsJugador2;
+        public void actionPerformed(ActionEvent e) {
+            DefaultListModel<String> model = jugador == 1 ? equipo1Model : equipo2Model;
+            ArrayList<String> equipo = jugador == 1 ? nombresEquipo1 : nombresEquipo2;
+            HashMap<String, Integer> items = jugador == 1 ? itemsJugador1 : itemsJugador2;
 
-        equipo.clear();
-        items.clear();
-        int totalItems = 0;
+            equipo.clear();
+            items.clear();
+            int totalItems = 0;
 
-        // ✅ Nuevo: permitir entre 1 y 6 Pokémon
-        if (model.size() < 1 || model.size() > 6) {
-            JOptionPane.showMessageDialog(null, "Debes seleccionar al menos 1 y como máximo 6 Pokémon.");
-            return;
-        }
-
-        for (String item : itemsDisponibles) {
-            int cantidad = (int) spinners.get(item).getValue();
-            totalItems += cantidad;
-        }
-
-        if (totalItems > 7) {
-            JOptionPane.showMessageDialog(null, "No puedes seleccionar más de 7 ítems.");
-            return;
-        }
-
-        for (String item : itemsDisponibles) {
-            int cantidad = (int) spinners.get(item).getValue();
-            if (cantidad > 0) {
-                items.put(item, cantidad);
+            // Validar cantidad de pokemones seleccionados (entre 1 y 6)
+            if (model.size() < 1 || model.size() > 6) {
+                JOptionPane.showMessageDialog(null, "Debes seleccionar al menos 1 y como maximo 6 Pokemon.");
+                return;
             }
-        }
 
-        for (int i = 0; i < model.size(); i++) {
-            equipo.add(model.get(i));
-        }
+            // Validar cantidad total de items (maximo 7)
+            for (String item : itemsDisponibles) {
+                int cantidad = (int) spinners.get(item).getValue();
+                totalItems += cantidad;
+            }
+            if (totalItems > 7) {
+                JOptionPane.showMessageDialog(null, "No puedes seleccionar mas de 7 items.");
+                return;
+            }
 
-        JOptionPane.showMessageDialog(null, "Equipo del Jugador " + jugador + " confirmado");
+            // Guardar items seleccionados
+            for (String item : itemsDisponibles) {
+                int cantidad = (int) spinners.get(item).getValue();
+                if (cantidad > 0) {
+                    items.put(item, cantidad);
+                }
+            }
 
-        // ✅ Verificar que ambos equipos estén confirmados (mínimo 1 Pokémon por jugador)
-        if (nombresEquipo1.size() >= 1 && nombresEquipo2.size() >= 1) {
-            PokemonBattleGame.iniciarBatalla(
-                new ArrayList<>(nombresEquipo1),
-                new ArrayList<>(nombresEquipo2),
-                new HashMap<>(itemsJugador1),
-                new HashMap<>(itemsJugador2)
-            );
-            dispose();
-        }
+            // Guardar pokemones seleccionados
+            for (int i = 0; i < model.size(); i++) {
+                equipo.add(model.get(i));
+            }
+
+            JOptionPane.showMessageDialog(null, "Equipo del Jugador " + jugador + " confirmado");
+
+            // Verificar que ambos equipos esten confirmados (minimo 1 Pokemon por jugador)
+            if (nombresEquipo1.size() >= 1 && nombresEquipo2.size() >= 1) {
+                PokemonBattleGame.iniciarBatalla(
+                    new ArrayList<>(nombresEquipo1),
+                    new ArrayList<>(nombresEquipo2),
+                    new HashMap<>(itemsJugador1),
+                    new HashMap<>(itemsJugador2)
+                );
+                dispose();
+            }
         }
     }
 }

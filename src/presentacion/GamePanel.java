@@ -15,7 +15,7 @@ import javax.swing.SwingUtilities;
 
 /**
  * Clase principal del panel de juego que implementa la logica del juego y la interfaz de usuario
- * Gestiona los estados del juego menu principal seleccion de modo PvP en juego
+ * Gestiona los estados del juego menu principal seleccion de modo juego
  * dibuja los elementos en pantalla y actualiza el estado del juego
  * Implementa la interfaz Runnable para ejecutarse en un hilo separado
  *
@@ -34,7 +34,6 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenWidth = titleSize * maxScreenCol;
     public final int screenHeight = titleSize * maxScreenRow;
     private Font pokemonFont;
-
 
     // Control del juego
     KeyHandler keyH = new KeyHandler();
@@ -65,7 +64,7 @@ public class GamePanel extends JPanel implements Runnable {
     // Nueva area para el boton de volver
     Rectangle backZone;
 
-    // Nuevas áreas para los botones de selección de tipo de máquina
+    // Nuevas areas para los botones de selección de tipo de maquina
     Rectangle defensiveTrainerZone;
     Rectangle attackingTrainerZone;
     Rectangle chaningTrainerZone;
@@ -109,7 +108,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.setFocusable(true);
 
-        // Crear barra de menú
+        // Crear barra de menu
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("Archivo");
 
@@ -134,8 +133,6 @@ public class GamePanel extends JPanel implements Runnable {
         fontMetrics = this.getFontMetrics(buttonFont);
         calculateButtonSizes();
         MusicManager.playMusic("musica/Normal_music.wav");
-
-        // Quitar KeyListener y agregar MouseListener para clicks en botones
         this.removeKeyListener(keyH);
         this.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -190,7 +187,6 @@ public class GamePanel extends JPanel implements Runnable {
 
     /**
      * Inicia el hilo del juego
-     * Crea una nueva instancia de Thread con este GamePanel como Runnable y la inicia
      */
     public void startGameThread() {
         gameThread = new Thread(this);
@@ -214,22 +210,10 @@ public class GamePanel extends JPanel implements Runnable {
             lastTime = currentTime;
 
             if (delta >= 1) {
-                update();
                 repaint();
                 delta--;
             }
         }
-    }
-
-    /**
-     * Actualiza el estado del juego
-     * Actualmente actualiza la logica del jugador y maneja la seleccion de elementos del menu
-     * cuando se presiona la tecla Enter
-     */
-    public void update() {
-        // player.update(); // Eliminar esta linea
-
-        // Ya no se usa keyH.enterPressed ni handleMenuSelection
     }
 
     /**
@@ -298,7 +282,7 @@ public class GamePanel extends JPanel implements Runnable {
         });
     }
 
-        /**
+    /**
      * Inicia el modo de juego PvP Supervivencia 
      * Cierra la ventana actual y crea una nueva instancia de PvPSurvivalSetUp
      */
@@ -309,13 +293,18 @@ public class GamePanel extends JPanel implements Runnable {
                 parentFrame.dispose();
             }
 
-            // Crear nueva instancia de PvPNormalSetUp
+            // Crear nueva instancia de PvPSurpervivenciaSetUp
             PvPSupervivenciaSetUp pvpSetup = new PvPSupervivenciaSetUp();
             pvpSetup.setVisible(true);
         });
     }
 
-    // Métodos de setup para PvM y MvM (solo expresados, sin implementación)
+    /**
+     * Inicia el modo de juego PvM
+     * Cierra la ventana actual y crea una nueva instancia de PvMSetUp
+     *
+     * @param trainerType El tipo de entrenador a usar en el modo PvM
+     */
     private void PvMSetUp(String trainerType) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -331,6 +320,10 @@ public class GamePanel extends JPanel implements Runnable {
         });
     }
 
+    /**
+     * Inicia el modo de juego MvM
+     * Cierra la ventana actual y crea una nueva instancia de MvMSetUp
+     */
     private void MvMSetUp() {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -339,7 +332,7 @@ public class GamePanel extends JPanel implements Runnable {
                     parentFrame.dispose();
                 }
 
-                // Crear nueva instancia de PvMSetUp
+                // Crear nueva instancia de MvMSetUp
                 MvMSetUp mvmSetup = new MvMSetUp();
                 mvmSetup.setVisible(true);
             }
@@ -357,30 +350,22 @@ public class GamePanel extends JPanel implements Runnable {
      */
     private void drawButton(Graphics2D g2, Rectangle rect, String text, Color color) {
         if (rect == null) return;
-
-        // Fondo del boton (color solido retro)
+        // Fondo del boton
         g2.setColor(color);
         g2.fillRect(rect.x, rect.y, rect.width, rect.height);
-
-        // Borde pixelado (negro, grueso)
+        // Borde pixelado 
         g2.setColor(Color.BLACK);
         g2.setStroke(new BasicStroke(4));
         g2.drawRect(rect.x, rect.y, rect.width, rect.height);
-
-        // Sombra interna para efecto 3D retro
         g2.setColor(new Color(60, 60, 60));
         g2.drawLine(rect.x, rect.y + rect.height, rect.x + rect.width, rect.y + rect.height); // abajo
         g2.drawLine(rect.x + rect.width, rect.y, rect.x + rect.width, rect.y + rect.height); // derecha
-
-        // Texto centrado con fuente PokemonGB
         g2.setFont(buttonFont);
         g2.setColor(Color.WHITE);
         int textWidth = g2.getFontMetrics().stringWidth(text);
         int textX = rect.x + (rect.width - textWidth) / 2;
         int textY = rect.y + (rect.height / 2) + g2.getFontMetrics().getAscent() / 2 - 5;
         g2.drawString(text, textX, textY);
-
-        // Ya no hay efecto de seleccion por colision con el jugador
     }
 
     /**
@@ -389,16 +374,12 @@ public class GamePanel extends JPanel implements Runnable {
      */
     private void calculateButtonSizes() {
         if (fontMetrics == null) return;
-
-        // Botones principales en columna (uno debajo del otro)
         int mainButtonWidth = fontMetrics.stringWidth("Player vs Player") + 40;
         int mainButtonHeight = 30;
         int mainButtonSpacing = 20;
-
         int totalMainHeight = mainButtonHeight * 3 + mainButtonSpacing * 2;
         int startMainY = (screenHeight - totalMainHeight) / 2 + 60;
         int mainButtonX = (screenWidth - mainButtonWidth) / 2;
-
         pvpZone = new Rectangle(mainButtonX, startMainY, mainButtonWidth, mainButtonHeight);
         pvmZone = new Rectangle(mainButtonX, startMainY + mainButtonHeight + mainButtonSpacing, mainButtonWidth, mainButtonHeight);
         mvmZone = new Rectangle(mainButtonX, startMainY + 2 * (mainButtonHeight + mainButtonSpacing), mainButtonWidth, mainButtonHeight);
@@ -589,7 +570,7 @@ public class GamePanel extends JPanel implements Runnable {
             new Color(255, 255, 180) : new Color(220, 220, 120));
     }
 
-    // Dibuja la selección de tipo de máquina para PvM
+    // Dibuja la seleccion de tipo de maquina para PvM
     private void drawPvmModeSelection(Graphics2D g2) {
         g2.setColor(Color.WHITE);
         g2.setFont(titleFont);
@@ -602,7 +583,7 @@ public class GamePanel extends JPanel implements Runnable {
         int subtitleWidth = g2.getFontMetrics().stringWidth(subtitle);
         g2.drawString(subtitle, (screenWidth - subtitleWidth)/2, defensiveTrainerZone.y - 30);
 
-        // Colores más oscuros para mejor contraste
+        // Colores mas oscuros para mejor contraste
         drawButton(g2, defensiveTrainerZone, "defensiveTrainer", new Color(60, 60, 120));
         drawButton(g2, attackingTrainerZone, "attackingTrainer", new Color(120, 60, 60));
         drawButton(g2, chaningTrainerZone, "chaningTrainer", new Color(120, 120, 60));
@@ -610,7 +591,7 @@ public class GamePanel extends JPanel implements Runnable {
         drawButton(g2, backZonePVM, "Volver", new Color(100, 100, 40));
     }
 
-    // Dibuja la selección de tipo de máquina para MvM
+    // Dibuja la selección de tipo de maquina para MvM
     private void drawMvmModeSelection(Graphics2D g2) {
         g2.setColor(Color.WHITE);
         g2.setFont(titleFont);
@@ -623,7 +604,7 @@ public class GamePanel extends JPanel implements Runnable {
         int subtitleWidth = g2.getFontMetrics().stringWidth(subtitle);
         g2.drawString(subtitle, (screenWidth - subtitleWidth)/2, defensiveTrainerZone.y - 30);
 
-        // Colores más oscuros para mejor contraste
+        // Colores mas oscuros para mejor contraste
         drawButton(g2, defensiveTrainerZone, "defensiveTrainer", new Color(60, 60, 120));
         drawButton(g2, attackingTrainerZone, "attackingTrainer", new Color(120, 60, 60));
         drawButton(g2, chaningTrainerZone, "chaningTrainer", new Color(120, 120, 60));

@@ -3,9 +3,25 @@ package presentacion;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Clase que representa un dialogo grafico para mostrar el resultado del lanzamiento de moneda
+ * Indica visualmente que jugador comienza la batalla mostrando una moneda de color y un mensaje
+ * Permite al usuario confirmar para cerrar el dialogo
+ * 
+ * @author David Patacon
+ * @author Daniel Hueso
+ * @version 1.0
+ */
 public class CoinFlipDialog extends JDialog {
-    private boolean resultado; // true = jugador1, false = jugador2
+    // true = jugador1 comienza, false = jugador2 comienza
+    private boolean resultado;
 
+    /**
+     * Constructor del dialogo de lanzamiento de moneda
+     * 
+     * @param parent Ventana principal sobre la que se muestra el dialogo
+     * @param resultado true si comienza jugador1, false si comienza jugador2
+     */
     public CoinFlipDialog(JFrame parent, boolean resultado) {
         super(parent, "Lanzamiento de Moneda", true);
         this.resultado = resultado;
@@ -14,7 +30,7 @@ public class CoinFlipDialog extends JDialog {
         setLocationRelativeTo(parent);
         setUndecorated(true);
 
-        // Panel principal con diseño personalizado
+        // Panel principal con diseño personalizado de fondo redondeado
         JPanel mainPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -29,6 +45,7 @@ public class CoinFlipDialog extends JDialog {
         mainPanel.setOpaque(false);
         mainPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
 
+        // Imagen de la moneda
         JLabel imagen = new JLabel();
         imagen.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -44,11 +61,13 @@ public class CoinFlipDialog extends JDialog {
             imagen.setForeground(Color.WHITE);
         }
 
+        // Mensaje que indica que jugador comienza
         JLabel mensaje = new JLabel((resultado ? "¡Jugador 1" : "¡Jugador 2") + " comienza!");
         mensaje.setFont(new Font("Pokemon GB", Font.BOLD, 22));
         mensaje.setForeground(Color.WHITE);
         mensaje.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        // Boton para confirmar y cerrar el dialogo
         JButton confirmar = new JButton("CONFIRMAR");
         confirmar.setFont(new Font("Pokemon GB", Font.BOLD, 16));
         confirmar.setBackground(new Color(50, 50, 50));
@@ -59,7 +78,7 @@ public class CoinFlipDialog extends JDialog {
         confirmar.setPreferredSize(new Dimension(200, 40));
         confirmar.addActionListener(e -> dispose());
 
-        // Espaciado y disposición
+        // Espaciado y disposicion de los componentes
         mainPanel.add(Box.createVerticalStrut(20));
         mainPanel.add(imagen);
         mainPanel.add(Box.createVerticalStrut(30));
@@ -71,6 +90,10 @@ public class CoinFlipDialog extends JDialog {
         setContentPane(mainPanel);
     }
 
+    /**
+     * Devuelve el resultado del lanzamiento de moneda
+     * @return true si comienza jugador1, false si comienza jugador2
+     */
     public boolean getResultado() {
         return resultado;
     }

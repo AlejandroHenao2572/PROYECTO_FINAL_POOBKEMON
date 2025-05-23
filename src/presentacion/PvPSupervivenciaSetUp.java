@@ -9,26 +9,33 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-
 /**
  * Clase PvPSupervivenciaSetUp
  *
- * Esta clase configura automáticamente equipos aleatorios de 6 Pokémon para cada jugador
- * en el modo Supervivencia, mostrando las imágenes de los Pokémon asignados.
+ * Permite configurar una batalla PvP en modo Supervivencia, donde ambos jugadores reciben
+ * automaticamente un equipo aleatorio de 6 Pokemon. Los equipos se muestran visualmente
+ * con imagenes y nombres. No se permite seleccionar items, solo se muestran los equipos.
+ * Al confirmar ambos equipos, se inicia la batalla llamando a PokemonBattleGame.iniciarBatalla.
  *
- * Autores: David Patacon y Daniel Hueso
- * Version: 1.1
+ * @author David Patacon
+ * @author Daniel Hueso
+ * @version 1.0
  */
 public class PvPSupervivenciaSetUp extends JFrame {
+    // Paneles para cada jugador
     private JPanel panelJugador1, panelJugador2;
+    // Modelos para mostrar los equipos seleccionados
     private DefaultListModel<String> equipo1Model = new DefaultListModel<>();
     private DefaultListModel<String> equipo2Model = new DefaultListModel<>();
-    
+
+    // Mapas para imagenes de pokemones (normal y mini)
     private HashMap<String, ImageIcon> imagenesPokemones = new HashMap<>();
     private HashMap<String, ImageIcon> imagenesPokemonesMini = new HashMap<>();
+    // Listas de etiquetas para mostrar las imagenes de los equipos
     private ArrayList<JLabel> imagenesEquipo1 = new ArrayList<>();
     private ArrayList<JLabel> imagenesEquipo2 = new ArrayList<>();
 
+    // Lista de nombres de pokemones disponibles
     private ArrayList<String> listaPokemones = new ArrayList<>() {{
         add("Charizard"); add("Blastoise"); add("Venusaur");
         add("Gengar"); add("Dragonite"); add("Snorlax"); add("Raichu");
@@ -41,22 +48,27 @@ public class PvPSupervivenciaSetUp extends JFrame {
         add("Zangoose"); add("Clefable"); add("Absol"); add("Chimecho");
     }};
 
+    // Listas para los nombres de los equipos asignados a cada jugador
     private ArrayList<String> nombresEquipo1 = new ArrayList<>();
     private ArrayList<String> nombresEquipo2 = new ArrayList<>();
 
+    /**
+     * Constructor de la ventana de configuracion PvP Supervivencia
+     * Inicializa la interfaz, paneles y genera los equipos aleatorios para ambos jugadores
+     */
     public PvPSupervivenciaSetUp() {
-        setTitle("Configuración - PvP Modo Supervivencia");
-        setSize(1200, 800); // Aumenté un poco el tamaño para mejor visualización
+        setTitle("Configuracion - PvP Modo Supervivencia");
+        setSize(1200, 800); // Tamaño grande para mejor visualizacion
         setLayout(new GridLayout(1, 2));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         getContentPane().setBackground(new Color(240, 240, 240));
 
-        cargarImagenes();
-        crearPanelJugador(panelJugador1 = new JPanel(), 1);
-        crearPanelJugador(panelJugador2 = new JPanel(), 2);
+        cargarImagenes(); // Cargar imagenes de pokemones
+        crearPanelJugador(panelJugador1 = new JPanel(), 1); // Panel para jugador 1
+        crearPanelJugador(panelJugador2 = new JPanel(), 2); // Panel para jugador 2
 
-        // Generar equipos aleatorios automáticamente
+        // Generar equipos aleatorios automaticamente
         generarEquipoAleatorio(1);
         generarEquipoAleatorio(2);
 
@@ -74,6 +86,11 @@ public class PvPSupervivenciaSetUp extends JFrame {
         add(panelJugador2);
     }
 
+    /**
+     * Crea el panel visual para un jugador, mostrando su equipo y el boton de confirmar
+     * @param panel Panel a configurar
+     * @param jugador Numero de jugador (1 o 2)
+     */
     private void crearPanelJugador(JPanel panel, int jugador) {
         Color colorFondo = jugador == 1 ? new Color(255, 100, 100) : new Color(100, 100, 255);
         Color colorSecundario = jugador == 1 ? new Color(255, 220, 220) : new Color(220, 220, 255);
@@ -82,7 +99,7 @@ public class PvPSupervivenciaSetUp extends JFrame {
         panel.setLayout(new BorderLayout(0, 10));
         panel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 2), new EmptyBorder(15, 15, 15, 15)));
 
-        // Panel superior con título y modo de juego
+        // Panel superior con titulo y modo de juego
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setBackground(colorFondo);
         topPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 2), new EmptyBorder(10, 10, 10, 10)));
@@ -94,7 +111,7 @@ public class PvPSupervivenciaSetUp extends JFrame {
 
         panel.add(topPanel, BorderLayout.NORTH);
 
-        // Panel central con los Pokémon asignados
+        // Panel central con los Pokemon asignados
         JPanel equipoPanel = new JPanel(new GridLayout(2, 3, 10, 10));
         equipoPanel.setBackground(colorSecundario);
         equipoPanel.setBorder(new CompoundBorder(
@@ -103,7 +120,7 @@ public class PvPSupervivenciaSetUp extends JFrame {
                 new Font("Pokemon GB", Font.BOLD, 16), Color.BLACK),
             new EmptyBorder(10, 10, 10, 10)));
 
-        // Inicializar las etiquetas de imágenes para los 6 Pokémon
+        // Inicializar las etiquetas de imagenes para los 6 Pokemon
         ArrayList<JLabel> imagenesEquipo = jugador == 1 ? imagenesEquipo1 : imagenesEquipo2;
         for (int i = 0; i < 6; i++) {
             JLabel pokemonLabel = new JLabel("", SwingConstants.CENTER);
@@ -116,14 +133,13 @@ public class PvPSupervivenciaSetUp extends JFrame {
             pokemonLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
             pokemonLabel.setHorizontalTextPosition(SwingConstants.CENTER);
             pokemonLabel.setFont(new Font("Pokemon GB", Font.PLAIN, 12));
-            
             imagenesEquipo.add(pokemonLabel);
             equipoPanel.add(pokemonLabel);
         }
 
         panel.add(equipoPanel, BorderLayout.CENTER);
 
-        // Panel inferior con botón de confirmación
+        // Panel inferior con boton de confirmacion
         JPanel bottomPanel = new JPanel();
         bottomPanel.setBackground(colorSecundario);
         bottomPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -142,6 +158,10 @@ public class PvPSupervivenciaSetUp extends JFrame {
         panel.add(bottomPanel, BorderLayout.SOUTH);
     }
 
+    /**
+     * Carga las imagenes de los pokemones para mostrar en la interfaz
+     * Escala las imagenes para que se ajusten a los paneles
+     */
     private void cargarImagenes() {
         for (String nombre : listaPokemones) {
             try {
@@ -159,16 +179,20 @@ public class PvPSupervivenciaSetUp extends JFrame {
         }
     }
 
+    /**
+     * Genera un equipo aleatorio de 6 Pokemon para el jugador indicado
+     * @param jugador Numero de jugador (1 o 2)
+     */
     private void generarEquipoAleatorio(int jugador) {
         DefaultListModel<String> model = jugador == 1 ? equipo1Model : equipo2Model;
         ArrayList<JLabel> imagenesEquipo = jugador == 1 ? imagenesEquipo1 : imagenesEquipo2;
         model.clear();
         
-        // Hacer una copia de la lista de pokémones para no modificar la original
+        // Hacer una copia de la lista de pokemones para no modificar la original
         ArrayList<String> pokemonesDisponibles = new ArrayList<>(listaPokemones);
         Collections.shuffle(pokemonesDisponibles);
         
-        // Seleccionar los primeros 6 pokémones de la lista mezclada
+        // Seleccionar los primeros 6 pokemones de la lista mezclada
         for (int i = 0; i < 6 && i < pokemonesDisponibles.size(); i++) {
             String pokemon = pokemonesDisponibles.get(i);
             model.addElement(pokemon);
@@ -182,6 +206,10 @@ public class PvPSupervivenciaSetUp extends JFrame {
         }
     }
 
+    /**
+     * Listener para el boton de confirmar equipo de cada jugador
+     * Cuando ambos equipos estan confirmados, inicia la batalla
+     */
     private class ConfirmarEquipoListener implements ActionListener {
         int jugador;
 
@@ -206,7 +234,7 @@ public class PvPSupervivenciaSetUp extends JFrame {
                 "Equipo Confirmado", 
                 JOptionPane.INFORMATION_MESSAGE);
 
-            // Verificar que ambos equipos estén confirmados
+            // Verificar que ambos equipos esten confirmados
             if (nombresEquipo1.size() == 6 && nombresEquipo2.size() == 6) {
                 PokemonBattleGame.iniciarBatalla(
                     new ArrayList<>(nombresEquipo1),

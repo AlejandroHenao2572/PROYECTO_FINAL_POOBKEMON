@@ -5,14 +5,39 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 
+
+/**
+ * Ventana principal para batallas Jugador vs Maquina (MvM)
+ * Gestiona la interfaz grafica, paneles de batalla y acciones del usuario
+ * Implementa BattleGUIListener para recibir eventos de la batalla
+ * Permite guardar, cargar partidas y mostrar mensajes al usuario
+ * 
+ * @author David Patacon
+ * @author Daniel Hueso
+ * @version 1.0
+ */
 public class MainWindowMvM extends JFrame implements BattleGUIListener {
+    // Panel grafico principal de la batalla
     private BattlePanel battlePanel;
+    // Panel de acciones del jugador
     private ActionPanelMvM actionPanel;
+    // Modelo de la batalla MvM
     private BattleMvM battle;
+    // Dialogo para mostrar mensajes
     private JDialog messageDialog;
+    // Indicador de turno en la interfaz
     private JLabel turnIndicator;
+    // Indica si la batalla esta pausada
     private boolean isBattlePaused = false;
 
+    
+    /**
+     * Constructor de la ventana principal MvM
+     * Inicializa la interfaz, paneles y la batalla
+     * 
+     * @param player Entrenador IA jugador
+     * @param machine Entrenador IA maquina
+     */
     public MainWindowMvM(AITrainer player, AITrainer machine) {
         // Configuración de la ventana principal
         setTitle("Pokémon Esmeralda - Jugador vs Máquina");
@@ -57,7 +82,7 @@ public class MainWindowMvM extends JFrame implements BattleGUIListener {
         turnIndicator.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
         add(turnIndicator, BorderLayout.NORTH);
 
-        // Barra de menú
+        // Barra de menu
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("Archivo");
 
@@ -83,6 +108,9 @@ public class MainWindowMvM extends JFrame implements BattleGUIListener {
         MusicManager.playMusic("musica/Battle_music.wav");
     }
 
+    /**
+     * Muestra el dialogo para guardar la partida y guarda el estado actual
+     */
     private void guardarPartida() {
         JFileChooser fileChooser = new JFileChooser() {
             private void writeObject(ObjectOutputStream out) throws IOException {
@@ -114,6 +142,9 @@ public class MainWindowMvM extends JFrame implements BattleGUIListener {
         }
     }
 
+    /**
+     * Muestra el dialogo para cargar una partida y actualiza la interfaz
+     */
     private void cargarPartida() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Cargar partida");
@@ -137,6 +168,9 @@ public class MainWindowMvM extends JFrame implements BattleGUIListener {
         }
     }
 
+    /**
+     * Reconstruye la interfaz grafica despues de cargar una partida
+     */
     private void rebuildUIAfterLoad() {
         getContentPane().removeAll();
         this.battlePanel = new BattlePanel(battle.getEntrenador1(), battle.getEntrenador2());
@@ -164,17 +198,26 @@ public class MainWindowMvM extends JFrame implements BattleGUIListener {
         repaint();
     }
 
+    /**
+     * Centra la ventana en la pantalla
+     */
     private void centerWindow() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation((screenSize.width - getWidth()) / 2,
                 (screenSize.height - getHeight()) / 2);
     }
 
+    /**
+     * Inicia la batalla
+     */
     public void startBattle() {
         battle.iniciar();
     }
 
-    // Método para actualizar el panel de acciones según el turno
+
+    /**
+     * Actualiza la interfaz grafica segun el estado de la batalla
+     */
     public void updateUI() {
         if (!isBattlePaused) {
             battlePanel.updatePokemonStats();
@@ -184,11 +227,18 @@ public class MainWindowMvM extends JFrame implements BattleGUIListener {
         }
     }
 
+    /**
+     * Evento cuando inicia la batalla
+     */
     @Override
     public void onBattleStarted() {
         updateUI();
     }
 
+    /**
+     * Evento cuando inicia el turno de un entrenador
+     * @param trainer Entrenador que inicia su turno
+     */
     @Override
     public void onTurnStarted(Trainer trainer) {
         updateTurnIndicator(trainer);
@@ -197,6 +247,10 @@ public class MainWindowMvM extends JFrame implements BattleGUIListener {
         actionPanel.addBattleText("¿Qué debería hacer " + trainer.getPokemonActivo().getNombre() + "?");
     }
 
+    /**
+     * Actualiza el indicador de turno en la interfaz
+     * @param currentTrainer Entrenador actual
+     */
     private void updateTurnIndicator(Trainer currentTrainer) {
         if (currentTrainer instanceof HumanTrainer) {
             turnIndicator.setText("Turno de " + currentTrainer.getNombre() + " (Jugador)");
@@ -209,9 +263,16 @@ public class MainWindowMvM extends JFrame implements BattleGUIListener {
         }
     }
 
+    /**
+     * Evento cuando termina el turno de un entrenador
+     */
     @Override
     public void onTurnEnded(Trainer trainer) {}
 
+    /**
+     * Evento cuando un Pokemon es debilitado
+     * @param trainer Entrenador cuyo Pokemon fue debilitado
+     */
     @Override
     public void onPokemonDebilitado(Trainer trainer) {
         actionPanel.addBattleText(trainer.getPokemonActivo().getNombre() + " se ha debilitado!");
@@ -219,6 +280,12 @@ public class MainWindowMvM extends JFrame implements BattleGUIListener {
         updateUI();
     }
 
+    
+    /**
+     * Evento cuando un entrenador cambia de Pokemon
+     * @param trainer Entrenador que realiza el cambio
+     * @param message Mensaje descriptivo del cambio
+     */
     @Override
     public void onPokemonChanged(Trainer trainer, String message) {
         battlePanel.updatePokemonStats();
@@ -226,6 +293,10 @@ public class MainWindowMvM extends JFrame implements BattleGUIListener {
         updateUI();
     }
 
+    /**
+     * Evento cuando termina la batalla
+     * @param winner Entrenador que gano la batalla
+     */
     @Override
     public void onBattleEnded(Trainer winner) {
         showMessage(winner.getNombre() + " ha ganado la batalla!");
@@ -248,6 +319,11 @@ public class MainWindowMvM extends JFrame implements BattleGUIListener {
         }
     }
 
+    /**
+     * Evento cuando un entrenador usa un movimiento
+     * @param trainer Entrenador que usa el movimiento
+     * @param result Mensaje descriptivo del resultado
+     */
     @Override
     public void onMoveUsed(Trainer trainer, String result) {
         actionPanel.addBattleText(result);
@@ -261,12 +337,22 @@ public class MainWindowMvM extends JFrame implements BattleGUIListener {
         updateUI();
     }
 
+    /**
+     * Evento cuando un entrenador usa un item
+     * @param trainer Entrenador que usa el item
+     * @param result Mensaje descriptivo del resultado
+     */
     @Override
     public void onItemUsed(Trainer trainer, String result) {
         actionPanel.addBattleText(result);
         updateUI();
     }
 
+    /**
+     * Evento cuando un Pokemon es revivido con un item
+     * @param trainer Entrenador que revive al Pokemon
+     * @param pokemon Pokemon que fue revivido
+     */
     @Override
     public void onPokemonRevivido(Trainer trainer, Pokemon pokemon) {
         battlePanel.updatePokemonStats();
@@ -274,10 +360,19 @@ public class MainWindowMvM extends JFrame implements BattleGUIListener {
         updateUI();
     }
 
+    /**
+     * Llama al metodo para usar un item de revivir
+     * @param itemIndex Indice del item en la mochila
+     * @param pokemonIndex Indice del Pokemon a revivir
+     */
     public void useReviveItem(int itemIndex, int pokemonIndex) {
         battle.usarItemRevivir(itemIndex, pokemonIndex);
     }
 
+    /**
+     * Llama al metodo para seleccionar un ataque
+     * @param moveIndex Indice del movimiento a usar
+     */
     public void attackSelected(int moveIndex) {
         try {
             String message = battle.movimientoSeleccionado(moveIndex);
@@ -286,7 +381,7 @@ public class MainWindowMvM extends JFrame implements BattleGUIListener {
 
             actionPanel.disableButtons();
 
-            // El turno se finalizará automáticamente por el listener en BattlePvM
+            // El turno se finalizara automaticamente por el listener en BattlePvM
             Timer messageTimer = new Timer(1500, e -> {
                 actionPanel.enableButtons();
             });
@@ -298,6 +393,10 @@ public class MainWindowMvM extends JFrame implements BattleGUIListener {
         }
     }
 
+    /**
+     * Llama al metodo para cambiar de Pokemon
+     * @param pokemonIndex Indice del Pokemon a cambiar
+     */
     public void switchPokemonSelected(int pokemonIndex) {
         try {
             String message = battle.cambioPokemonSeleccionado(pokemonIndex);
@@ -318,6 +417,10 @@ public class MainWindowMvM extends JFrame implements BattleGUIListener {
         }
     }
 
+    /**
+     * Llama al metodo para usar un item
+     * @param itemIndex Indice del item a usar
+     */
     public void useItemSelected(int itemIndex) {
         try {
             String message = battle.itemSeleccionado(itemIndex);
@@ -338,12 +441,19 @@ public class MainWindowMvM extends JFrame implements BattleGUIListener {
         }
     }
 
+    /**
+     * Permite huir del combate y cerrar la aplicacion
+     */
     public void runAway() {
-        actionPanel.addBattleText("¡Has huido del combate!");
-        showMessage("Escapaste con éxito");
+        actionPanel.addBattleText("Has huido del combate!");
+        showMessage("Escapaste con exito");
         System.exit(0);
     }
 
+    /**
+     * Muestra un mensaje emergente en pantalla
+     * @param message Mensaje a mostrar
+     */
     private void showMessage(String message) {
         JOptionPane pane = new JOptionPane(message, JOptionPane.PLAIN_MESSAGE);
         JDialog dialog = pane.createDialog(this, "");
@@ -355,9 +465,18 @@ public class MainWindowMvM extends JFrame implements BattleGUIListener {
         dialog.setVisible(true);
     }
 
+    /**
+     * Devuelve la batalla actual
+     * @return battle objeto BattleMvM actual
+     */
     public BattleMvM getBattle() {
         return battle;
     }
+
+    /**
+     * Establece la batalla actual
+     * @param battle Nueva batalla a establecer
+     */
     public void setBattle(BattleMvM battle) {
         this.battle = battle;
     }

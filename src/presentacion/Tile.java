@@ -9,8 +9,9 @@ import java.awt.image.BufferedImage;
  * Esta clase representa un bloque individual dentro del mapa del juego.
  * Cada Tile puede tener una imagen asociada y una propiedad de colision.
  *
- * Autores: David Patacon y Daniel Hueso
- * Version: 1.0
+ * @author David Patacon
+ * @author Daniel Hueso
+ * @version 1.0
  */
 public class Tile {
     public BufferedImage image;
