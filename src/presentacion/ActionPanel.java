@@ -310,9 +310,69 @@ public class ActionPanel extends JPanel {
                     button.addActionListener(e -> mainWindow.runAway());
                     break;
             }
-
             buttonPanel.add(button);
         }
+
+
+        Pokemon activo = currentPlayer.getPokemonActivo();
+        if (activo != null && activo.esSacrificable()) {
+            JButton sacrificeButton = new JButton("SACRIFICAR");
+            sacrificeButton.setFont(new Font("Pokemon GB", Font.BOLD, 12));
+            sacrificeButton.setForeground(Color.WHITE);
+            sacrificeButton.setBackground(new Color(200, 80, 40));
+            sacrificeButton.setFocusPainted(false);
+            sacrificeButton.setBorder(createRoundedBorder());
+            sacrificeButton.addActionListener(e -> showSacrificeOptions());
+            buttonPanel.add(sacrificeButton);
+        }
+
+        buttonPanel.revalidate();
+        buttonPanel.repaint();
+    }
+
+    /**
+     * Muestra las opciones de sacrificio del Pokemon activo
+     * Permite transferir salud a otro Pokemon del equipo
+     */
+    private void showSacrificeOptions() {
+        buttonPanel.removeAll();
+        ArrayList<Pokemon> equipo = currentPlayer.getEquipo();
+        Pokemon sacrificado = currentPlayer.getPokemonActivo();
+
+        for (int i = 0; i < equipo.size(); i++) {
+            Pokemon receptor = equipo.get(i);
+            if (receptor != sacrificado && !receptor.estaDebilitado()) {
+                JButton receptorButton = new JButton("Transferir a " + receptor.getNombre());
+                receptorButton.setFont(new Font("Pokemon GB", Font.PLAIN, 12));
+                receptorButton.setForeground(Color.WHITE);
+                receptorButton.setBackground(new Color(200, 80, 40));
+                receptorButton.setFocusPainted(false);
+                receptorButton.setBorder(createRoundedBorder());
+                int idx = i;
+                receptorButton.addActionListener(e -> {
+                    try {
+                        String msg = mainWindow.getBattle().sacrificarPokemon(currentPlayer, idx);
+                        addBattleText(msg);
+                        disableButtons();
+                    } catch (POOBkemonException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    resetButtons();
+                });
+                buttonPanel.add(receptorButton);
+            }
+        }
+
+        // Boton de volver
+        JButton backButton = new JButton("VOLVER");
+        backButton.setFont(new Font("Pokemon GB", Font.BOLD, 12));
+        backButton.setForeground(Color.WHITE);
+        backButton.setBackground(new Color(14, 174, 147));
+        backButton.setFocusPainted(false);
+        backButton.addActionListener(e -> resetButtons());
+        backButton.setBorder(createRoundedBorder());
+        buttonPanel.add(backButton);
+
         buttonPanel.revalidate();
         buttonPanel.repaint();
     }

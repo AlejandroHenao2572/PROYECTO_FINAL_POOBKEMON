@@ -348,5 +348,37 @@ public class Pokemon implements Serializable {
                 throw new POOBkemonException(String.format(POOBkemonException.ERROR_ESTADISTICA_NO_EXISTE, estadistica));
         }
     }
+
+    /**
+     * Indica si el Pokemon es sacrificable 
+     * @return true si es sacrificable, false en caso contrario
+     */
+    public boolean esSacrificable() {
+        return getPsActual() < getPs() && getPsActual() <= (getPs() / 2);
+    }
+
+    /**
+     * Devuelve el porcentaje de salud actual 
+     */
+    public int getPorcentajeSalud() {
+        return (int) Math.round((getPsActual() * 100.0) / getPs());
+    }
+
+    /**
+     * Aumenta la salud actual en porcentaje
+     * @param porcentaje Porcentaje a sumar
+     */
+    public void aumentarSaludPorcentaje(int porcentaje) {
+        int saludExtra = (int) Math.round(getPs() * (porcentaje / 100.0));
+        setPsActual(getPsActual() + saludExtra);
+    }
+
+    /**
+     * Establece los puntos de salud actuales del Pokemon
+     * @param psActual nuevo valor de puntos de salud actuales
+     */
+    public void setPsActual(int psActual) {
+        this.psActual = psActual;
+    }
     
 }

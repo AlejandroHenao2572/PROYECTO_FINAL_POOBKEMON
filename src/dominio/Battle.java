@@ -558,6 +558,39 @@ public class Battle implements Serializable {
     }
 
     /**
+     * Sacrifica el Pokemon activo del entrenador y transfiere su salud a otro Pokemon del mismo equipo.
+     * @param entrenador Entrenador que sacrifica
+     * @param indiceReceptor Indice del Pokemon que recibira la salud
+     * @return Mensaje descriptivo de la accion
+     * @throws POOBkemonException Si no es sacrificable o el receptor es invalido
+     */
+    public String sacrificarPokemon(Trainer entrenador, int indiceReceptor) throws POOBkemonException {
+        Pokemon sacrificado = entrenador.getPokemonActivo();
+        if (!sacrificado.esSacrificable()) {
+            throw new POOBkemonException("El Pokemon no es sacrificable.");
+        }
+        if (indiceReceptor < 0 || indiceReceptor >= entrenador.getEquipo().size()) {
+            throw new POOBkemonException("Indice de receptor invalido.");
+        }
+        Pokemon receptor = entrenador.getEquipo().get(indiceReceptor);
+        if (receptor == sacrificado || receptor.estaDebilitado()) {
+            throw new POOBkemonException("No se puede transferir a ese Pokemon.");
+        }
+        int porcentaje = sacrificado.getPorcentajeSalud();
+        receptor.aumentarSaludPorcentaje(porcentaje);
+        sacrificado.setPsActual(0); // El sacrificado queda fuera de combate
+
+        // Cambiar el Pokemon activo al receptor
+        entrenador.cambiarPokemon(indiceReceptor);
+
+        // Cambiar turno automaticamente
+        finalizarTurno();
+
+        return sacrificado.getNombre() + " se sacrifico y transfirio " + porcentaje + "% de salud a " + receptor.getNombre() + ".";
+    }
+
+
+    /**
      * Devuelve el primer entrenador humano de la batalla
      * 
      * @return entrenador1 primer entrenador humano
