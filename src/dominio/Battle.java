@@ -506,6 +506,7 @@ public class Battle implements Serializable {
             if (listener != null) {
                 listener.onMoveUsed(turnoActual, message);
             }
+            finalizarTurno();
             return message;
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error inesperado al usar ítem", e);
@@ -551,6 +552,7 @@ public class Battle implements Serializable {
                     esperandoAccion = true;
                     iniciarTemporizadorTurno();
                 }
+                finalizarTurno();
             }
         } catch (Exception e) {
             System.err.println("Error al usar item de revivir: " + e.getMessage());
