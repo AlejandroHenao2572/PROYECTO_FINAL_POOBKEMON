@@ -291,7 +291,7 @@ public class PvPNormalSetUp extends JFrame {
 
             // Verificar que ambos equipos esten confirmados (minimo 1 Pokemon por jugador)
             if (nombresEquipo1.size() >= 1 && nombresEquipo2.size() >= 1) {
-                PokemonBattleGame.iniciarBatalla(
+                PokemonBattleGame.iniciarBatallaPvP(
                     new ArrayList<>(nombresEquipo1),
                     new ArrayList<>(nombresEquipo2),
                     new HashMap<>(itemsJugador1),

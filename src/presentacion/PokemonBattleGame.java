@@ -30,16 +30,17 @@ public class PokemonBattleGame {
      * @param items1  Mapa de nombres de items y cantidades para el primer entrenador
      * @param items2  Mapa de nombres de items y cantidades para el segundo entrenador
      */
-    public static void iniciarBatalla(
+    public static void iniciarBatallaPvP(
         List<String> nombresEquipo1,
         List<String> nombresEquipo2,
         Map<String, Integer> items1,
         Map<String, Integer> items2
     ) {
         try {
-            Battle battle = Battle.setupBattle(nombresEquipo1, nombresEquipo2, items1, items2);
+            Battle battle = Battle.getInstance();
+            battle.setUpBattlePvP(nombresEquipo1, nombresEquipo2, items1, items2);
             SwingUtilities.invokeLater(() -> {
-                MainWindow mainWindow = new MainWindow((HumanTrainer) battle.getEntrenador1(), (HumanTrainer) battle.getEntrenador2());
+                MainWindow mainWindow = new MainWindow(battle.getEntrenador1(), battle.getEntrenador2(), battle);
                 mainWindow.setVisible(true);
                 mainWindow.startBattle();
             });
@@ -73,9 +74,10 @@ public class PokemonBattleGame {
         String nombreEntrenadorMaquina
     ) {
         try {
-            BattlePvM battle = BattlePvM.setupBattle(nombresEquipoJugador, nombresEquipoMaquina, itemsJugador, itemsMaquina, nombreEntrenadorMaquina);
+            Battle battle = Battle.getInstance();
+            battle.setUpBattlePvM(nombresEquipoJugador, nombresEquipoMaquina, itemsJugador, itemsMaquina, nombreEntrenadorMaquina);
             SwingUtilities.invokeLater(() -> {
-                MainWindowPvM mainWindow = new MainWindowPvM((HumanTrainer) battle.getEntrenador1(), (AITrainer) battle.getEntrenador2());
+                MainWindow mainWindow = new MainWindow(battle.getEntrenador1(), battle.getEntrenador2(), battle);
                 mainWindow.setVisible(true);
                 mainWindow.startBattle();
             });
@@ -109,9 +111,10 @@ public class PokemonBattleGame {
         String tipoMaquina2
     ) {
         try {
-            BattleMvM battle = BattleMvM.setupBattle(nombresEquipoMaquina1, nombresEquipoMaquina2, itemsMaquina1, itemsMaquina2, tipoMaquina1, tipoMaquina2);
+            Battle battle = Battle.getInstance();
+            battle.setUpBattleMvM(nombresEquipoMaquina1, nombresEquipoMaquina2, itemsMaquina1, itemsMaquina2, tipoMaquina1, tipoMaquina2);
             SwingUtilities.invokeLater(() -> {
-                MainWindowMvM mainWindow = new MainWindowMvM((AITrainer) battle.getEntrenador1(), (AITrainer) battle.getEntrenador2());
+                MainWindow mainWindow = new MainWindow(battle.getEntrenador1(), battle.getEntrenador2(),battle);
                 mainWindow.setVisible(true);
                 mainWindow.startBattle();
             });
@@ -122,19 +125,5 @@ public class PokemonBattleGame {
             LOGGER.log(Level.SEVERE, "Error inesperado al iniciar la batalla: " + e.getMessage(), e);
             JOptionPane.showMessageDialog(null, "Error inesperado al iniciar la batalla.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-    
-    /**
-     * Metodo principal de la aplicacion
-     * Inicializa la tabla de efectividades y muestra la ventana de configuracion PvP
-     * 
-     * @param args Argumentos de linea de comandos
-     */
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            TablaTipos.inicializarEfectividades();
-            PvPNormalSetUp setup = new PvPNormalSetUp();
-            setup.setVisible(true);
-        });
     }
 }

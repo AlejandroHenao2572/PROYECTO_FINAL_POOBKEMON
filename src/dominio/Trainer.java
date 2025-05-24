@@ -19,6 +19,7 @@ public abstract class Trainer implements Serializable {
     protected ArrayList<Pokemon> equipo;
     protected ArrayList<Item> items;
     protected Pokemon pokemonActivo;
+    protected TrainerListener listener;
 
     /**
      * Constructor del entrenador
@@ -163,6 +164,15 @@ public abstract class Trainer implements Serializable {
      */
     public ArrayList<Item> getItems() {
         return items;
+    }
+
+    /**
+     * Establece el listener para notificar acciones completadas
+     * 
+     * @param listener Objeto listener
+     */
+    public void setListener(TrainerListener listener) {
+        this.listener = listener;
     }
 
     /**

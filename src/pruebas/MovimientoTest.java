@@ -123,4 +123,43 @@ public class MovimientoTest {
         // Se verifica que el objetivo recibe dano
         assertTrue(objetivo.getPsActual() < 100);
     }
+
+    /**
+     * Prueba que un movimiento especial reduce los PS del objetivo y consume 1 PP.
+     */
+    @Test
+    public void deberiaHacerDanoYReducirPPConMovimientoEspecial() {
+        MovimientoEspecial rayo = new MovimientoEspecial("Rayo", "Electrico", 90, 100, 5);
+        int hpInicial = objetivo.getPs();
+        int ppInicial = rayo.getPP();
+
+        rayo.ejecutar(atacante, objetivo);
+
+        assertTrue(objetivo.getPsActual() < hpInicial, "El objetivo debe recibir dano especial");
+        assertEquals(ppInicial - 1, rayo.getPP(), "El movimiento especial debe consumir 1 PP");
+    }
+
+    /**
+     * Prueba que un movimiento especial no puede usarse si no tiene PP.
+     */
+    @Test
+    public void noDeberiaPermitirUsarMovimientoEspecialSinPP() {
+        MovimientoEspecial rayo = new MovimientoEspecial("Rayo", "Electrico", 90, 100, 1);
+        rayo.ejecutar(atacante, objetivo); // Usa el unico PP
+        assertFalse(rayo.esUtilizable(), "El movimiento especial no debe ser utilizable sin PP");
+        int hpAntes = objetivo.getPsActual();
+        rayo.ejecutar(atacante, objetivo); // No deberia hacer nada
+        assertEquals(hpAntes, objetivo.getPsActual(), "No debe causar dano si no tiene PP");
+    }
+
+    /**
+     * Prueba que un movimiento especial con precision baja puede fallar y no causa daño.
+     */
+    @Test
+    public void noDeberiaHacerDanoSiFallaPrecisionMovimientoEspecial() {
+        MovimientoEspecial especialFallo = new MovimientoEspecial("Fallo", "Psiquico", 100, 0, 5);
+        int hpInicial = objetivo.getPsActual();
+        especialFallo.ejecutar(atacante, objetivo);
+        assertEquals(hpInicial, objetivo.getPsActual(), "No debe causar dano si la precision es 0");
+    }
 }

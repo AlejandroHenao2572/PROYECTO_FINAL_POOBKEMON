@@ -36,7 +36,7 @@ public class DefensiveTrainer extends AITrainer {
      * @return mensaje de la accion realizada
      */
     @Override
-    public String decidirAccion(BattlePvM batalla, Trainer oponente) {
+    public String decidirAccion(Battle batalla, Trainer oponente) {
         // 1. Busca movimientos defensivos (suben defensa o defensa especial propia, protegen, o bajan ataque o ataque especial rival)
         int movimientoDefensivo = -1;
         for (int i = 0; i < pokemonActivo.getMovimientos().size(); i++) {
@@ -81,77 +81,4 @@ public class DefensiveTrainer extends AITrainer {
         // 5. Si no puede hacer nada pasa turno
         return "";
     }
-
-    /**
-     * Decide la accion de la IA en una batalla MvM
-     * Prioriza curarse o cambiar si el pokemon esta muy danado
-     * Si no esta danado busca movimientos ofensivos o defensivos
-     * Si no puede atacar intenta cambiar de pokemon
-     * Si no puede hacer nada pasa turno
-     * 
-     * @param batalla referencia a la batalla MvM
-     * @param oponente entrenador rival
-     * @return mensaje de la accion realizada
-     */
-    @Override
-    public String decidirAccion(BattleMvM batalla, Trainer oponente) {
-        // 1. Si el pokemon activo esta muy danado intenta curarse o cambiar
-        if (pokemonActivo.getPsActual() < pokemonActivo.getPs() * 0.3) {
-            // Intenta usar objeto de curacion
-            for (int i = 0; i < items.size(); i++) {
-                Item item = items.get(i);
-                if (item instanceof Potion || item instanceof SuperPotion || item instanceof HyperPotion) {
-                    String msg = onItemSelected(i);
-                    batalla.getListener().onMoveUsed(this, msg);
-                    return msg;
-                }
-            }
-            // Si hay otro pokemon sano cambia
-            for (int i = 0; i < equipo.size(); i++) {
-                Pokemon p = equipo.get(i);
-                if (!p.estaDebilitado() && p != pokemonActivo) {
-                    String msg = cambiarPokemon(i);
-                    batalla.getListener().onPokemonChanged(this, msg);
-                    return msg;
-                }
-            }
-        }
-
-        // 2. Busca movimientos ofensivos o defensivos
-        int mejorMovimiento = -1;
-        for (int i = 0; i < pokemonActivo.getMovimientos().size(); i++) {
-            Movimiento m = pokemonActivo.getMovimientos().get(i);
-            // Aqui deberias verificar si el movimiento es ofensivo o defensivo segun tu logica
-            if (m.esUtilizable() && (m instanceof MovimientoFisico)) {
-                mejorMovimiento = i;
-                break;
-            }
-        }
-        // Si encuentra uno lo usa
-        if (mejorMovimiento != -1) { 
-            return onAttackSelected(mejorMovimiento, oponente);
-        }
-
-        // Si no hay movimientos ofensivos o defensivos usa el primer ataque utilizable
-        for (int i = 0; i < pokemonActivo.getMovimientos().size(); i++) {
-            Movimiento m = pokemonActivo.getMovimientos().get(i);
-            if (m.esUtilizable()) {
-                return onAttackSelected(i, oponente);
-            }
-        }
-
-        // Si no puede atacar intenta cambiar de pokemon
-        for (int i = 0; i < equipo.size(); i++) {
-            Pokemon p = equipo.get(i);
-            if (!p.estaDebilitado() && p != pokemonActivo) {
-                String msg = cambiarPokemon(i);
-                batalla.getListener().onPokemonChanged(this, msg);
-                return msg;
-            }
-        }
-
-        // Si no puede hacer nada pasa turno
-        return "";
-    }
-
 }

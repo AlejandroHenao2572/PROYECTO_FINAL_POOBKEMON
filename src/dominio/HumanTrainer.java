@@ -11,7 +11,6 @@ package dominio;
  * @version 1.0
  */
 public class HumanTrainer extends Trainer {
-    private TrainerListener listener;
 
     /**
      * Crea un nuevo entrenador humano
@@ -99,12 +98,4 @@ public class HumanTrainer extends Trainer {
         return "Seleccion de pokemon no valida";
     }
 
-    /**
-     * Establece el listener para notificar acciones completadas
-     * 
-     * @param listener objeto listener
-     */
-    public void setListener(TrainerListener listener) {
-        this.listener = listener;
-    }
 }

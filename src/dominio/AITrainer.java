@@ -10,7 +10,6 @@ package dominio;
  * @version 1.0
  */
 public abstract class AITrainer extends Trainer {
-    private TrainerListener listener;
 
     /**
      * Constructor de la clase AITrainer
@@ -84,25 +83,6 @@ public abstract class AITrainer extends Trainer {
      * @param oponente entrenador rival
      * @return mensaje de la accion realizada
      */
-    public abstract String decidirAccion(BattlePvM batalla, Trainer oponente);
-
-    /**
-     * Metodo abstracto para que la IA decida su accion en una batalla MvM
-     * 
-     * @param batalla referencia a la batalla MvM
-     * @param oponente entrenador rival
-     * @return mensaje de la accion realizada
-     */
-    public abstract String decidirAccion(BattleMvM batalla, Trainer oponente);
-
-
-    /**
-     * Establece el listener para notificar acciones completadas
-     * 
-     * @param listener Objeto listener
-     */
-    public void setListener(TrainerListener listener) {
-        this.listener = listener;
-    }
+    public abstract String decidirAccion(Battle batalla, Trainer oponente);
 
 }

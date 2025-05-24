@@ -236,7 +236,7 @@ public class PvPSupervivenciaSetUp extends JFrame {
 
             // Verificar que ambos equipos esten confirmados
             if (nombresEquipo1.size() == 6 && nombresEquipo2.size() == 6) {
-                PokemonBattleGame.iniciarBatalla(
+                PokemonBattleGame.iniciarBatallaPvP(
                     new ArrayList<>(nombresEquipo1),
                     new ArrayList<>(nombresEquipo2),
                     new HashMap<>(),  // Sin items para el jugador 1

@@ -38,7 +38,7 @@ public class MainWindow extends JFrame implements BattleGUIListener {
      * @param player1 Primer entrenador humano
      * @param player2 Segundo entrenador humano
      */
-    public MainWindow(HumanTrainer player1, HumanTrainer player2) {
+    public MainWindow(Trainer player1, Trainer player2, Battle battle) {
         setTitle("Pokemon Esmeralda - Combate");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
@@ -56,7 +56,7 @@ public class MainWindow extends JFrame implements BattleGUIListener {
         }
 
         // 1. Inicializar la batalla
-        this.battle = new Battle(player1, player2);
+        this.battle = battle;
         
         // 2. Inicializar el panel de batalla
         this.battlePanel = new BattlePanel(player1, player2);
@@ -347,7 +347,7 @@ public class MainWindow extends JFrame implements BattleGUIListener {
         actionPanel.addBattleText(trainer.getPokemonActivo().getNombre() + " se ha debilitado!");
         
         // Mostrar opciones de cambio solo si es el turno del jugador afectado
-        if (trainer == battle.getTurnoActual()) {
+        if (trainer == battle.getTurnoActual() && trainer instanceof HumanTrainer) {
             SwingUtilities.invokeLater(() -> {
                 actionPanel.showSwitchOptions();
             });
@@ -389,7 +389,16 @@ public class MainWindow extends JFrame implements BattleGUIListener {
         
         if (choice == 0) {
             dispose();
-            //new PokemonBattleGame().startNewBattle();
+            // Abrir ventana de menu principal
+            MusicManager.stopMusic();
+            JFrame menuFrame = new JFrame("POOBkemon - Menú Principal");
+            menuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            GamePanel gamePanel = new GamePanel(menuFrame);
+            menuFrame.add(gamePanel);
+            menuFrame.pack();
+            menuFrame.setLocationRelativeTo(null);
+            menuFrame.setVisible(true);
+            gamePanel.startGameThread();
         } else {
             System.exit(0);
         }
@@ -518,9 +527,17 @@ public class MainWindow extends JFrame implements BattleGUIListener {
      * Permite huir del combate y cerrar la aplicacion
      */
     public void runAway() {
+        dispose();
         actionPanel.addBattleText("¡Has huido del combate!");
         showMessage("Escapaste con exito");
-        System.exit(0);
+        JFrame menuFrame = new JFrame("POOBkemon - Menú Principal");
+        menuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        GamePanel gamePanel = new GamePanel(menuFrame);
+        menuFrame.add(gamePanel);
+        menuFrame.pack();
+        menuFrame.setLocationRelativeTo(null);
+        menuFrame.setVisible(true);
+        gamePanel.startGameThread();
     }
 
     /**
